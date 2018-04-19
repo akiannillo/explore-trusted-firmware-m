@@ -18,6 +18,7 @@ extern "C" {
 /**
  * \brief Include all the SVC handler headers
  */
+#include "interface/include/tfm_ns_psa_svc.h"
 #include "tfm_sst_svc_handler.h"
 #include "tfm_log_svc_handler.h"
 #include "svc_core_test_ns.h"
@@ -28,6 +29,22 @@ extern "C" {
  *
  */
 #define SVC(code) __ASM("svc %0" : : "I" (code))
+
+/**
+ * \def LIST_SVC_PSA
+ *
+ * \brief This is an X macro which lists
+ *        the SVC interface exposed by
+ *        PSA API. The enumerator and
+ *        corresponding SVC handler
+ *        function need to be registered.
+ *
+ */
+#define LIST_SVC_PSA \
+    X(SVC_PSA_VERSION, tfm_psa_ns_version) \
+    X(SVC_PSA_CONNECT, tfm_psa_ns_connect) \
+    X(SVC_PSA_CALL, tfm_psa_ns_call) \
+    X(SVC_PSA_CLOSE, tfm_psa_ns_close)
 
 /**
  * \def LIST_SVC_DISPATCHERS
@@ -122,6 +139,13 @@ enum tfm_svc_num {
     SVC_INVALID = 0,
 
 #define X(SVC_ENUM, SVC_HANDLER) SVC_ENUM,
+
+#if defined(TFM_PSA_API)
+    /* SVC API for PSA */
+    LIST_SVC_PSA
+#endif /* TFM_PSA_API */
+
+#if defined(TFM_LEGACY_API)
     /* SVC API for Services */
     LIST_SVC_DISPATCHERS
 
@@ -140,6 +164,7 @@ enum tfm_svc_num {
 #if defined(TFM_PARTITION_TEST_SECURE_SERVICES)
     LIST_SVC_TFM_PARTITION_TEST_SECURE_SERVICES
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
+#endif /* TFM_LEGACY_API */
 
 #undef X
 

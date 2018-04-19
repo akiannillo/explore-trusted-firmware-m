@@ -38,7 +38,8 @@ extern void tfm_core_partition_return_svc(void);
 /* This is the "Big Lock" on the secure side, to guarantee single entry
  * to SPE
  */
-static int32_t tfm_secure_lock;
+/* FixMe: check if this really needs to be exported */
+int32_t tfm_secure_lock;
 static int32_t tfm_secure_api_init = 1;
 
 static uint32_t *prepare_partition_ctx(

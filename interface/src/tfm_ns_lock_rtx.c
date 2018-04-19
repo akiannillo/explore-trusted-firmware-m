@@ -64,6 +64,9 @@ static const osMutexAttr_t ns_lock_attrib = {
  *        \ref LIST_SVC_DISPATCHERS
  */
 #define X(SVC_ENUM, SVC_HANDLER) TFM_SVC_DISPATCH_FUNCTION(SVC_ENUM);
+#if defined(TFM_PSA_API)
+LIST_SVC_PSA
+#endif
 LIST_SVC_DISPATCHERS
 #undef X
 
@@ -77,6 +80,9 @@ LIST_SVC_DISPATCHERS
 static void *tfm_svc_dispatch_functions[] = {
     (void *) NULL, /* SVC_INVALID */
 #define X(SVC_ENUM, SVC_HANDLER) (void *)TFM_SVC_DISPATCH_NAME(SVC_ENUM),
+#if defined(TFM_PSA_API)
+    LIST_SVC_PSA
+#endif
     LIST_SVC_DISPATCHERS
 #undef X
 };

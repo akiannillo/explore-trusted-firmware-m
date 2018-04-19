@@ -39,6 +39,13 @@ extern void * const osRtxUserSVC[1+USER_SVC_COUNT];
   (void *)USER_SVC_COUNT,
 
 #define X(SVC_ENUM, SVC_HANDLER) (void*)SVC_HANDLER,
+
+#if defined(TFM_PSA_API)
+    /* SVC API for PSA */
+    LIST_SVC_PSA
+#endif /* TFM_PSA_API */
+
+#if defined(TFM_LEGACY_API)
     /* SVC API for Services */
     LIST_SVC_DISPATCHERS
 
@@ -57,6 +64,7 @@ extern void * const osRtxUserSVC[1+USER_SVC_COUNT];
 #if defined(TFM_PARTITION_TEST_SECURE_SERVICES)
     LIST_SVC_TFM_PARTITION_TEST_SECURE_SERVICES
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
+#endif /* TFM_LEGACY_API */
 
 #undef X
 
