@@ -14,6 +14,7 @@
 #include "test/suites/log/secure/log_s_tests.h"
 #include "test/suites/invert/secure/invert_s_tests.h"
 #include "secure_fw/services/secure_storage/sst_object_system.h"
+#include "test/suites/ipc/secure/ipc_s_tests.h"
 
 static struct test_suite_t test_suites[] = {
 #ifdef SERVICES_TEST_S
@@ -30,6 +31,12 @@ static struct test_suite_t test_suites[] = {
     {&register_testsuite_s_invert_interface, 0, 0, 0},
 #endif
 #endif /* SERVICES_TEST_S */
+
+#ifdef CORE_TEST_IPC
+    /* Secure IPC test cases */
+    {&register_testsuite_s_ipc_interface, 0, 0, 0},
+#endif
+
 };
 
 static void setup_integ_test(void)
