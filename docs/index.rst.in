@@ -21,6 +21,7 @@ Welcome to TF-M's documentation!
     docs/dco
     glossary
     maintainers
+    docs/lic
     docs/user_guides/tfm_sw_requirement
     docs/user_guides/tfm_build_instruction
     docs/coding_guide
