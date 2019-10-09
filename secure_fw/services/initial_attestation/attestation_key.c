@@ -8,9 +8,9 @@
 #include "attestation_key.h"
 #include <stdint.h>
 #include <stddef.h>
-#include "psa/initial_attestation.h"
 #include "platform/include/tfm_plat_defs.h"
 #include "platform/include/tfm_plat_crypto_keys.h"
+#include "attestation.h"
 
 /* 0 is defined as an invalid handle in the PSA spec, so it is used here to
  * indicate that the key isn't loaded.

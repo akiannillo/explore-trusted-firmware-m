@@ -6,8 +6,9 @@
  */
 
 #include "t_cose_crypto.h"
-#include "psa/crypto.h"
 #include "attest_public_key.h"
+#include "psa/crypto.h"
+#include "attestation.h"
 
 /* Avoid compiler warning due to unused argument */
 #define ARG_UNUSED(arg) (void)(arg)

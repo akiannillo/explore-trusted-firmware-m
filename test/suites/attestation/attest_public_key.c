@@ -6,10 +6,9 @@
  */
 
 #include "attest_public_key.h"
-#include "psa/initial_attestation.h"
 #include "psa/crypto.h"
-#include "psa/crypto_types.h"
 #include <stdint.h>
+#include "attestation.h"
 
 /*!
  * \def ECC_CURVE_SECP256R1_PULBIC_KEY_LENGTH

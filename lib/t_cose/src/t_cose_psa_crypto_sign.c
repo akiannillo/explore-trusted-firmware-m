@@ -10,6 +10,7 @@
 #include "tfm_plat_crypto_keys.h"
 #include "tfm_memory_utils.h"
 #include "psa/crypto.h"
+#include "attestation.h"
 
 /* Avoid compiler warning due to unused argument */
 #define ARG_UNUSED(arg) (void)(arg)
