@@ -39,7 +39,7 @@ extern "C" {
 /*!
  * \def INVALID_CHALLENGE_OBJECT_SIZE
  *
- * \brief Size of challenge object that is
+ * \brief Size of challenge object that is invalid.
  */
 #define INVALID_CHALLENGE_OBJECT_SIZE (PSA_INITIAL_ATTEST_CHALLENGE_SIZE_32 + 1)
 
