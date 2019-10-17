@@ -17,7 +17,6 @@ set(TFM_NS_CLIENT_IDENTIFICATION OFF)
 
 add_definitions(-DCY8C6247BZI_D54=1)
 add_definitions(-DNDEBUG=1)
-add_definitions(-DTFM_CORE_DEBUG)
 
 # Skip Core Test temporarily
 set(CORE_TEST OFF)
