@@ -115,7 +115,7 @@ cy_en_prot_status_t SMPU_Configure(const SMPU_Resources *smpu_dev)
 cy_en_prot_status_t protect_unconfigured_smpus(void)
 {
     const cy_stc_smpu_cfg_t smpu_config = COMMON_SMPU_MASTER_CONFIG;
-    cy_en_prot_status_t ret;
+    cy_en_prot_status_t ret = CY_PROT_SUCCESS;
     int i;
     uint32_t att0, att1;
 
