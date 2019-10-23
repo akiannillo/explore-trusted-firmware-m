@@ -134,22 +134,22 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_PR0]
 // <i> Configuration settings for Driver_PPU_PR0 in component ::Drivers:PPC
-#define   RTE_PPU_PR0                               1
+#define   RTE_PPU_PR0                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_PR0]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_PR1]
 // <i> Configuration settings for Driver_PPU_PR1 in component ::Drivers:PPC
-#define   RTE_PPU_PR1                               1
+#define   RTE_PPU_PR1                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_PR1]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_PR2]
 // <i> Configuration settings for Driver_PPU_PR2 in component ::Drivers:PPC
-#define   RTE_PPU_PR2                               1
+#define   RTE_PPU_PR2                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_PR2]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_PR3]
 // <i> Configuration settings for Driver_PPU_PR3 in component ::Drivers:PPC
-#define   RTE_PPU_PR3                               1
+#define   RTE_PPU_PR3                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_PR3]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_PR4]
@@ -181,42 +181,42 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR0]
 // <i> Configuration settings for Driver_PPU_GR0 in component ::Drivers:PPC
-#define   RTE_PPU_GR0                               1
+#define   RTE_PPU_GR0                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR0]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR1]
 // <i> Configuration settings for Driver_PPU_GR1 in component ::Drivers:PPC
-#define   RTE_PPU_GR1                               1
+#define   RTE_PPU_GR1                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR1]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR2]
 // <i> Configuration settings for Driver_PPU_GR2 in component ::Drivers:PPC
-#define   RTE_PPU_GR2                               1
+#define   RTE_PPU_GR2                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR2]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR3]
 // <i> Configuration settings for Driver_PPU_GR3 in component ::Drivers:PPC
-#define   RTE_PPU_GR3                               1
+#define   RTE_PPU_GR3                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR3]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR4]
 // <i> Configuration settings for Driver_PPU_GR4 in component ::Drivers:PPC
-#define   RTE_PPU_GR4                               1
+#define   RTE_PPU_GR4                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR4]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR6]
 // <i> Configuration settings for Driver_PPU_GR6 in component ::Drivers:PPC
-#define   RTE_PPU_GR6                               1
+#define   RTE_PPU_GR6                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR6]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR9]
 // <i> Configuration settings for Driver_PPU_GR9 in component ::Drivers:PPC
-#define   RTE_PPU_GR9                               1
+#define   RTE_PPU_GR9                               0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR9]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR10]
 // <i> Configuration settings for Driver_PPU_GR10 in component ::Drivers:PPC
-#define   RTE_PPU_GR10                              1
+#define   RTE_PPU_GR10                              0
 // </e> PPC (Peripheral Protection Controller) [Driver_PPU_GR10]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_PPU_GR_MMIO0]
@@ -271,7 +271,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR2]
 // <i> Configuration settings for Driver_GR_PPU_SL_PERI_GR2 in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_PERI_GR2                    1
+#define   RTE_GR_PPU_SL_PERI_GR2                    0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR2]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_CPUSS]
@@ -296,7 +296,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_FLASHC]
 // <i> Configuration settings for Driver_GR_PPU_SL_FLASHC in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_FLASHC                      1
+#define   RTE_GR_PPU_SL_FLASHC                      0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_FLASHC]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_SRSS]
@@ -321,7 +321,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_EFUSE]
 // <i> Configuration settings for Driver_GR_PPU_SL_EFUSE in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_EFUSE                       1
+#define   RTE_GR_PPU_SL_EFUSE                       0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_EFUSE]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PROFILE]
@@ -331,17 +331,17 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT0]
 // <i> Configuration settings for Driver_GR_PPU_RG_IPC_STRUCT0 in component ::Drivers:PPC
-#define   RTE_GR_PPU_RG_IPC_STRUCT0                 1
+#define   RTE_GR_PPU_RG_IPC_STRUCT0                 0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT0]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT1]
 // <i> Configuration settings for Driver_GR_PPU_RG_IPC_STRUCT1 in component ::Drivers:PPC
-#define   RTE_GR_PPU_RG_IPC_STRUCT1                 1
+#define   RTE_GR_PPU_RG_IPC_STRUCT1                 0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT1]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT2]
 // <i> Configuration settings for Driver_GR_PPU_RG_IPC_STRUCT2 in component ::Drivers:PPC
-#define   RTE_GR_PPU_RG_IPC_STRUCT2                 1
+#define   RTE_GR_PPU_RG_IPC_STRUCT2                 0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT2]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_STRUCT3]
@@ -371,7 +371,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_INTR_STRUCT0]
 // <i> Configuration settings for Driver_GR_PPU_RG_IPC_INTR_STRUCT0 in component ::Drivers:PPC
-#define   RTE_GR_PPU_RG_IPC_INTR_STRUCT0            1
+#define   RTE_GR_PPU_RG_IPC_INTR_STRUCT0            0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_INTR_STRUCT0]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_RG_IPC_INTR_STRUCT1]
@@ -476,7 +476,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR3]
 // <i> Configuration settings for Driver_GR_PPU_SL_PERI_GR3 in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_PERI_GR3                    1
+#define   RTE_GR_PPU_SL_PERI_GR3                    0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR3]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_HSIOM]
@@ -536,7 +536,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR4]
 // <i> Configuration settings for Driver_GR_PPU_SL_PERI_GR4 in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_PERI_GR4                    1
+#define   RTE_GR_PPU_SL_PERI_GR4                    0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR4]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_SMIF]
@@ -546,7 +546,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR6]
 // <i> Configuration settings for Driver_GR_PPU_SL_PERI_GR6 in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_PERI_GR6                    1
+#define   RTE_GR_PPU_SL_PERI_GR6                    0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR6]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_SCB0]
@@ -596,7 +596,7 @@
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR9]
 // <i> Configuration settings for Driver_GR_PPU_SL_PERI_GR9 in component ::Drivers:PPC
-#define   RTE_GR_PPU_SL_PERI_GR9                    1
+#define   RTE_GR_PPU_SL_PERI_GR9                    0
 // </e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PERI_GR9]
 
 // <e> PPC (Peripheral Protection Controller) [Driver_GR_PPU_SL_PASS]
