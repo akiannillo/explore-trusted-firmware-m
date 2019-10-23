@@ -133,12 +133,8 @@ static int32_t ARM_USARTx_Initialize(UARTx_Resources* uart_dev)
 {
     cy_en_scb_uart_status_t retval;
 
-    Cy_PDL_Init(CY_DEVICE_CFG);
-
 #ifdef CY_SYSTEM_CPU_CM0P
     cy_stc_scb_uart_config_t config = DEF_CONFIG;
-
-    init_cycfg_all();
 
     /* Assign and configure pins, assign clock divider */
     retval = Cy_SCB_UART_Init(uart_dev->base, &config, NULL);

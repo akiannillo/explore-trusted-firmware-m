@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <stdio.h> /* for debugging printfs */
 #include "cy_prot.h"
+#include "cycfg.h"
 #include "device_definition.h"
 #include "driver_ppu.h"
 #include "driver_smpu.h"
@@ -90,11 +91,15 @@ void system_reset_cfg(void)
 extern void Cy_Platform_Init(void);
 void platform_init(void)
 {
+    Cy_PDL_Init(CY_DEVICE_CFG);
+
+    init_cycfg_all();
+    Cy_Platform_Init();
+
     /* make sure CM4 is disabled */
     if (CY_SYS_CM4_STATUS_ENABLED == Cy_SysGetCM4Status()) {
         Cy_SysDisableCM4();
     }
-    Cy_Platform_Init();
 }
 
 enum tfm_plat_err_t nvic_interrupt_target_state_cfg(void)

@@ -122,15 +122,16 @@ int main(void)
     __set_MSPLIM(msp_stack_bottom);
 #endif
 
-    stdio_init();
-
-    BOOT_LOG_INF("Starting bootloader");
-
     /* Performs platform specific initialization */
     if (bl2_platform_init() != ARM_DRIVER_OK) {
         while (1)
             ;
     }
+
+    stdio_init();
+
+    BOOT_LOG_INF("Starting bootloader");
+
     /* Initialise the mbedtls static memory allocator so that mbedtls allocates
      * memory from the provided static buffer instead of from the heap.
      */

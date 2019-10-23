@@ -24,6 +24,7 @@
 
 #include <stdbool.h>
 #include "system_psoc6.h"
+#include "cycfg.h"
 #include "cy_device.h"
 #include "cy_device_headers.h"
 #include "cy_syslib.h"
@@ -173,6 +174,8 @@ void Cy_Platform_Init(void);
 *******************************************************************************/
 void SystemInit(void)
 {
+    Cy_PDL_Init(CY_DEVICE_CFG);
+
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1U)
     extern const cy_israddress __Vectors[]; /* Vector Table in flash */;
     SCB->VTOR = (uint32_t) &__Vectors;
@@ -659,8 +662,6 @@ __cy_memory_4_row_size  EQU __cpp(1)
 *******************************************************************************/
 void Cy_Platform_Init(void)
 {
-    Cy_PDL_Init(CY_DEVICE_CFG);
-
 #if !defined(CY_IPC_DEFAULT_CFG_DISABLE)
     /* Initialize semaphores for the system operations.*/
     (void) Cy_IPC_Sema_Init(CY_IPC_CHAN_SEMA, 0ul, NULL);
@@ -733,11 +734,15 @@ extern ARM_DRIVER_FLASH FLASH_DEV_NAME;
 
 uint32_t bl2_platform_init(void)
 {
+    Cy_PDL_Init(CY_DEVICE_CFG);
+
+    init_cycfg_all();
+    Cy_Platform_Init();
+
     /* make sure CM4 is disabled */
     if (CY_SYS_CM4_STATUS_ENABLED == Cy_SysGetCM4Status()) {
         Cy_SysDisableCM4();
     }
-    Cy_Platform_Init();
 
     return FLASH_DEV_NAME.Initialize(NULL);
 }
