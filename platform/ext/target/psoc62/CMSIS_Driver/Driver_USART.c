@@ -70,35 +70,6 @@ static const ARM_USART_CAPABILITIES DriverCapabilities = {
     0  /* Reserved */
 };
 
-/* Default config */
-#define DEF_CONFIG { \
-    .uartMode = CY_SCB_UART_STANDARD, \
-    .oversample = 8, \
-    .dataWidth = 8, \
-    .enableMsbFirst = false, \
-    .stopBits = CY_SCB_UART_STOP_BITS_1, \
-    .parity = CY_SCB_UART_PARITY_NONE, \
-    .enableInputFilter = false, \
-    .dropOnParityError = false, \
-    .dropOnFrameError = false, \
-    .enableMutliProcessorMode = false, \
-    .receiverAddress = 0, \
-    .receiverAddressMask = 0, \
-    .acceptAddrInFifo = false, \
-    .irdaInvertRx = false, \
-    .irdaEnableLowPowerReceiver = false, \
-    .smartCardRetryOnNack = false, \
-    .enableCts = false, \
-    .ctsPolarity = CY_SCB_UART_ACTIVE_LOW, \
-    .rtsRxFifoLevel = 0, \
-    .rtsPolarity = CY_SCB_UART_ACTIVE_LOW, \
-    .breakWidth = 11, \
-    .rxFifoTriggerLevel = 63, \
-    .rxFifoIntEnableMask = 0, \
-    .txFifoTriggerLevel = 63, \
-    .txFifoIntEnableMask = 0, \
-};
-
 static ARM_DRIVER_VERSION ARM_USART_GetVersion(void)
 {
     return DriverVersion;
@@ -134,7 +105,7 @@ static int32_t ARM_USARTx_Initialize(UARTx_Resources* uart_dev)
     cy_en_scb_uart_status_t retval;
 
 #ifdef CY_SYSTEM_CPU_CM0P
-    cy_stc_scb_uart_config_t config = DEF_CONFIG;
+    cy_stc_scb_uart_config_t config = KITPROG_UART_config;
 
     /* Assign and configure pins, assign clock divider */
     retval = Cy_SCB_UART_Init(uart_dev->base, &config, NULL);
@@ -348,7 +319,7 @@ static void USARTx_SetFlowControl(uint32_t control,
 static int32_t ARM_USARTx_Control(UARTx_Resources* uart_dev, uint32_t control,
                                   uint32_t arg)
 {
-    cy_stc_scb_uart_config_t config = DEF_CONFIG;
+    cy_stc_scb_uart_config_t config = KITPROG_UART_config;
     cy_en_scb_uart_status_t cy_retval;
     uint32_t retval;
 
