@@ -50,12 +50,14 @@ struct ppu_resources {
     } master_cfg;
     union slave_config {
         struct ms_ppu_config ms_ppu;
-        /* TODO also need slave addr and size for MS_PPU_PR */
         cy_stc_ppu_prog_cfg_t ppu_pr;
         cy_stc_ppu_gr_cfg_t ppu_gr;
         cy_stc_ppu_sl_cfg_t gr_ppu_sl;
         cy_stc_ppu_rg_cfg_t gr_ppu_rg;
     } slave_cfg;
+    /* These are only applicable when ppu_type is MS_PPU_PR */
+    uint32_t slave_address;
+    cy_en_prot_size_t slave_region_size;
 };
 
 /* Affect all 8 subregions */
@@ -77,11 +79,11 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
                                              ppu_dev->master_cfg.ms_ppu.secure);
         if (ret != CY_PROT_SUCCESS)
             return ret;
-        /* TODO Sort out address and region size
-        ret = Cy_Prot_ConfigPpuProgSlaveAddr(ppu_dev->ppu.ms_ppu_pr);
+        ret = Cy_Prot_ConfigPpuProgSlaveAddr(ppu_dev->ppu.ms_ppu_pr,
+                                             ppu_dev->slave_address,
+                                             ppu_dev->slave_region_size);
         if (ret != CY_PROT_SUCCESS)
             return ret;
-        */
         ret = Cy_Prot_ConfigPpuProgSlaveAtt(ppu_dev->ppu.ms_ppu_pr,
                                             ppu_dev->slave_cfg.ms_ppu.pcMask,
                                             ppu_dev->slave_cfg.ms_ppu.user,
@@ -111,6 +113,8 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
         break;
 #endif
 
+/* This block is only needed if there are PPU_PR PPUs on the board */
+#if defined(PERI_PPU_PR0)
     case PPU_PR:
         ret = Cy_Prot_ConfigPpuProgMasterStruct(ppu_dev->ppu.ppu_pr,
                                                 &ppu_dev->master_cfg.ppu_pr);
@@ -125,7 +129,10 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
             return ret;
         ret = Cy_Prot_EnablePpuProgSlaveStruct(ppu_dev->ppu.ppu_pr);
         break;
+#endif
 
+/* This block is only needed if there are PPU_GR PPUs on the board */
+#if defined(PERI_PPU_GR0)
     case PPU_GR:
         ret = Cy_Prot_ConfigPpuFixedGrMasterStruct(ppu_dev->ppu.ppu_gr,
                                                    &ppu_dev->master_cfg.ppu_gr);
@@ -140,7 +147,10 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
             return ret;
         ret = Cy_Prot_EnablePpuFixedGrSlaveStruct(ppu_dev->ppu.ppu_gr);
         break;
+#endif
 
+/* This block is only needed if there are GR_PPU_SL PPUs on the board */
+#if defined(PERI_GR_PPU_SL_CRYPTO)
     case GR_PPU_SL:
         ret = Cy_Prot_ConfigPpuFixedSlMasterStruct(ppu_dev->ppu.gr_ppu_sl,
                                                    &ppu_dev->master_cfg.gr_ppu_sl);
@@ -155,7 +165,10 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
             return ret;
         ret = Cy_Prot_EnablePpuFixedSlSlaveStruct(ppu_dev->ppu.gr_ppu_sl);
         break;
+#endif
 
+/* This block is only needed if there are GR_PPU_RG PPUs on the board */
+#if defined(PERI_GR_PPU_RG_IPC_STRUCT0)
     case GR_PPU_RG:
         ret = Cy_Prot_ConfigPpuFixedRgMasterStruct(ppu_dev->ppu.gr_ppu_rg,
                                                    &ppu_dev->master_cfg.gr_ppu_rg);
@@ -170,6 +183,7 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
             return ret;
         ret = Cy_Prot_EnablePpuFixedRgSlaveStruct(ppu_dev->ppu.gr_ppu_rg);
         break;
+#endif
 
     default:
         printf("Unexpected peripheral type %d\n", ppu_dev->ppu_type);
@@ -184,6 +198,8 @@ cy_en_prot_status_t PPU_Configure(const PPU_Resources *ppu_dev)
     .ppu = {.ms_ppu_pr = PERI_PPU_##N}, \
     .master_cfg.ms_ppu = PPU_##N##_MASTER_CONFIG, \
     .slave_cfg.ms_ppu = PPU_##N##_SLAVE_CONFIG, \
+    .slave_address = PPU_##N##_SLAVE_ADDRESS, \
+    .slave_region_size = PPU_##N##_SLAVE_REGION_SIZE, \
 };
 
 #define DEFINE_MS_PPU_FX(N) const PPU_Resources N##_PPU_Resources = { \
