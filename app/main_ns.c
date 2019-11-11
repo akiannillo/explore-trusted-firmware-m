@@ -93,7 +93,7 @@ static void tfm_ns_multi_core_boot(void)
         }
     }
 
-    mailbox_init(&ns_mailbox_queue);
+    tfm_ns_mailbox_init(&ns_mailbox_queue);
 }
 #endif
 

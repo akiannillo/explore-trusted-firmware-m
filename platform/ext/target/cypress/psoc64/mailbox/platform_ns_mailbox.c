@@ -27,7 +27,7 @@ static void mailbox_ipc_init(void)
                                 0, IPC_RX_INT_MASK);
 }
 
-int32_t mailbox_notify_peer(void)
+int32_t tfm_ns_mailbox_hal_notify_peer(void)
 {
     cy_en_ipcdrv_status_t status;
 
@@ -57,7 +57,7 @@ static int32_t mailbox_sema_init(void)
     return PLATFORM_MAILBOX_SUCCESS;
 }
 
-int32_t mailbox_hal_init(struct ns_mailbox_queue_t *queue)
+int32_t tfm_ns_mailbox_hal_init(struct ns_mailbox_queue_t *queue)
 {
     uint32_t stage;
 
@@ -106,14 +106,14 @@ int32_t mailbox_hal_init(struct ns_mailbox_queue_t *queue)
     return MAILBOX_SUCCESS;
 }
 
-void mailbox_enter_critical(void)
+void tfm_ns_mailbox_hal_enter_critical(void)
 {
     while (Cy_IPC_Sema_Set(MAILBOX_SEMAPHORE_NUM, false) !=
            CY_IPC_SEMA_SUCCESS) {
     }
 }
 
-void mailbox_exit_critical(void)
+void tfm_ns_mailbox_hal_exit_critical(void)
 {
     while (Cy_IPC_Sema_Clear(MAILBOX_SEMAPHORE_NUM, false) !=
            CY_IPC_SEMA_SUCCESS) {

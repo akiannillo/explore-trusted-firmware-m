@@ -68,12 +68,12 @@ static uint8_t acquire_empty_slot(const struct ns_mailbox_queue_t *queue)
     uint8_t idx;
     mailbox_queue_status_t status;
 
-    mailbox_enter_critical();
+    tfm_ns_mailbox_hal_enter_critical();
     status = queue->empty_slots;
 
     if (!status) {
         /* No empty slot */
-        mailbox_exit_critical();
+        tfm_ns_mailbox_hal_exit_critical();
         return NUM_MAILBOX_QUEUE_SLOT;
     }
 
@@ -85,14 +85,14 @@ static uint8_t acquire_empty_slot(const struct ns_mailbox_queue_t *queue)
 
     clear_queue_slot_empty(idx);
 
-    mailbox_exit_critical();
+    tfm_ns_mailbox_hal_exit_critical();
 
     return idx;
 }
 
-mailbox_msg_handle_t mailbox_tx_client_call_req(uint32_t call_type,
-                                    const struct psa_client_params_t *params,
-                                    int32_t client_id)
+mailbox_msg_handle_t tfm_ns_mailbox_tx_client_req(uint32_t call_type,
+                                       const struct psa_client_params_t *params,
+                                       int32_t client_id)
 {
     uint8_t idx;
     struct mailbox_msg_t *msg_ptr;
@@ -120,17 +120,17 @@ mailbox_msg_handle_t mailbox_tx_client_call_req(uint32_t call_type,
 
     get_mailbox_msg_handle(idx, &handle);
 
-    mailbox_enter_critical();
+    tfm_ns_mailbox_hal_enter_critical();
     set_queue_slot_pend(idx);
-    mailbox_exit_critical();
+    tfm_ns_mailbox_hal_exit_critical();
 
-    mailbox_notify_peer();
+    tfm_ns_mailbox_hal_notify_peer();
 
     return handle;
 }
 
-int32_t mailbox_rx_client_call_reply(mailbox_msg_handle_t handle,
-                                     int32_t *reply)
+int32_t tfm_ns_mailbox_rx_client_reply(mailbox_msg_handle_t handle,
+                                       int32_t *reply)
 {
     uint8_t idx;
     int32_t ret;
@@ -150,15 +150,15 @@ int32_t mailbox_rx_client_call_reply(mailbox_msg_handle_t handle,
 
     *reply = mailbox_queue_ptr->queue[idx].reply.return_val;
 
-    mailbox_enter_critical();
+    tfm_ns_mailbox_hal_enter_critical();
     set_queue_slot_empty(idx);
     clear_queue_slot_replied(idx);
-    mailbox_exit_critical();
+    tfm_ns_mailbox_hal_exit_critical();
 
     return MAILBOX_SUCCESS;
 }
 
-bool mailbox_is_msg_replied(mailbox_msg_handle_t handle)
+bool tfm_ns_mailbox_is_msg_replied(mailbox_msg_handle_t handle)
 {
     uint8_t idx;
     int32_t ret;
@@ -177,9 +177,9 @@ bool mailbox_is_msg_replied(mailbox_msg_handle_t handle)
         return false;
     }
 
-    mailbox_enter_critical();
+    tfm_ns_mailbox_hal_enter_critical();
     status = mailbox_queue_ptr->replied_slots;
-    mailbox_exit_critical();
+    tfm_ns_mailbox_hal_exit_critical();
 
     if (status & (1 << idx)) {
         return true;
@@ -188,7 +188,7 @@ bool mailbox_is_msg_replied(mailbox_msg_handle_t handle)
     return false;
 }
 
-int32_t mailbox_init(struct ns_mailbox_queue_t *queue)
+int32_t tfm_ns_mailbox_init(struct ns_mailbox_queue_t *queue)
 {
     int32_t ret;
 
@@ -197,7 +197,6 @@ int32_t mailbox_init(struct ns_mailbox_queue_t *queue)
     }
 
     /*
-     * FIXME
      * Further verification of mailbox queue address may be required according
      * to non-secure memory assignment.
      */
@@ -211,7 +210,7 @@ int32_t mailbox_init(struct ns_mailbox_queue_t *queue)
     mailbox_queue_ptr = queue;
 
     /* Platform specific initialization. */
-    ret = mailbox_hal_init(queue);
+    ret = tfm_ns_mailbox_hal_init(queue);
 
     return ret;
 }

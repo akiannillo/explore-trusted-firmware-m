@@ -41,7 +41,7 @@ extern void *ns_lock_handle;
 
 static void mailbox_wait_reply(mailbox_msg_handle_t handle)
 {
-    while (!mailbox_is_msg_replied(handle)) {};
+    while (!tfm_ns_mailbox_is_msg_replied(handle)) {};
 }
 
 /**** API functions ****/
@@ -58,8 +58,8 @@ uint32_t psa_framework_version(void)
         return PSA_VERSION_NONE;
     }
 
-    handle = mailbox_tx_client_call_req(MAILBOX_PSA_FRAMEWORK_VERSION, &params,
-                                        NON_SECURE_CLIENT_ID);
+    handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_FRAMEWORK_VERSION,
+                                          &params, NON_SECURE_CLIENT_ID);
     if (handle < 0) {
         os_wrapper_mutex_release(ns_lock_handle);
         return PSA_VERSION_NONE;
@@ -67,7 +67,7 @@ uint32_t psa_framework_version(void)
 
     mailbox_wait_reply(handle);
 
-    ret = mailbox_rx_client_call_reply(handle, (int32_t *)&version);
+    ret = tfm_ns_mailbox_rx_client_reply(handle, (int32_t *)&version);
     if (ret != MAILBOX_SUCCESS) {
         version = PSA_VERSION_NONE;
     }
@@ -93,8 +93,8 @@ uint32_t psa_version(uint32_t sid)
         return PSA_VERSION_NONE;
     }
 
-    handle = mailbox_tx_client_call_req(MAILBOX_PSA_VERSION, &params,
-                                        NON_SECURE_CLIENT_ID);
+    handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_VERSION, &params,
+                                          NON_SECURE_CLIENT_ID);
     if (handle < 0) {
         os_wrapper_mutex_release(ns_lock_handle);
         return PSA_VERSION_NONE;
@@ -102,7 +102,7 @@ uint32_t psa_version(uint32_t sid)
 
     mailbox_wait_reply(handle);
 
-    ret = mailbox_rx_client_call_reply(handle, (int32_t *)&version);
+    ret = tfm_ns_mailbox_rx_client_reply(handle, (int32_t *)&version);
     if (ret != MAILBOX_SUCCESS) {
         version = PSA_VERSION_NONE;
     }
@@ -129,8 +129,8 @@ psa_handle_t psa_connect(uint32_t sid, uint32_t minor_version)
         return PSA_NULL_HANDLE;
     }
 
-    handle = mailbox_tx_client_call_req(MAILBOX_PSA_CONNECT, &params,
-                                        NON_SECURE_CLIENT_ID);
+    handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CONNECT, &params,
+                                          NON_SECURE_CLIENT_ID);
     if (handle < 0) {
         os_wrapper_mutex_release(ns_lock_handle);
         return PSA_NULL_HANDLE;
@@ -138,7 +138,7 @@ psa_handle_t psa_connect(uint32_t sid, uint32_t minor_version)
 
     mailbox_wait_reply(handle);
 
-    ret = mailbox_rx_client_call_reply(handle, (int32_t *)&psa_handle);
+    ret = tfm_ns_mailbox_rx_client_reply(handle, (int32_t *)&psa_handle);
     if (ret != MAILBOX_SUCCESS) {
         psa_handle = PSA_NULL_HANDLE;
     }
@@ -171,8 +171,8 @@ psa_status_t psa_call(psa_handle_t handle, int32_t type,
         return PSA_ERROR_GENERIC_ERROR;
     }
 
-    msg_handle = mailbox_tx_client_call_req(MAILBOX_PSA_CALL, &params,
-                                            NON_SECURE_CLIENT_ID);
+    msg_handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CALL, &params,
+                                              NON_SECURE_CLIENT_ID);
     if (msg_handle < 0) {
         os_wrapper_mutex_release(ns_lock_handle);
         return PSA_INTER_CORE_COMM_ERR;
@@ -180,7 +180,7 @@ psa_status_t psa_call(psa_handle_t handle, int32_t type,
 
     mailbox_wait_reply(msg_handle);
 
-    ret = mailbox_rx_client_call_reply(msg_handle, (int32_t *)&status);
+    ret = tfm_ns_mailbox_rx_client_reply(msg_handle, (int32_t *)&status);
     if (ret != MAILBOX_SUCCESS) {
         status = PSA_INTER_CORE_COMM_ERR;
     }
@@ -205,8 +205,8 @@ void psa_close(psa_handle_t handle)
         return;
     }
 
-    msg_handle = mailbox_tx_client_call_req(MAILBOX_PSA_CLOSE, &params,
-                                            NON_SECURE_CLIENT_ID);
+    msg_handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CLOSE, &params,
+                                              NON_SECURE_CLIENT_ID);
     if (msg_handle < 0) {
         os_wrapper_mutex_release(ns_lock_handle);
         return;
@@ -214,7 +214,7 @@ void psa_close(psa_handle_t handle)
 
     mailbox_wait_reply(msg_handle);
 
-    (void)mailbox_rx_client_call_reply(msg_handle, &reply);
+    (void)tfm_ns_mailbox_rx_client_reply(msg_handle, &reply);
 
     os_wrapper_mutex_release(ns_lock_handle);
 }
