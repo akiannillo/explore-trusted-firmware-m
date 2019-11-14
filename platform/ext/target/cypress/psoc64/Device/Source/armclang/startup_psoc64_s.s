@@ -15,9 +15,9 @@
 ; * limitations under the License.
 ; */
 ;
-; This file is derivative of CMSIS V5.01 startup_ARMv8MML.s
-; Git SHA: 8a1d9d6ee18b143ae5befefa14d89fb5b3f99c75
-
+; adapted from Cypress PSoC64 Peripheral-Driver-Library v1.3.1
+; startup_psoc6_02_cm0plus.s
+;
 ;/*
 ;//-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 ;*/
@@ -45,7 +45,7 @@ CY_NMI_HANLDER_ADDR    EQU    0x0000000D
                 IMPORT  HardFault_Handler
                 IMPORT  SVC_Handler
                 IMPORT  PendSV_Handler
-                IMPORT  NvicMux9_IRQHandler
+                IMPORT  NvicMux7_IRQHandler
                 IMPORT  Cy_SysIpcPipeIsrCm0
 
 __Vectors       ;Core Interrupts
@@ -66,39 +66,23 @@ __Vectors       ;Core Interrupts
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
 
-                ; External interrupts               Description
-                DCD     NvicMux0_IRQHandler       ; CM0+ NVIC Mux input 0
+                ; External interrupts                           Description
+                DCD     NvicMux0_IRQHandler                   ; CPU User Interrupt #0
                 DCD     Cy_SysIpcPipeIsrCm0
-                DCD     NvicMux2_IRQHandler       ; CM0+ NVIC Mux input 2
-                DCD     NvicMux3_IRQHandler       ; CM0+ NVIC Mux input 3
-                DCD     NvicMux4_IRQHandler       ; CM0+ NVIC Mux input 4
-                DCD     NvicMux5_IRQHandler       ; CM0+ NVIC Mux input 5
-                DCD     NvicMux6_IRQHandler       ; CM0+ NVIC Mux input 6
-                DCD     NvicMux7_IRQHandler       ; CM0+ NVIC Mux input 7
-                DCD     NvicMux8_IRQHandler       ; CM0+ NVIC Mux input 8
-                DCD     NvicMux9_IRQHandler       ; CM0+ NVIC Mux input 9
-                DCD     NvicMux10_IRQHandler      ; CM0+ NVIC Mux input 10
-                DCD     NvicMux11_IRQHandler      ; CM0+ NVIC Mux input 11
-                DCD     NvicMux12_IRQHandler      ; CM0+ NVIC Mux input 12
-                DCD     NvicMux13_IRQHandler      ; CM0+ NVIC Mux input 13
-                DCD     NvicMux14_IRQHandler      ; CM0+ NVIC Mux input 14
-                DCD     NvicMux15_IRQHandler      ; CM0+ NVIC Mux input 15
-                DCD     NvicMux16_IRQHandler      ; CM0+ NVIC Mux input 16
-                DCD     NvicMux17_IRQHandler      ; CM0+ NVIC Mux input 17
-                DCD     NvicMux18_IRQHandler      ; CM0+ NVIC Mux input 18
-                DCD     NvicMux19_IRQHandler      ; CM0+ NVIC Mux input 19
-                DCD     NvicMux20_IRQHandler      ; CM0+ NVIC Mux input 20
-                DCD     NvicMux21_IRQHandler      ; CM0+ NVIC Mux input 21
-                DCD     NvicMux22_IRQHandler      ; CM0+ NVIC Mux input 22
-                DCD     NvicMux23_IRQHandler      ; CM0+ NVIC Mux input 23
-                DCD     NvicMux24_IRQHandler      ; CM0+ NVIC Mux input 24
-                DCD     NvicMux25_IRQHandler      ; CM0+ NVIC Mux input 25
-                DCD     NvicMux26_IRQHandler      ; CM0+ NVIC Mux input 26
-                DCD     NvicMux27_IRQHandler      ; CM0+ NVIC Mux input 27
-                DCD     NvicMux28_IRQHandler      ; CM0+ NVIC Mux input 28
-                DCD     NvicMux29_IRQHandler      ; CM0+ NVIC Mux input 29
-                DCD     NvicMux30_IRQHandler      ; CM0+ NVIC Mux input 30
-                DCD     NvicMux31_IRQHandler      ; CM0+ NVIC Mux input 31
+                DCD     NvicMux2_IRQHandler                   ; CPU User Interrupt #2
+                DCD     NvicMux3_IRQHandler                   ; CPU User Interrupt #3
+                DCD     NvicMux4_IRQHandler                   ; CPU User Interrupt #4
+                DCD     NvicMux5_IRQHandler                   ; CPU User Interrupt #5
+                DCD     NvicMux6_IRQHandler                   ; CPU User Interrupt #6
+                DCD     NvicMux7_IRQHandler                   ; CPU User Interrupt #7
+                DCD     Internal0_IRQHandler                  ; Internal SW Interrupt #0
+                DCD     Internal1_IRQHandler                  ; Internal SW Interrupt #1
+                DCD     Internal2_IRQHandler                  ; Internal SW Interrupt #2
+                DCD     Internal3_IRQHandler                  ; Internal SW Interrupt #3
+                DCD     Internal4_IRQHandler                  ; Internal SW Interrupt #4
+                DCD     Internal5_IRQHandler                  ; Internal SW Interrupt #5
+                DCD     Internal6_IRQHandler                  ; Internal SW Interrupt #6
+                DCD     Internal7_IRQHandler                  ; Internal SW Interrupt #7
 
 __Vectors_End
 
@@ -147,30 +131,14 @@ $handler_name   PROC
                 Default_Handler NvicMux4_IRQHandler
                 Default_Handler NvicMux5_IRQHandler
                 Default_Handler NvicMux6_IRQHandler
-                Default_Handler NvicMux7_IRQHandler
-                Default_Handler NvicMux8_IRQHandler
-                Default_Handler NvicMux10_IRQHandler
-                Default_Handler NvicMux11_IRQHandler
-                Default_Handler NvicMux12_IRQHandler
-                Default_Handler NvicMux13_IRQHandler
-                Default_Handler NvicMux14_IRQHandler
-                Default_Handler NvicMux15_IRQHandler
-                Default_Handler NvicMux16_IRQHandler
-                Default_Handler NvicMux17_IRQHandler
-                Default_Handler NvicMux18_IRQHandler
-                Default_Handler NvicMux19_IRQHandler
-                Default_Handler NvicMux20_IRQHandler
-                Default_Handler NvicMux21_IRQHandler
-                Default_Handler NvicMux22_IRQHandler
-                Default_Handler NvicMux23_IRQHandler
-                Default_Handler NvicMux24_IRQHandler
-                Default_Handler NvicMux25_IRQHandler
-                Default_Handler NvicMux26_IRQHandler
-                Default_Handler NvicMux27_IRQHandler
-                Default_Handler NvicMux28_IRQHandler
-                Default_Handler NvicMux29_IRQHandler
-                Default_Handler NvicMux30_IRQHandler
-                Default_Handler NvicMux31_IRQHandler
+                Default_Handler Internal0_IRQHandler
+                Default_Handler Internal1_IRQHandler
+                Default_Handler Internal2_IRQHandler
+                Default_Handler Internal3_IRQHandler
+                Default_Handler Internal4_IRQHandler
+                Default_Handler Internal5_IRQHandler
+                Default_Handler Internal6_IRQHandler
+                Default_Handler Internal7_IRQHandler
 
                 ALIGN
 

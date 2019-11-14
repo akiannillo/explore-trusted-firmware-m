@@ -17,7 +17,8 @@
  * limitations under the License.
  */
 
-/* adapted from Cypress-Peripheral-Driver-Library-v3.0.1 startup_psoc63_cm4.S*/
+/* adapted from Cypress PSoC64 Peripheral-Driver-Library v1.3.1
+   startup_psoc6_02_cm4.S*/
 
 #include "region_defs.h"
 
@@ -72,8 +73,6 @@ __Vectors:
     .long    srss_interrupt_mcwdt_1_IRQHandler       /* Multi Counter Watchdog Timer interrupt */
     .long    srss_interrupt_backup_IRQHandler        /* Backup domain interrupt */
     .long    srss_interrupt_IRQHandler               /* Other combined Interrupts for SRSS (LVD, WDT, CLKCAL) */
-    .long    pass_interrupt_ctbs_IRQHandler          /* CTBm Interrupt (all CTBms) */
-    .long    bless_interrupt_IRQHandler              /* Bluetooth Radio interrupt */
     .long    cpuss_interrupts_ipc_0_IRQHandler       /* CPUSS Inter Process Communication Interrupt #0 */
     .long    cpuss_interrupts_ipc_1_IRQHandler       /* CPUSS Inter Process Communication Interrupt #1 */
     .long    cpuss_interrupts_ipc_2_IRQHandler       /* CPUSS Inter Process Communication Interrupt #2 */
@@ -98,7 +97,15 @@ __Vectors:
     .long    scb_5_interrupt_IRQHandler              /* Serial Communication Block #5 */
     .long    scb_6_interrupt_IRQHandler              /* Serial Communication Block #6 */
     .long    scb_7_interrupt_IRQHandler              /* Serial Communication Block #7 */
+    .long    scb_9_interrupt_IRQHandler              /* Serial Communication Block #9 */
+    .long    scb_10_interrupt_IRQHandler             /* Serial Communication Block #10 */
+    .long    scb_11_interrupt_IRQHandler             /* Serial Communication Block #11 */
+    .long    scb_12_interrupt_IRQHandler             /* Serial Communication Block #12 */
     .long    csd_interrupt_IRQHandler                /* CSD (Capsense) interrupt */
+    .long    cpuss_interrupts_dmac_0_IRQHandler      /* CPUSS DMAC, Channel #0 */
+    .long    cpuss_interrupts_dmac_1_IRQHandler      /* CPUSS DMAC, Channel #1 */
+    .long    cpuss_interrupts_dmac_2_IRQHandler      /* CPUSS DMAC, Channel #2 */
+    .long    cpuss_interrupts_dmac_3_IRQHandler      /* CPUSS DMAC, Channel #3 */
     .long    cpuss_interrupts_dw0_0_IRQHandler       /* CPUSS DataWire #0, Channel #0 */
     .long    cpuss_interrupts_dw0_1_IRQHandler       /* CPUSS DataWire #0, Channel #1 */
     .long    cpuss_interrupts_dw0_2_IRQHandler       /* CPUSS DataWire #0, Channel #2 */
@@ -115,6 +122,19 @@ __Vectors:
     .long    cpuss_interrupts_dw0_13_IRQHandler      /* CPUSS DataWire #0, Channel #13 */
     .long    cpuss_interrupts_dw0_14_IRQHandler      /* CPUSS DataWire #0, Channel #14 */
     .long    cpuss_interrupts_dw0_15_IRQHandler      /* CPUSS DataWire #0, Channel #15 */
+    .long    cpuss_interrupts_dw0_16_IRQHandler      /* CPUSS DataWire #0, Channel #16 */
+    .long    cpuss_interrupts_dw0_17_IRQHandler      /* CPUSS DataWire #0, Channel #17 */
+    .long    cpuss_interrupts_dw0_18_IRQHandler      /* CPUSS DataWire #0, Channel #18 */
+    .long    cpuss_interrupts_dw0_19_IRQHandler      /* CPUSS DataWire #0, Channel #19 */
+    .long    cpuss_interrupts_dw0_20_IRQHandler      /* CPUSS DataWire #0, Channel #20 */
+    .long    cpuss_interrupts_dw0_21_IRQHandler      /* CPUSS DataWire #0, Channel #21 */
+    .long    cpuss_interrupts_dw0_22_IRQHandler      /* CPUSS DataWire #0, Channel #22 */
+    .long    cpuss_interrupts_dw0_23_IRQHandler      /* CPUSS DataWire #0, Channel #23 */
+    .long    cpuss_interrupts_dw0_24_IRQHandler      /* CPUSS DataWire #0, Channel #24 */
+    .long    cpuss_interrupts_dw0_25_IRQHandler      /* CPUSS DataWire #0, Channel #25 */
+    .long    cpuss_interrupts_dw0_26_IRQHandler      /* CPUSS DataWire #0, Channel #26 */
+    .long    cpuss_interrupts_dw0_27_IRQHandler      /* CPUSS DataWire #0, Channel #27 */
+    .long    cpuss_interrupts_dw0_28_IRQHandler      /* CPUSS DataWire #0, Channel #28 */
     .long    cpuss_interrupts_dw1_0_IRQHandler       /* CPUSS DataWire #1, Channel #0 */
     .long    cpuss_interrupts_dw1_1_IRQHandler       /* CPUSS DataWire #1, Channel #1 */
     .long    cpuss_interrupts_dw1_2_IRQHandler       /* CPUSS DataWire #1, Channel #2 */
@@ -131,10 +151,24 @@ __Vectors:
     .long    cpuss_interrupts_dw1_13_IRQHandler      /* CPUSS DataWire #1, Channel #13 */
     .long    cpuss_interrupts_dw1_14_IRQHandler      /* CPUSS DataWire #1, Channel #14 */
     .long    cpuss_interrupts_dw1_15_IRQHandler      /* CPUSS DataWire #1, Channel #15 */
+    .long    cpuss_interrupts_dw1_16_IRQHandler      /* CPUSS DataWire #1, Channel #16 */
+    .long    cpuss_interrupts_dw1_17_IRQHandler      /* CPUSS DataWire #1, Channel #17 */
+    .long    cpuss_interrupts_dw1_18_IRQHandler      /* CPUSS DataWire #1, Channel #18 */
+    .long    cpuss_interrupts_dw1_19_IRQHandler      /* CPUSS DataWire #1, Channel #19 */
+    .long    cpuss_interrupts_dw1_20_IRQHandler      /* CPUSS DataWire #1, Channel #20 */
+    .long    cpuss_interrupts_dw1_21_IRQHandler      /* CPUSS DataWire #1, Channel #21 */
+    .long    cpuss_interrupts_dw1_22_IRQHandler      /* CPUSS DataWire #1, Channel #22 */
+    .long    cpuss_interrupts_dw1_23_IRQHandler      /* CPUSS DataWire #1, Channel #23 */
+    .long    cpuss_interrupts_dw1_24_IRQHandler      /* CPUSS DataWire #1, Channel #24 */
+    .long    cpuss_interrupts_dw1_25_IRQHandler      /* CPUSS DataWire #1, Channel #25 */
+    .long    cpuss_interrupts_dw1_26_IRQHandler      /* CPUSS DataWire #1, Channel #26 */
+    .long    cpuss_interrupts_dw1_27_IRQHandler      /* CPUSS DataWire #1, Channel #27 */
+    .long    cpuss_interrupts_dw1_28_IRQHandler      /* CPUSS DataWire #1, Channel #28 */
     .long    cpuss_interrupts_fault_0_IRQHandler     /* CPUSS Fault Structure Interrupt #0 */
     .long    cpuss_interrupts_fault_1_IRQHandler     /* CPUSS Fault Structure Interrupt #1 */
     .long    cpuss_interrupt_crypto_IRQHandler       /* CRYPTO Accelerator Interrupt */
-    .long    Cy_Flash_ResumeIrqHandler
+    .long    Cy_Flash_ResumeIrqHandler               /* FLASH Macro Interrupt */
+    .long    cpuss_interrupts_cm4_fp_IRQHandler      /* Floating Point operation fault */
     .long    cpuss_interrupts_cm0_cti_0_IRQHandler   /* CM0+ CTI #0 */
     .long    cpuss_interrupts_cm0_cti_1_IRQHandler   /* CM0+ CTI #1 */
     .long    cpuss_interrupts_cm4_cti_0_IRQHandler   /* CM4 CTI #0 */
@@ -171,31 +205,19 @@ __Vectors:
     .long    tcpwm_1_interrupts_21_IRQHandler        /* TCPWM #1, Counter #21 */
     .long    tcpwm_1_interrupts_22_IRQHandler        /* TCPWM #1, Counter #22 */
     .long    tcpwm_1_interrupts_23_IRQHandler        /* TCPWM #1, Counter #23 */
-    .long    udb_interrupts_0_IRQHandler             /* UDB Interrupt #0 */
-    .long    udb_interrupts_1_IRQHandler             /* UDB Interrupt #1 */
-    .long    udb_interrupts_2_IRQHandler             /* UDB Interrupt #2 */
-    .long    udb_interrupts_3_IRQHandler             /* UDB Interrupt #3 */
-    .long    udb_interrupts_4_IRQHandler             /* UDB Interrupt #4 */
-    .long    udb_interrupts_5_IRQHandler             /* UDB Interrupt #5 */
-    .long    udb_interrupts_6_IRQHandler             /* UDB Interrupt #6 */
-    .long    udb_interrupts_7_IRQHandler             /* UDB Interrupt #7 */
-    .long    udb_interrupts_8_IRQHandler             /* UDB Interrupt #8 */
-    .long    udb_interrupts_9_IRQHandler             /* UDB Interrupt #9 */
-    .long    udb_interrupts_10_IRQHandler            /* UDB Interrupt #10 */
-    .long    udb_interrupts_11_IRQHandler            /* UDB Interrupt #11 */
-    .long    udb_interrupts_12_IRQHandler            /* UDB Interrupt #12 */
-    .long    udb_interrupts_13_IRQHandler            /* UDB Interrupt #13 */
-    .long    udb_interrupts_14_IRQHandler            /* UDB Interrupt #14 */
-    .long    udb_interrupts_15_IRQHandler            /* UDB Interrupt #15 */
     .long    pass_interrupt_sar_IRQHandler           /* SAR ADC interrupt */
-    .long    audioss_interrupt_i2s_IRQHandler        /* I2S Audio interrupt */
-    .long    audioss_interrupt_pdm_IRQHandler        /* PDM/PCM Audio interrupt */
+    .long    audioss_0_interrupt_i2s_IRQHandler      /* I2S0 Audio interrupt */
+    .long    audioss_0_interrupt_pdm_IRQHandler      /* PDM0/PCM0 Audio interrupt */
+    .long    audioss_1_interrupt_i2s_IRQHandler      /* I2S1 Audio interrupt */
     .long    profile_interrupt_IRQHandler            /* Energy Profiler interrupt */
     .long    smif_interrupt_IRQHandler               /* Serial Memory Interface interrupt */
     .long    usb_interrupt_hi_IRQHandler             /* USB Interrupt */
     .long    usb_interrupt_med_IRQHandler            /* USB Interrupt */
     .long    usb_interrupt_lo_IRQHandler             /* USB Interrupt */
-    .long    pass_interrupt_dacs_IRQHandler          /* Consolidated interrrupt for all DACs */
+    .long    sdhc_0_interrupt_wakeup_IRQHandler      /* SDIO wakeup interrupt for mxsdhc */
+    .long    sdhc_0_interrupt_general_IRQHandler     /* Consolidated interrupt for mxsdhc for everything else */
+    .long    sdhc_1_interrupt_wakeup_IRQHandler      /* EEMC wakeup interrupt for mxsdhc, not used */
+    .long    sdhc_1_interrupt_general_IRQHandler     /* Consolidated interrupt for mxsdhc for everything else */
 
 
     .size    __Vectors, . - __Vectors
@@ -224,8 +246,8 @@ __ramVectors:
     .weak   Cy_OnResetUser
     .func   Cy_OnResetUser, Cy_OnResetUser
     .type   Cy_OnResetUser, %function
-Cy_OnResetUser:
 
+Cy_OnResetUser:
     bx lr
     .size   Cy_OnResetUser, . - Cy_OnResetUser
     .endfunc
@@ -234,6 +256,7 @@ Cy_OnResetUser:
     .global Cy_SaveIRQ
     .func   Cy_SaveIRQ, Cy_SaveIRQ
     .type   Cy_SaveIRQ, %function
+
 Cy_SaveIRQ:
     mrs r0, PRIMASK
     cpsid i
@@ -245,6 +268,7 @@ Cy_SaveIRQ:
     .global Cy_RestoreIRQ
     .func   Cy_RestoreIRQ, Cy_RestoreIRQ
     .type   Cy_RestoreIRQ, %function
+
 Cy_RestoreIRQ:
     msr PRIMASK, r0
     bx lr
@@ -254,8 +278,8 @@ Cy_RestoreIRQ:
     /* Reset handler */
     .weak    Reset_Handler
     .type    Reset_Handler, %function
-Reset_Handler:
 
+Reset_Handler:
     bl Cy_OnResetUser
     cpsid i
 
@@ -327,7 +351,7 @@ Reset_Handler:
  *  latter.
  *
  *  Define macro __STARTUP_CLEAR_BSS_MULTIPLE to choose the former.
- *  Otherwise efine macro __STARTUP_CLEAR_BSS to choose the later.
+ *  Otherwise define macro __STARTUP_CLEAR_BSS to choose the later.
  */
 #ifdef __STARTUP_CLEAR_BSS_MULTIPLE
 /*  Multiple sections scheme.
@@ -411,6 +435,7 @@ Reset_Handler:
     .thumb_func
     .weak    Default_Handler
     .type    Default_Handler, %function
+
 Default_Handler:
     b    .
     .size    Default_Handler, . - Default_Handler
@@ -418,11 +443,12 @@ Default_Handler:
 
     .weak    Cy_SysLib_FaultHandler
     .type    Cy_SysLib_FaultHandler, %function
+
 Cy_SysLib_FaultHandler:
     b    .
     .size    Cy_SysLib_FaultHandler, . - Cy_SysLib_FaultHandler
-
     .type Fault_Handler, %function
+
 Fault_Handler:
     /* Storing LR content for Creator call stack trace */
     push {LR}
@@ -487,12 +513,11 @@ Fault_Handler:
     def_irq_handler  srss_interrupt_mcwdt_1_IRQHandler       /* Multi Counter Watchdog Timer interrupt */
     def_irq_handler  srss_interrupt_backup_IRQHandler        /* Backup domain interrupt */
     def_irq_handler  srss_interrupt_IRQHandler               /* Other combined Interrupts for SRSS (LVD, WDT, CLKCAL) */
-    def_irq_handler  pass_interrupt_ctbs_IRQHandler          /* CTBm Interrupt (all CTBms) */
-    def_irq_handler  bless_interrupt_IRQHandler              /* Bluetooth Radio interrupt */
     def_irq_handler  cpuss_interrupts_ipc_0_IRQHandler       /* CPUSS Inter Process Communication Interrupt #0 */
     def_irq_handler  cpuss_interrupts_ipc_1_IRQHandler       /* CPUSS Inter Process Communication Interrupt #1 */
     def_irq_handler  cpuss_interrupts_ipc_2_IRQHandler       /* CPUSS Inter Process Communication Interrupt #2 */
     def_irq_handler  cpuss_interrupts_ipc_3_IRQHandler       /* CPUSS Inter Process Communication Interrupt #3 */
+    def_irq_handler  cpuss_interrupts_ipc_4_IRQHandler       /* CPUSS Inter Process Communication Interrupt #4 */
     def_irq_handler  cpuss_interrupts_ipc_5_IRQHandler       /* CPUSS Inter Process Communication Interrupt #5 */
     def_irq_handler  cpuss_interrupts_ipc_6_IRQHandler       /* CPUSS Inter Process Communication Interrupt #6 */
     def_irq_handler  cpuss_interrupts_ipc_7_IRQHandler       /* CPUSS Inter Process Communication Interrupt #7 */
@@ -512,7 +537,15 @@ Fault_Handler:
     def_irq_handler  scb_5_interrupt_IRQHandler              /* Serial Communication Block #5 */
     def_irq_handler  scb_6_interrupt_IRQHandler              /* Serial Communication Block #6 */
     def_irq_handler  scb_7_interrupt_IRQHandler              /* Serial Communication Block #7 */
+    def_irq_handler  scb_9_interrupt_IRQHandler              /* Serial Communication Block #9 */
+    def_irq_handler  scb_10_interrupt_IRQHandler             /* Serial Communication Block #10 */
+    def_irq_handler  scb_11_interrupt_IRQHandler             /* Serial Communication Block #11 */
+    def_irq_handler  scb_12_interrupt_IRQHandler             /* Serial Communication Block #12 */
     def_irq_handler  csd_interrupt_IRQHandler                /* CSD (Capsense) interrupt */
+    def_irq_handler  cpuss_interrupts_dmac_0_IRQHandler      /* CPUSS DMAC, Channel #0 */
+    def_irq_handler  cpuss_interrupts_dmac_1_IRQHandler      /* CPUSS DMAC, Channel #1 */
+    def_irq_handler  cpuss_interrupts_dmac_2_IRQHandler      /* CPUSS DMAC, Channel #2 */
+    def_irq_handler  cpuss_interrupts_dmac_3_IRQHandler      /* CPUSS DMAC, Channel #3 */
     def_irq_handler  cpuss_interrupts_dw0_0_IRQHandler       /* CPUSS DataWire #0, Channel #0 */
     def_irq_handler  cpuss_interrupts_dw0_1_IRQHandler       /* CPUSS DataWire #0, Channel #1 */
     def_irq_handler  cpuss_interrupts_dw0_2_IRQHandler       /* CPUSS DataWire #0, Channel #2 */
@@ -529,6 +562,19 @@ Fault_Handler:
     def_irq_handler  cpuss_interrupts_dw0_13_IRQHandler      /* CPUSS DataWire #0, Channel #13 */
     def_irq_handler  cpuss_interrupts_dw0_14_IRQHandler      /* CPUSS DataWire #0, Channel #14 */
     def_irq_handler  cpuss_interrupts_dw0_15_IRQHandler      /* CPUSS DataWire #0, Channel #15 */
+    def_irq_handler  cpuss_interrupts_dw0_16_IRQHandler      /* CPUSS DataWire #0, Channel #16 */
+    def_irq_handler  cpuss_interrupts_dw0_17_IRQHandler      /* CPUSS DataWire #0, Channel #17 */
+    def_irq_handler  cpuss_interrupts_dw0_18_IRQHandler      /* CPUSS DataWire #0, Channel #18 */
+    def_irq_handler  cpuss_interrupts_dw0_19_IRQHandler      /* CPUSS DataWire #0, Channel #19 */
+    def_irq_handler  cpuss_interrupts_dw0_20_IRQHandler      /* CPUSS DataWire #0, Channel #20 */
+    def_irq_handler  cpuss_interrupts_dw0_21_IRQHandler      /* CPUSS DataWire #0, Channel #21 */
+    def_irq_handler  cpuss_interrupts_dw0_22_IRQHandler      /* CPUSS DataWire #0, Channel #22 */
+    def_irq_handler  cpuss_interrupts_dw0_23_IRQHandler      /* CPUSS DataWire #0, Channel #23 */
+    def_irq_handler  cpuss_interrupts_dw0_24_IRQHandler      /* CPUSS DataWire #0, Channel #24 */
+    def_irq_handler  cpuss_interrupts_dw0_25_IRQHandler      /* CPUSS DataWire #0, Channel #25 */
+    def_irq_handler  cpuss_interrupts_dw0_26_IRQHandler      /* CPUSS DataWire #0, Channel #26 */
+    def_irq_handler  cpuss_interrupts_dw0_27_IRQHandler      /* CPUSS DataWire #0, Channel #27 */
+    def_irq_handler  cpuss_interrupts_dw0_28_IRQHandler      /* CPUSS DataWire #0, Channel #28 */
     def_irq_handler  cpuss_interrupts_dw1_0_IRQHandler       /* CPUSS DataWire #1, Channel #0 */
     def_irq_handler  cpuss_interrupts_dw1_1_IRQHandler       /* CPUSS DataWire #1, Channel #1 */
     def_irq_handler  cpuss_interrupts_dw1_2_IRQHandler       /* CPUSS DataWire #1, Channel #2 */
@@ -545,9 +591,24 @@ Fault_Handler:
     def_irq_handler  cpuss_interrupts_dw1_13_IRQHandler      /* CPUSS DataWire #1, Channel #13 */
     def_irq_handler  cpuss_interrupts_dw1_14_IRQHandler      /* CPUSS DataWire #1, Channel #14 */
     def_irq_handler  cpuss_interrupts_dw1_15_IRQHandler      /* CPUSS DataWire #1, Channel #15 */
+    def_irq_handler  cpuss_interrupts_dw1_16_IRQHandler      /* CPUSS DataWire #1, Channel #16 */
+    def_irq_handler  cpuss_interrupts_dw1_17_IRQHandler      /* CPUSS DataWire #1, Channel #17 */
+    def_irq_handler  cpuss_interrupts_dw1_18_IRQHandler      /* CPUSS DataWire #1, Channel #18 */
+    def_irq_handler  cpuss_interrupts_dw1_19_IRQHandler      /* CPUSS DataWire #1, Channel #19 */
+    def_irq_handler  cpuss_interrupts_dw1_20_IRQHandler      /* CPUSS DataWire #1, Channel #20 */
+    def_irq_handler  cpuss_interrupts_dw1_21_IRQHandler      /* CPUSS DataWire #1, Channel #21 */
+    def_irq_handler  cpuss_interrupts_dw1_22_IRQHandler      /* CPUSS DataWire #1, Channel #22 */
+    def_irq_handler  cpuss_interrupts_dw1_23_IRQHandler      /* CPUSS DataWire #1, Channel #23 */
+    def_irq_handler  cpuss_interrupts_dw1_24_IRQHandler      /* CPUSS DataWire #1, Channel #24 */
+    def_irq_handler  cpuss_interrupts_dw1_25_IRQHandler      /* CPUSS DataWire #1, Channel #25 */
+    def_irq_handler  cpuss_interrupts_dw1_26_IRQHandler      /* CPUSS DataWire #1, Channel #26 */
+    def_irq_handler  cpuss_interrupts_dw1_27_IRQHandler      /* CPUSS DataWire #1, Channel #27 */
+    def_irq_handler  cpuss_interrupts_dw1_28_IRQHandler      /* CPUSS DataWire #1, Channel #28 */
     def_irq_handler  cpuss_interrupts_fault_0_IRQHandler     /* CPUSS Fault Structure Interrupt #0 */
     def_irq_handler  cpuss_interrupts_fault_1_IRQHandler     /* CPUSS Fault Structure Interrupt #1 */
     def_irq_handler  cpuss_interrupt_crypto_IRQHandler       /* CRYPTO Accelerator Interrupt */
+    def_irq_handler  cpuss_interrupt_fm_IRQHandler           /* FLASH Macro Interrupt */
+    def_irq_handler  cpuss_interrupts_cm4_fp_IRQHandler      /* Floating Point operation fault */
     def_irq_handler  cpuss_interrupts_cm0_cti_0_IRQHandler   /* CM0+ CTI #0 */
     def_irq_handler  cpuss_interrupts_cm0_cti_1_IRQHandler   /* CM0+ CTI #1 */
     def_irq_handler  cpuss_interrupts_cm4_cti_0_IRQHandler   /* CM4 CTI #0 */
@@ -584,31 +645,19 @@ Fault_Handler:
     def_irq_handler  tcpwm_1_interrupts_21_IRQHandler        /* TCPWM #1, Counter #21 */
     def_irq_handler  tcpwm_1_interrupts_22_IRQHandler        /* TCPWM #1, Counter #22 */
     def_irq_handler  tcpwm_1_interrupts_23_IRQHandler        /* TCPWM #1, Counter #23 */
-    def_irq_handler  udb_interrupts_0_IRQHandler             /* UDB Interrupt #0 */
-    def_irq_handler  udb_interrupts_1_IRQHandler             /* UDB Interrupt #1 */
-    def_irq_handler  udb_interrupts_2_IRQHandler             /* UDB Interrupt #2 */
-    def_irq_handler  udb_interrupts_3_IRQHandler             /* UDB Interrupt #3 */
-    def_irq_handler  udb_interrupts_4_IRQHandler             /* UDB Interrupt #4 */
-    def_irq_handler  udb_interrupts_5_IRQHandler             /* UDB Interrupt #5 */
-    def_irq_handler  udb_interrupts_6_IRQHandler             /* UDB Interrupt #6 */
-    def_irq_handler  udb_interrupts_7_IRQHandler             /* UDB Interrupt #7 */
-    def_irq_handler  udb_interrupts_8_IRQHandler             /* UDB Interrupt #8 */
-    def_irq_handler  udb_interrupts_9_IRQHandler             /* UDB Interrupt #9 */
-    def_irq_handler  udb_interrupts_10_IRQHandler            /* UDB Interrupt #10 */
-    def_irq_handler  udb_interrupts_11_IRQHandler            /* UDB Interrupt #11 */
-    def_irq_handler  udb_interrupts_12_IRQHandler            /* UDB Interrupt #12 */
-    def_irq_handler  udb_interrupts_13_IRQHandler            /* UDB Interrupt #13 */
-    def_irq_handler  udb_interrupts_14_IRQHandler            /* UDB Interrupt #14 */
-    def_irq_handler  udb_interrupts_15_IRQHandler            /* UDB Interrupt #15 */
     def_irq_handler  pass_interrupt_sar_IRQHandler           /* SAR ADC interrupt */
-    def_irq_handler  audioss_interrupt_i2s_IRQHandler        /* I2S Audio interrupt */
-    def_irq_handler  audioss_interrupt_pdm_IRQHandler        /* PDM/PCM Audio interrupt */
+    def_irq_handler  audioss_0_interrupt_i2s_IRQHandler      /* I2S0 Audio interrupt */
+    def_irq_handler  audioss_0_interrupt_pdm_IRQHandler      /* PDM0/PCM0 Audio interrupt */
+    def_irq_handler  audioss_1_interrupt_i2s_IRQHandler      /* I2S1 Audio interrupt */
     def_irq_handler  profile_interrupt_IRQHandler            /* Energy Profiler interrupt */
     def_irq_handler  smif_interrupt_IRQHandler               /* Serial Memory Interface interrupt */
     def_irq_handler  usb_interrupt_hi_IRQHandler             /* USB Interrupt */
     def_irq_handler  usb_interrupt_med_IRQHandler            /* USB Interrupt */
     def_irq_handler  usb_interrupt_lo_IRQHandler             /* USB Interrupt */
-    def_irq_handler  pass_interrupt_dacs_IRQHandler          /* Consolidated interrrupt for all DACs */
+    def_irq_handler  sdhc_0_interrupt_wakeup_IRQHandler      /* SDIO wakeup interrupt for mxsdhc */
+    def_irq_handler  sdhc_0_interrupt_general_IRQHandler     /* Consolidated interrupt for mxsdhc for everything else */
+    def_irq_handler  sdhc_1_interrupt_wakeup_IRQHandler      /* EEMC wakeup interrupt for mxsdhc, not used */
+    def_irq_handler  sdhc_1_interrupt_general_IRQHandler     /* Consolidated interrupt for mxsdhc for everything else */
 
     .end
 

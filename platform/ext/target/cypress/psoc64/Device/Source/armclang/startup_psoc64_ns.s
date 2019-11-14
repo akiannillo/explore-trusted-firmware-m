@@ -17,10 +17,9 @@
 ; * limitations under the License.
 ; */
 ;
-; This file is derivative of mbed-os startup_psoc6_01_cm4.S
-; TARGET_CY8CKIT_062_WIFI_BT/device/TARGET_MCU_PSOC6_M4/TOOLCHAIN_ARM/
-; Git SHA: 101ae73b87e7082502915c5a4c6f3971fac270bb
-
+; adapted from Cypress PSoC64 Peripheral-Driver-Library v1.3.1
+;   startup_psoc6_02_cm4.s*/
+;
 ;/*
 ;//-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
 ;*/
@@ -104,8 +103,6 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     srss_interrupt_mcwdt_1_IRQHandler     ; Multi Counter Watchdog Timer interrupt
                 DCD     srss_interrupt_backup_IRQHandler      ; Backup domain interrupt
                 DCD     srss_interrupt_IRQHandler             ; Other combined Interrupts for SRSS (LVD, WDT, CLKCAL)
-                DCD     pass_interrupt_ctbs_IRQHandler        ; CTBm Interrupt (all CTBms)
-                DCD     bless_interrupt_IRQHandler            ; Bluetooth Radio interrupt
                 DCD     cpuss_interrupts_ipc_0_IRQHandler     ; CPUSS Inter Process Communication Interrupt #0
                 DCD     cpuss_interrupts_ipc_1_IRQHandler     ; CPUSS Inter Process Communication Interrupt #1
                 DCD     cpuss_interrupts_ipc_2_IRQHandler     ; CPUSS Inter Process Communication Interrupt #2
@@ -130,7 +127,15 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     scb_5_interrupt_IRQHandler            ; Serial Communication Block #5
                 DCD     scb_6_interrupt_IRQHandler            ; Serial Communication Block #6
                 DCD     scb_7_interrupt_IRQHandler            ; Serial Communication Block #7
+                DCD     scb_9_interrupt_IRQHandler            ; Serial Communication Block #9
+                DCD     scb_10_interrupt_IRQHandler           ; Serial Communication Block #10
+                DCD     scb_11_interrupt_IRQHandler           ; Serial Communication Block #11
+                DCD     scb_12_interrupt_IRQHandler           ; Serial Communication Block #1
                 DCD     csd_interrupt_IRQHandler              ; CSD (Capsense) interrupt
+                DCD     cpuss_interrupts_dmac_0_IRQHandler    ; CPUSS DMAC, Channel #0
+                DCD     cpuss_interrupts_dmac_1_IRQHandler    ; CPUSS DMAC, Channel #1
+                DCD     cpuss_interrupts_dmac_2_IRQHandler    ; CPUSS DMAC, Channel #2
+                DCD     cpuss_interrupts_dmac_3_IRQHandler    ; CPUSS DMAC, Channel #3
                 DCD     cpuss_interrupts_dw0_0_IRQHandler     ; CPUSS DataWire #0, Channel #0
                 DCD     cpuss_interrupts_dw0_1_IRQHandler     ; CPUSS DataWire #0, Channel #1
                 DCD     cpuss_interrupts_dw0_2_IRQHandler     ; CPUSS DataWire #0, Channel #2
@@ -147,6 +152,19 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     cpuss_interrupts_dw0_13_IRQHandler    ; CPUSS DataWire #0, Channel #13
                 DCD     cpuss_interrupts_dw0_14_IRQHandler    ; CPUSS DataWire #0, Channel #14
                 DCD     cpuss_interrupts_dw0_15_IRQHandler    ; CPUSS DataWire #0, Channel #15
+                DCD     cpuss_interrupts_dw0_16_IRQHandler    ; CPUSS DataWire #0, Channel #16
+                DCD     cpuss_interrupts_dw0_17_IRQHandler    ; CPUSS DataWire #0, Channel #17
+                DCD     cpuss_interrupts_dw0_18_IRQHandler    ; CPUSS DataWire #0, Channel #18
+                DCD     cpuss_interrupts_dw0_19_IRQHandler    ; CPUSS DataWire #0, Channel #19
+                DCD     cpuss_interrupts_dw0_20_IRQHandler    ; CPUSS DataWire #0, Channel #20
+                DCD     cpuss_interrupts_dw0_21_IRQHandler    ; CPUSS DataWire #0, Channel #21
+                DCD     cpuss_interrupts_dw0_22_IRQHandler    ; CPUSS DataWire #0, Channel #22
+                DCD     cpuss_interrupts_dw0_23_IRQHandler    ; CPUSS DataWire #0, Channel #23
+                DCD     cpuss_interrupts_dw0_24_IRQHandler    ; CPUSS DataWire #0, Channel #24
+                DCD     cpuss_interrupts_dw0_25_IRQHandler    ; CPUSS DataWire #0, Channel #25
+                DCD     cpuss_interrupts_dw0_26_IRQHandler    ; CPUSS DataWire #0, Channel #26
+                DCD     cpuss_interrupts_dw0_27_IRQHandler    ; CPUSS DataWire #0, Channel #27
+                DCD     cpuss_interrupts_dw0_28_IRQHandler    ; CPUSS DataWire #0, Channel #28
                 DCD     cpuss_interrupts_dw1_0_IRQHandler     ; CPUSS DataWire #1, Channel #0
                 DCD     cpuss_interrupts_dw1_1_IRQHandler     ; CPUSS DataWire #1, Channel #1
                 DCD     cpuss_interrupts_dw1_2_IRQHandler     ; CPUSS DataWire #1, Channel #2
@@ -163,10 +181,24 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     cpuss_interrupts_dw1_13_IRQHandler    ; CPUSS DataWire #1, Channel #13
                 DCD     cpuss_interrupts_dw1_14_IRQHandler    ; CPUSS DataWire #1, Channel #14
                 DCD     cpuss_interrupts_dw1_15_IRQHandler    ; CPUSS DataWire #1, Channel #15
+                DCD     cpuss_interrupts_dw1_16_IRQHandler    ; CPUSS DataWire #1, Channel #16
+                DCD     cpuss_interrupts_dw1_17_IRQHandler    ; CPUSS DataWire #1, Channel #17
+                DCD     cpuss_interrupts_dw1_18_IRQHandler    ; CPUSS DataWire #1, Channel #18
+                DCD     cpuss_interrupts_dw1_19_IRQHandler    ; CPUSS DataWire #1, Channel #19
+                DCD     cpuss_interrupts_dw1_20_IRQHandler    ; CPUSS DataWire #1, Channel #20
+                DCD     cpuss_interrupts_dw1_21_IRQHandler    ; CPUSS DataWire #1, Channel #21
+                DCD     cpuss_interrupts_dw1_22_IRQHandler    ; CPUSS DataWire #1, Channel #22
+                DCD     cpuss_interrupts_dw1_23_IRQHandler    ; CPUSS DataWire #1, Channel #23
+                DCD     cpuss_interrupts_dw1_24_IRQHandler    ; CPUSS DataWire #1, Channel #24
+                DCD     cpuss_interrupts_dw1_25_IRQHandler    ; CPUSS DataWire #1, Channel #25
+                DCD     cpuss_interrupts_dw1_26_IRQHandler    ; CPUSS DataWire #1, Channel #26
+                DCD     cpuss_interrupts_dw1_27_IRQHandler    ; CPUSS DataWire #1, Channel #27
+                DCD     cpuss_interrupts_dw1_28_IRQHandler    ; CPUSS DataWire #1, Channel #28
                 DCD     cpuss_interrupts_fault_0_IRQHandler   ; CPUSS Fault Structure Interrupt #0
                 DCD     cpuss_interrupts_fault_1_IRQHandler   ; CPUSS Fault Structure Interrupt #1
                 DCD     cpuss_interrupt_crypto_IRQHandler     ; CRYPTO Accelerator Interrupt
                 DCD     Cy_Flash_ResumeIrqHandler
+                DCD     cpuss_interrupts_cm4_fp_IRQHandler    ; Floating Point operation fault
                 DCD     cpuss_interrupts_cm0_cti_0_IRQHandler ; CM0+ CTI #0
                 DCD     cpuss_interrupts_cm0_cti_1_IRQHandler ; CM0+ CTI #1
                 DCD     cpuss_interrupts_cm4_cti_0_IRQHandler ; CM4 CTI #0
@@ -203,31 +235,19 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     tcpwm_1_interrupts_21_IRQHandler      ; TCPWM #1, Counter #21
                 DCD     tcpwm_1_interrupts_22_IRQHandler      ; TCPWM #1, Counter #22
                 DCD     tcpwm_1_interrupts_23_IRQHandler      ; TCPWM #1, Counter #23
-                DCD     udb_interrupts_0_IRQHandler           ; UDB Interrupt #0
-                DCD     udb_interrupts_1_IRQHandler           ; UDB Interrupt #1
-                DCD     udb_interrupts_2_IRQHandler           ; UDB Interrupt #2
-                DCD     udb_interrupts_3_IRQHandler           ; UDB Interrupt #3
-                DCD     udb_interrupts_4_IRQHandler           ; UDB Interrupt #4
-                DCD     udb_interrupts_5_IRQHandler           ; UDB Interrupt #5
-                DCD     udb_interrupts_6_IRQHandler           ; UDB Interrupt #6
-                DCD     udb_interrupts_7_IRQHandler           ; UDB Interrupt #7
-                DCD     udb_interrupts_8_IRQHandler           ; UDB Interrupt #8
-                DCD     udb_interrupts_9_IRQHandler           ; UDB Interrupt #9
-                DCD     udb_interrupts_10_IRQHandler          ; UDB Interrupt #10
-                DCD     udb_interrupts_11_IRQHandler          ; UDB Interrupt #11
-                DCD     udb_interrupts_12_IRQHandler          ; UDB Interrupt #12
-                DCD     udb_interrupts_13_IRQHandler          ; UDB Interrupt #13
-                DCD     udb_interrupts_14_IRQHandler          ; UDB Interrupt #14
-                DCD     udb_interrupts_15_IRQHandler          ; UDB Interrupt #15
                 DCD     pass_interrupt_sar_IRQHandler         ; SAR ADC interrupt
-                DCD     audioss_interrupt_i2s_IRQHandler      ; I2S Audio interrupt
-                DCD     audioss_interrupt_pdm_IRQHandler      ; PDM/PCM Audio interrupt
+                DCD     audioss_0_interrupt_i2s_IRQHandler    ; I2S0 Audio interrupt
+                DCD     audioss_0_interrupt_pdm_IRQHandler    ; PDM0/PCM0 Audio interrupt
+                DCD     audioss_1_interrupt_i2s_IRQHandler    ; I2S1 Audio interrupt
                 DCD     profile_interrupt_IRQHandler          ; Energy Profiler interrupt
                 DCD     smif_interrupt_IRQHandler             ; Serial Memory Interface interrupt
                 DCD     usb_interrupt_hi_IRQHandler           ; USB Interrupt
                 DCD     usb_interrupt_med_IRQHandler          ; USB Interrupt
                 DCD     usb_interrupt_lo_IRQHandler           ; USB Interrupt
-                DCD     pass_interrupt_dacs_IRQHandler        ; Consolidated interrrupt for all DACs
+                DCD     sdhc_0_interrupt_wakeup_IRQHandler    ; SDIO wakeup interrupt for mxsdhc
+                DCD     sdhc_0_interrupt_general_IRQHandler   ; Consolidated interrupt for mxsdhc for everything else
+                DCD     sdhc_1_interrupt_wakeup_IRQHandler    ; EEMC wakeup interrupt for mxsdhc, not used
+                DCD     sdhc_1_interrupt_general_IRQHandler   ; Consolidated interrupt for mxsdhc for everything else
 
 __Vectors_End
 
@@ -337,8 +357,6 @@ Default_Handler     PROC
                     EXPORT  srss_interrupt_mcwdt_1_IRQHandler     [WEAK]
                     EXPORT  srss_interrupt_backup_IRQHandler      [WEAK]
                     EXPORT  srss_interrupt_IRQHandler             [WEAK]
-                    EXPORT  pass_interrupt_ctbs_IRQHandler        [WEAK]
-                    EXPORT  bless_interrupt_IRQHandler            [WEAK]
                     EXPORT  cpuss_interrupts_ipc_0_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_ipc_1_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_ipc_2_IRQHandler     [WEAK]
@@ -362,7 +380,15 @@ Default_Handler     PROC
                     EXPORT  scb_5_interrupt_IRQHandler            [WEAK]
                     EXPORT  scb_6_interrupt_IRQHandler            [WEAK]
                     EXPORT  scb_7_interrupt_IRQHandler            [WEAK]
+                    EXPORT  scb_9_interrupt_IRQHandler            [WEAK]
+                    EXPORT  scb_10_interrupt_IRQHandler           [WEAK]
+                    EXPORT  scb_11_interrupt_IRQHandler           [WEAK]
+                    EXPORT  scb_12_interrupt_IRQHandler           [WEAK]
                     EXPORT  csd_interrupt_IRQHandler              [WEAK]
+                    EXPORT  cpuss_interrupts_dmac_0_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dmac_1_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dmac_2_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dmac_3_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw0_0_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_dw0_1_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_dw0_2_IRQHandler     [WEAK]
@@ -379,6 +405,19 @@ Default_Handler     PROC
                     EXPORT  cpuss_interrupts_dw0_13_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw0_14_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw0_15_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_16_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_17_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_18_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_19_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_20_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_21_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_22_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_23_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_24_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_25_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_26_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_27_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw0_28_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw1_0_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_dw1_1_IRQHandler     [WEAK]
                     EXPORT  cpuss_interrupts_dw1_2_IRQHandler     [WEAK]
@@ -395,9 +434,23 @@ Default_Handler     PROC
                     EXPORT  cpuss_interrupts_dw1_13_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw1_14_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_dw1_15_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_16_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_17_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_18_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_19_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_20_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_21_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_22_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_23_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_24_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_25_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_26_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_27_IRQHandler    [WEAK]
+                    EXPORT  cpuss_interrupts_dw1_28_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_fault_0_IRQHandler   [WEAK]
                     EXPORT  cpuss_interrupts_fault_1_IRQHandler   [WEAK]
                     EXPORT  cpuss_interrupt_crypto_IRQHandler     [WEAK]
+                    EXPORT  cpuss_interrupts_cm4_fp_IRQHandler    [WEAK]
                     EXPORT  cpuss_interrupts_cm0_cti_0_IRQHandler [WEAK]
                     EXPORT  cpuss_interrupts_cm0_cti_1_IRQHandler [WEAK]
                     EXPORT  cpuss_interrupts_cm4_cti_0_IRQHandler [WEAK]
@@ -434,31 +487,19 @@ Default_Handler     PROC
                     EXPORT  tcpwm_1_interrupts_21_IRQHandler      [WEAK]
                     EXPORT  tcpwm_1_interrupts_22_IRQHandler      [WEAK]
                     EXPORT  tcpwm_1_interrupts_23_IRQHandler      [WEAK]
-                    EXPORT  udb_interrupts_0_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_1_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_2_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_3_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_4_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_5_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_6_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_7_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_8_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_9_IRQHandler           [WEAK]
-                    EXPORT  udb_interrupts_10_IRQHandler          [WEAK]
-                    EXPORT  udb_interrupts_11_IRQHandler          [WEAK]
-                    EXPORT  udb_interrupts_12_IRQHandler          [WEAK]
-                    EXPORT  udb_interrupts_13_IRQHandler          [WEAK]
-                    EXPORT  udb_interrupts_14_IRQHandler          [WEAK]
-                    EXPORT  udb_interrupts_15_IRQHandler          [WEAK]
                     EXPORT  pass_interrupt_sar_IRQHandler         [WEAK]
-                    EXPORT  audioss_interrupt_i2s_IRQHandler      [WEAK]
-                    EXPORT  audioss_interrupt_pdm_IRQHandler      [WEAK]
+                    EXPORT  audioss_0_interrupt_i2s_IRQHandler    [WEAK]
+                    EXPORT  audioss_0_interrupt_pdm_IRQHandler    [WEAK]
+                    EXPORT  audioss_1_interrupt_i2s_IRQHandler    [WEAK]
                     EXPORT  profile_interrupt_IRQHandler          [WEAK]
                     EXPORT  smif_interrupt_IRQHandler             [WEAK]
                     EXPORT  usb_interrupt_hi_IRQHandler           [WEAK]
                     EXPORT  usb_interrupt_med_IRQHandler          [WEAK]
                     EXPORT  usb_interrupt_lo_IRQHandler           [WEAK]
-                    EXPORT  pass_interrupt_dacs_IRQHandler        [WEAK]
+                    EXPORT  sdhc_0_interrupt_wakeup_IRQHandler    [WEAK]
+                    EXPORT  sdhc_0_interrupt_general_IRQHandler   [WEAK]
+                    EXPORT  sdhc_1_interrupt_wakeup_IRQHandler    [WEAK]
+                    EXPORT  sdhc_1_interrupt_general_IRQHandler   [WEAK]
 
 ioss_interrupts_gpio_0_IRQHandler
 ioss_interrupts_gpio_1_IRQHandler
@@ -483,8 +524,6 @@ srss_interrupt_mcwdt_0_IRQHandler
 srss_interrupt_mcwdt_1_IRQHandler
 srss_interrupt_backup_IRQHandler
 srss_interrupt_IRQHandler
-pass_interrupt_ctbs_IRQHandler
-bless_interrupt_IRQHandler
 cpuss_interrupts_ipc_0_IRQHandler
 cpuss_interrupts_ipc_1_IRQHandler
 cpuss_interrupts_ipc_2_IRQHandler
@@ -508,7 +547,15 @@ scb_4_interrupt_IRQHandler
 scb_5_interrupt_IRQHandler
 scb_6_interrupt_IRQHandler
 scb_7_interrupt_IRQHandler
+scb_9_interrupt_IRQHandler
+scb_10_interrupt_IRQHandler
+scb_11_interrupt_IRQHandler
+scb_12_interrupt_IRQHandler
 csd_interrupt_IRQHandler
+cpuss_interrupts_dmac_0_IRQHandler
+cpuss_interrupts_dmac_1_IRQHandler
+cpuss_interrupts_dmac_2_IRQHandler
+cpuss_interrupts_dmac_3_IRQHandler
 cpuss_interrupts_dw0_0_IRQHandler
 cpuss_interrupts_dw0_1_IRQHandler
 cpuss_interrupts_dw0_2_IRQHandler
@@ -525,6 +572,19 @@ cpuss_interrupts_dw0_12_IRQHandler
 cpuss_interrupts_dw0_13_IRQHandler
 cpuss_interrupts_dw0_14_IRQHandler
 cpuss_interrupts_dw0_15_IRQHandler
+cpuss_interrupts_dw0_16_IRQHandler
+cpuss_interrupts_dw0_17_IRQHandler
+cpuss_interrupts_dw0_18_IRQHandler
+cpuss_interrupts_dw0_19_IRQHandler
+cpuss_interrupts_dw0_20_IRQHandler
+cpuss_interrupts_dw0_21_IRQHandler
+cpuss_interrupts_dw0_22_IRQHandler
+cpuss_interrupts_dw0_23_IRQHandler
+cpuss_interrupts_dw0_24_IRQHandler
+cpuss_interrupts_dw0_25_IRQHandler
+cpuss_interrupts_dw0_26_IRQHandler
+cpuss_interrupts_dw0_27_IRQHandler
+cpuss_interrupts_dw0_28_IRQHandler
 cpuss_interrupts_dw1_0_IRQHandler
 cpuss_interrupts_dw1_1_IRQHandler
 cpuss_interrupts_dw1_2_IRQHandler
@@ -541,9 +601,23 @@ cpuss_interrupts_dw1_12_IRQHandler
 cpuss_interrupts_dw1_13_IRQHandler
 cpuss_interrupts_dw1_14_IRQHandler
 cpuss_interrupts_dw1_15_IRQHandler
+cpuss_interrupts_dw1_16_IRQHandler
+cpuss_interrupts_dw1_17_IRQHandler
+cpuss_interrupts_dw1_18_IRQHandler
+cpuss_interrupts_dw1_19_IRQHandler
+cpuss_interrupts_dw1_20_IRQHandler
+cpuss_interrupts_dw1_21_IRQHandler
+cpuss_interrupts_dw1_22_IRQHandler
+cpuss_interrupts_dw1_23_IRQHandler
+cpuss_interrupts_dw1_24_IRQHandler
+cpuss_interrupts_dw1_25_IRQHandler
+cpuss_interrupts_dw1_26_IRQHandler
+cpuss_interrupts_dw1_27_IRQHandler
+cpuss_interrupts_dw1_28_IRQHandler
 cpuss_interrupts_fault_0_IRQHandler
 cpuss_interrupts_fault_1_IRQHandler
 cpuss_interrupt_crypto_IRQHandler
+cpuss_interrupts_cm4_fp_IRQHandler
 cpuss_interrupts_cm0_cti_0_IRQHandler
 cpuss_interrupts_cm0_cti_1_IRQHandler
 cpuss_interrupts_cm4_cti_0_IRQHandler
@@ -580,31 +654,19 @@ tcpwm_1_interrupts_20_IRQHandler
 tcpwm_1_interrupts_21_IRQHandler
 tcpwm_1_interrupts_22_IRQHandler
 tcpwm_1_interrupts_23_IRQHandler
-udb_interrupts_0_IRQHandler
-udb_interrupts_1_IRQHandler
-udb_interrupts_2_IRQHandler
-udb_interrupts_3_IRQHandler
-udb_interrupts_4_IRQHandler
-udb_interrupts_5_IRQHandler
-udb_interrupts_6_IRQHandler
-udb_interrupts_7_IRQHandler
-udb_interrupts_8_IRQHandler
-udb_interrupts_9_IRQHandler
-udb_interrupts_10_IRQHandler
-udb_interrupts_11_IRQHandler
-udb_interrupts_12_IRQHandler
-udb_interrupts_13_IRQHandler
-udb_interrupts_14_IRQHandler
-udb_interrupts_15_IRQHandler
 pass_interrupt_sar_IRQHandler
-audioss_interrupt_i2s_IRQHandler
-audioss_interrupt_pdm_IRQHandler
+audioss_0_interrupt_i2s_IRQHandler
+audioss_0_interrupt_pdm_IRQHandler
+audioss_1_interrupt_i2s_IRQHandler
 profile_interrupt_IRQHandler
 smif_interrupt_IRQHandler
 usb_interrupt_hi_IRQHandler
 usb_interrupt_med_IRQHandler
 usb_interrupt_lo_IRQHandler
-pass_interrupt_dacs_IRQHandler
+sdhc_0_interrupt_wakeup_IRQHandler
+sdhc_0_interrupt_general_IRQHandler
+sdhc_1_interrupt_wakeup_IRQHandler
+sdhc_1_interrupt_general_IRQHandler
 
                 B       .
 

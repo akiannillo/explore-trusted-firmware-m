@@ -17,7 +17,8 @@
  * limitations under the License.
  */
 
-/* adapted from Cypress-Peripheral-Driver-Library-v3.0.1 startup_psoc63_cm0plus.S*/
+/* adapted from Cypress PSoC64 Peripheral-Driver-Library v1.3.1
+   startup_psoc6_02_cm0plus.S*/
 
 #include "region_defs.h"
 
@@ -60,30 +61,14 @@ __Vectors:
     .long    NvicMux5_IRQHandler                     /* CM0 + NVIC Mux input 5 */
     .long    NvicMux6_IRQHandler                     /* CM0 + NVIC Mux input 6 */
     .long    NvicMux7_IRQHandler                     /* CM0 + NVIC Mux input 7 */
-    .long    NvicMux8_IRQHandler                     /* CM0 + NVIC Mux input 8 */
-    .long    NvicMux9_IRQHandler                     /* CM0 + NVIC Mux input 9 */
-    .long    NvicMux10_IRQHandler                    /* CM0 + NVIC Mux input 10 */
-    .long    NvicMux11_IRQHandler                    /* CM0 + NVIC Mux input 11 */
-    .long    NvicMux12_IRQHandler                    /* CM0 + NVIC Mux input 12 */
-    .long    NvicMux13_IRQHandler                    /* CM0 + NVIC Mux input 13 */
-    .long    NvicMux14_IRQHandler                    /* CM0 + NVIC Mux input 14 */
-    .long    NvicMux15_IRQHandler                    /* CM0 + NVIC Mux input 15 */
-    .long    NvicMux16_IRQHandler                    /* CM0 + NVIC Mux input 16 */
-    .long    NvicMux17_IRQHandler                    /* CM0 + NVIC Mux input 17 */
-    .long    NvicMux18_IRQHandler                    /* CM0 + NVIC Mux input 18 */
-    .long    NvicMux19_IRQHandler                    /* CM0 + NVIC Mux input 19 */
-    .long    NvicMux20_IRQHandler                    /* CM0 + NVIC Mux input 20 */
-    .long    NvicMux21_IRQHandler                    /* CM0 + NVIC Mux input 21 */
-    .long    NvicMux22_IRQHandler                    /* CM0 + NVIC Mux input 22 */
-    .long    NvicMux23_IRQHandler                    /* CM0 + NVIC Mux input 23 */
-    .long    NvicMux24_IRQHandler                    /* CM0 + NVIC Mux input 24 */
-    .long    NvicMux25_IRQHandler                    /* CM0 + NVIC Mux input 25 */
-    .long    NvicMux26_IRQHandler                    /* CM0 + NVIC Mux input 26 */
-    .long    NvicMux27_IRQHandler                    /* CM0 + NVIC Mux input 27 */
-    .long    NvicMux28_IRQHandler                    /* CM0 + NVIC Mux input 28 */
-    .long    NvicMux29_IRQHandler                    /* CM0 + NVIC Mux input 29 */
-    .long    NvicMux30_IRQHandler                    /* CM0 + NVIC Mux input 30 */
-    .long    NvicMux31_IRQHandler                    /* CM0 + NVIC Mux input 31 */
+    .long    Internal0_IRQHandler                    /* Internal SW Interrupt #0 */
+    .long    Internal1_IRQHandler                    /* Internal SW Interrupt #1 */
+    .long    Internal2_IRQHandler                    /* Internal SW Interrupt #2 */
+    .long    Internal3_IRQHandler                    /* Internal SW Interrupt #3 */
+    .long    Internal4_IRQHandler                    /* Internal SW Interrupt #4 */
+    .long    Internal5_IRQHandler                    /* Internal SW Interrupt #5 */
+    .long    Internal6_IRQHandler                    /* Internal SW Interrupt #6 */
+    .long    Internal7_IRQHandler                    /* Internal SW Interrupt #7 */
 
     .size    __Vectors, . - __Vectors
     .equ    __VectorsSize, . - __Vectors
@@ -111,8 +96,8 @@ __ramVectors:
     .weak   Cy_OnResetUser
     .func   Cy_OnResetUser, Cy_OnResetUser
     .type   Cy_OnResetUser, %function
-Cy_OnResetUser:
 
+Cy_OnResetUser:
     bx lr
     .size   Cy_OnResetUser, . - Cy_OnResetUser
     .endfunc
@@ -141,8 +126,8 @@ Cy_RestoreIRQ:
     /* Reset handler */
     .weak    Reset_Handler
     .type    Reset_Handler, %function
-Reset_Handler:
 
+Reset_Handler:
     bl Cy_OnResetUser
     cpsid i
 
@@ -219,7 +204,7 @@ Reset_Handler:
  *  latter.
  *
  *  Define macro __STARTUP_CLEAR_BSS_MULTIPLE to choose the former.
- *  Otherwise efine macro __STARTUP_CLEAR_BSS to choose the later.
+ *  Otherwise define macro __STARTUP_CLEAR_BSS to choose the later.
  */
 #ifdef __STARTUP_CLEAR_BSS_MULTIPLE
 /*  Multiple sections scheme.
@@ -300,16 +285,14 @@ Reset_Handler:
 Default_Handler:
     b    .
     .size    Default_Handler, . - Default_Handler
-
-
     .weak    Cy_SysLib_FaultHandler
     .type    Cy_SysLib_FaultHandler, %function
+
 Cy_SysLib_FaultHandler:
     b    .
     .size    Cy_SysLib_FaultHandler, . - Cy_SysLib_FaultHandler
-
-
     .type Fault_Handler, %function
+
 Fault_Handler:
     /* Storing LR content for Creator call stack trace */
     push {LR}
@@ -347,37 +330,21 @@ Fault_Handler:
     def_irq_handler    PendSV_Handler
     def_irq_handler    SysTick_Handler
 
-    def_irq_handler  NvicMux0_IRQHandler                     /* CM0 + NVIC Mux input 0 */
-    def_irq_handler  NvicMux2_IRQHandler                     /* CM0 + NVIC Mux input 2 */
-    def_irq_handler  NvicMux3_IRQHandler                     /* CM0 + NVIC Mux input 3 */
-    def_irq_handler  NvicMux4_IRQHandler                     /* CM0 + NVIC Mux input 4 */
-    def_irq_handler  NvicMux5_IRQHandler                     /* CM0 + NVIC Mux input 5 */
-    def_irq_handler  NvicMux6_IRQHandler                     /* CM0 + NVIC Mux input 6 */
-    def_irq_handler  NvicMux7_IRQHandler                     /* CM0 + NVIC Mux input 7 */
-    def_irq_handler  NvicMux8_IRQHandler                     /* CM0 + NVIC Mux input 8 */
-    def_irq_handler  NvicMux9_IRQHandler                     /* CM0 + NVIC Mux input 9 */
-    def_irq_handler  NvicMux10_IRQHandler                    /* CM0 + NVIC Mux input 10 */
-    def_irq_handler  NvicMux11_IRQHandler                    /* CM0 + NVIC Mux input 11 */
-    def_irq_handler  NvicMux12_IRQHandler                    /* CM0 + NVIC Mux input 12 */
-    def_irq_handler  NvicMux13_IRQHandler                    /* CM0 + NVIC Mux input 13 */
-    def_irq_handler  NvicMux14_IRQHandler                    /* CM0 + NVIC Mux input 14 */
-    def_irq_handler  NvicMux15_IRQHandler                    /* CM0 + NVIC Mux input 15 */
-    def_irq_handler  NvicMux16_IRQHandler                    /* CM0 + NVIC Mux input 16 */
-    def_irq_handler  NvicMux17_IRQHandler                    /* CM0 + NVIC Mux input 17 */
-    def_irq_handler  NvicMux18_IRQHandler                    /* CM0 + NVIC Mux input 18 */
-    def_irq_handler  NvicMux19_IRQHandler                    /* CM0 + NVIC Mux input 19 */
-    def_irq_handler  NvicMux20_IRQHandler                    /* CM0 + NVIC Mux input 20 */
-    def_irq_handler  NvicMux21_IRQHandler                    /* CM0 + NVIC Mux input 21 */
-    def_irq_handler  NvicMux22_IRQHandler                    /* CM0 + NVIC Mux input 22 */
-    def_irq_handler  NvicMux23_IRQHandler                    /* CM0 + NVIC Mux input 23 */
-    def_irq_handler  NvicMux24_IRQHandler                    /* CM0 + NVIC Mux input 24 */
-    def_irq_handler  NvicMux25_IRQHandler                    /* CM0 + NVIC Mux input 25 */
-    def_irq_handler  NvicMux26_IRQHandler                    /* CM0 + NVIC Mux input 26 */
-    def_irq_handler  NvicMux27_IRQHandler                    /* CM0 + NVIC Mux input 27 */
-    def_irq_handler  NvicMux28_IRQHandler                    /* CM0 + NVIC Mux input 28 */
-    def_irq_handler  NvicMux29_IRQHandler                    /* CM0 + NVIC Mux input 29 */
-    def_irq_handler  NvicMux30_IRQHandler                    /* CM0 + NVIC Mux input 30 */
-    def_irq_handler  NvicMux31_IRQHandler                    /* CM0 + NVIC Mux input 31 */
+    def_irq_handler  NvicMux0_IRQHandler                     /* CPU User Interrupt #0 */
+    def_irq_handler  NvicMux2_IRQHandler                     /* CPU User Interrupt #2 */
+    def_irq_handler  NvicMux3_IRQHandler                     /* CPU User Interrupt #3 */
+    def_irq_handler  NvicMux4_IRQHandler                     /* CPU User Interrupt #4 */
+    def_irq_handler  NvicMux5_IRQHandler                     /* CPU User Interrupt #5 */
+    def_irq_handler  NvicMux6_IRQHandler                     /* CPU User Interrupt #6 */
+    def_irq_handler  NvicMux7_IRQHandler                     /* CPU User Interrupt #7 */
+    def_irq_handler  Internal0_IRQHandler                    /* Internal SW Interrupt #0 */
+    def_irq_handler  Internal1_IRQHandler                    /* Internal SW Interrupt #1 */
+    def_irq_handler  Internal2_IRQHandler                    /* Internal SW Interrupt #2 */
+    def_irq_handler  Internal3_IRQHandler                    /* Internal SW Interrupt #3 */
+    def_irq_handler  Internal4_IRQHandler                    /* Internal SW Interrupt #4 */
+    def_irq_handler  Internal5_IRQHandler                    /* Internal SW Interrupt #5 */
+    def_irq_handler  Internal6_IRQHandler                    /* Internal SW Interrupt #6 */
+    def_irq_handler  Internal7_IRQHandler                    /* Internal SW Interrupt #7 */
 
     .end
 

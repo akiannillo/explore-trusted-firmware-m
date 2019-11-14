@@ -34,7 +34,7 @@ void mailbox_clear_intr(void)
                               0, IPC_RX_INT_MASK);
 }
 
-void NvicMux9_IRQHandler(void)
+void NvicMux7_IRQHandler(void)
 {
     uint32_t magic;
 
