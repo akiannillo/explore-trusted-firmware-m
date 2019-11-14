@@ -27,4 +27,6 @@
  * This is a default device configuration file with all peripherals enabled.
  */
 
+#define DEFAULT_UART_BAUDRATE  115200
+
 #endif  /* __ARM_LTD_DEVICE_CFG_H__ */

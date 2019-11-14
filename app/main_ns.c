@@ -14,10 +14,6 @@
 #include "tfm_integ_test.h"
 #include "tfm_ns_svc.h"
 #include "tfm_ns_interface.h"
-#if TFM_MULTI_CORE_TOPOLOGY
-#include "tfm_multi_core_api.h"
-#include "tfm_ns_mailbox.h"
-#endif
 #ifdef TEST_FRAMEWORK_NS
 #include "test/framework/test_framework_integ_test.h"
 #endif
@@ -26,6 +22,15 @@
 #endif
 #include "target_cfg.h"
 #include "tfm_plat_ns.h"
+#include "Driver_USART.h"
+#include "device_cfg.h"
+#ifdef TFM_MULTI_CORE_TOPOLOGY
+#include "tfm_multi_core_api.h"
+#include "tfm_ns_mailbox.h"
+#endif
+
+/* For UART the CMSIS driver is used */
+extern ARM_DRIVER_USART NS_DRIVER_STDIO;
 
 /**
  * \brief Modified table template for user defined SVC functions
@@ -58,6 +63,36 @@ extern void * const osRtxUserSVC[1+USER_SVC_COUNT];
  */
 };
 
+#if defined(__ARMCC_VERSION)
+/* Struct FILE is implemented in stdio.h. Used to redirect printf to
+ * NS_DRIVER_STDIO
+ */
+FILE __stdout;
+/* Redirects armclang printf to NS_DRIVER_STDIO */
+int fputc(int ch, FILE *f) {
+    /* Send byte to NS_DRIVER_STDIO */
+    (void)NS_DRIVER_STDIO.Send((const unsigned char *)&ch, 1);
+    /* Return character written */
+    return ch;
+}
+#elif defined(__GNUC__)
+/* redirects gcc printf to NS_DRIVER_STDIO */
+int _write(int fd, char * str, int len)
+{
+    (void)NS_DRIVER_STDIO.Send(str, len);
+
+    return len;
+}
+#elif defined(__ICCARM__)
+int putchar(int ch)
+{
+    /* Send byte to NS_DRIVER_STDIO */
+    (void)NS_DRIVER_STDIO.Send((const unsigned char *)&ch, 1);
+    /* Return character written */
+    return ch;
+}
+#endif
+
 /**
  * \brief List of RTOS thread attributes
  */
@@ -83,6 +118,8 @@ static struct ns_mailbox_queue_t ns_mailbox_queue;
 
 static void tfm_ns_multi_core_boot(void)
 {
+    int32_t ret;
+
     LOG_MSG("Non-secure code running on non-secure core.");
 
     if (tfm_ns_wait_for_s_cpu_ready()) {
@@ -93,9 +130,34 @@ static void tfm_ns_multi_core_boot(void)
         }
     }
 
-    tfm_ns_mailbox_init(&ns_mailbox_queue);
+    ret = tfm_ns_mailbox_init(&ns_mailbox_queue);
+    if (ret != MAILBOX_SUCCESS) {
+        LOG_MSG("Non-secure mailbox initialization failed.");
+
+        /* Avoid undefined behavior after NS mailbox initialization failed */
+        for (;;) {
+        }
+    }
 }
 #endif
+
+/**
+ * \brief Platform peripherals and devices initialization.
+ *        Can be overridden for platform specific initialization.
+ *
+ * \return  ARM_DRIVER_OK if the initialization succeeds
+*/
+__WEAK int32_t tfm_ns_platform_init(void)
+{
+    int32_t status;
+
+    status = NS_DRIVER_STDIO.Initialize(NULL);
+    if (status == ARM_DRIVER_OK) {
+        status = NS_DRIVER_STDIO.Control(ARM_USART_MODE_ASYNCHRONOUS,
+                                         DEFAULT_UART_BAUDRATE);
+    }
+    return status;
+}
 
 /**
  * \brief main() function
