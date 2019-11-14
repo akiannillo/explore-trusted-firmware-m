@@ -125,41 +125,19 @@ static cy_en_prot_status_t set_bus_master_attr(void)
 
     printf("%s()\n", __func__);
 
-    /* Cortex-M4 - Unprivileged (ignored?), Non-secure, PC=6 */
-    ret = Cy_Prot_ConfigBusMaster(CPUSS_MS_ID_CM4, false, false, HOST_PCS_MASK);
-    if (ret != CY_PROT_SUCCESS) {
-        return ret;
-    }
+    /* Cortex-M4 - PC=6 */
     ret = Cy_Prot_SetActivePC(CPUSS_MS_ID_CM4, CY_PROT_HOST_DEFAULT);
     if (ret != CY_PROT_SUCCESS) {
         return ret;
     }
 
-    /* Test Controller - Unprivileged, Non-secure, PC=7 */
-    ret = Cy_Prot_ConfigBusMaster(CPUSS_MS_ID_TC, false, false, TC_PC_MASK);
-    if (ret != CY_PROT_SUCCESS) {
-        return ret;
-    }
+    /* Test Controller - PC=7 */
     ret = Cy_Prot_SetActivePC(CPUSS_MS_ID_TC, CY_PROT_TC);
     if (ret != CY_PROT_SUCCESS) {
         return ret;
     }
 
-    /* Crypto - Privileged, Secure, PC=1 */
-    ret = Cy_Prot_ConfigBusMaster(CPUSS_MS_ID_CRYPTO, true, true, SECURE_PCS_MASK);
-    if (ret != CY_PROT_SUCCESS) {
-        return ret;
-    }
-    ret = Cy_Prot_SetActivePC(CPUSS_MS_ID_CRYPTO, CY_PROT_SPM_DEFAULT);
-    if (ret != CY_PROT_SUCCESS) {
-        return ret;
-    }
-
-    /* Cortex-M0+ - Privileged (ignored?), Secure, PC=1 */
-    ret = Cy_Prot_ConfigBusMaster(CPUSS_MS_ID_CM0, true, true, SECURE_PCS_MASK);
-    if (ret != CY_PROT_SUCCESS) {
-        return ret;
-    }
+    /* Cortex-M0+ - PC=1 */
     ret = Cy_Prot_SetActivePC(CPUSS_MS_ID_CM0, CY_PROT_SPM_DEFAULT);
     if (ret != CY_PROT_SUCCESS) {
         return ret;

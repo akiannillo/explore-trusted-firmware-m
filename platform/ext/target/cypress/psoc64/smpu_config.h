@@ -34,7 +34,7 @@
 #define COMMON_SMPU_MASTER_CONFIG {\
     .userPermission = CY_PROT_PERM_R, \
     .privPermission = CY_PROT_PERM_RW, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = ONLY_BL2_SPM_MASK, \
 }
@@ -51,7 +51,7 @@
     .subregions = SMPU0_SUBREGION_DIS, \
     .userPermission = CY_PROT_PERM_RWX, \
     .privPermission = CY_PROT_PERM_RWX, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
@@ -79,7 +79,7 @@
     .subregions = ALL_ENABLED, \
     .userPermission = CY_PROT_PERM_RW, \
     .privPermission = CY_PROT_PERM_RW, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
@@ -102,7 +102,7 @@
     .subregions = ALL_ENABLED, \
     .userPermission = CY_PROT_PERM_RW, \
     .privPermission = CY_PROT_PERM_RW, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
@@ -122,7 +122,7 @@
     .subregions = ALL_ENABLED, \
     .userPermission = CY_PROT_PERM_RW, \
     .privPermission = CY_PROT_PERM_RW, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
@@ -151,7 +151,7 @@
     .subregions = SMPU7_SUBREGION_DIS, \
     .userPermission = CY_PROT_PERM_DISABLED, \
     .privPermission = CY_PROT_PERM_RW, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
@@ -187,7 +187,7 @@
     .subregions = ALL_ENABLED, \
     .userPermission = CY_PROT_PERM_DISABLED, \
     .privPermission = CY_PROT_PERM_RX, \
-    .secure = true, \
+    .secure = false, \
     .pcMatch = false, \
     .pcMask = SECURE_PCS_MASK, \
 }
