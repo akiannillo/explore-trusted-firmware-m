@@ -4,7 +4,9 @@
 * Description:
 * Peripheral Hardware Block configuration
 * This file was automatically generated and should not be modified.
-* 
+* cfg-backend-cli: 1.2.0.1478
+* Device Support Library (../../../../output/cypress/psoc6pdl): 1.4.0.1571
+*
 ********************************************************************************
 * Copyright 2017-2019 Cypress Semiconductor Corporation
 * SPDX-License-Identifier: Apache-2.0
@@ -28,25 +30,18 @@
 #include "cycfg_notices.h"
 #include "cy_sysclk.h"
 #include "cy_csd.h"
-#include "cy_scb_uart.h"
-#include "cy_scb_ezi2c.h"
-#include "cy_smif.h"
-#include "cy_mcwdt.h"
-#include "cy_rtc.h"
-#include "cy_tcpwm_pwm.h"
-#include "cycfg_routing.h"
-#include "cy_usbfs_dev_drv.h"
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
+#define CYBSP_CSD_ENABLED 1U
 #define CY_CAPSENSE_CORE 4u
-#define CY_CAPSENSE_CPU_CLK 100000000u
-#define CY_CAPSENSE_PERI_CLK 100000000u
+#define CY_CAPSENSE_CPU_CLK 144000000u
+#define CY_CAPSENSE_PERI_CLK 72000000u
 #define CY_CAPSENSE_VDDA_MV 3300u
 #define CY_CAPSENSE_PERI_DIV_TYPE CY_SYSCLK_DIV_8_BIT
-#define CY_CAPSENSE_PERI_DIV_INDEX 4u
+#define CY_CAPSENSE_PERI_DIV_INDEX 0u
 #define Cmod_PORT GPIO_PRT7
 #define CintA_PORT GPIO_PRT7
 #define CintB_PORT GPIO_PRT7
@@ -74,61 +69,10 @@ extern "C" {
 #define Cmod_PORT_NUM 7u
 #define CintA_PORT_NUM 7u
 #define CintB_PORT_NUM 7u
-#define CapSense_HW CSD0
-#define CapSense_IRQ csd_interrupt_IRQn
-#define BT_UART_HW SCB2
-#define BT_UART_IRQ scb_2_interrupt_IRQn
-#define CSD_COMM_HW SCB3
-#define CSD_COMM_IRQ scb_3_interrupt_IRQn
-#define KITPROG_UART_HW SCB5
-#define KITPROG_UART_IRQ scb_5_interrupt_IRQn
-#define QSPI_HW SMIF0
-#define QSPI_IRQ smif_interrupt_IRQn
-#define QSPI_MEMORY_MODE_ALIGMENT_ERROR (0UL)
-#define QSPI_RX_DATA_FIFO_UNDERFLOW (0UL)
-#define QSPI_TX_COMMAND_FIFO_OVERFLOW (0UL)
-#define QSPI_TX_DATA_FIFO_OVERFLOW (0UL)
-#define QSPI_RX_FIFO_TRIGEER_LEVEL (0UL)
-#define QSPI_TX_FIFO_TRIGEER_LEVEL (0UL)
-#define QSPI_DATALINES0_1 (1UL)
-#define QSPI_DATALINES2_3 (1UL)
-#define QSPI_DATALINES4_5 (0UL)
-#define QSPI_DATALINES6_7 (0UL)
-#define QSPI_SS0 (1UL)
-#define QSPI_SS1 (0UL)
-#define QSPI_SS2 (0UL)
-#define QSPI_SS3 (0UL)
-#define QSPI_DESELECT_DELAY 7
-#define MCWDT0_HW MCWDT_STRUCT0
-#define RTC_10_MONTH_OFFSET (28U)
-#define RTC_MONTH_OFFSET (24U)
-#define RTC_10_DAY_OFFSET (20U)
-#define RTC_DAY_OFFSET (16U)
-#define RTC_1000_YEAR_OFFSET (12U)
-#define RTC_100_YEAR_OFFSET (8U)
-#define RTC_10_YEAR_OFFSET (4U)
-#define RTC_YEAR_OFFSET (0U)
-#define PWM_HW TCPWM1
-#define PWM_NUM 1UL
-#define PWM_MASK (1UL << 1)
-#define USBUART_ACTIVE_ENDPOINTS_MASK 7U
-#define USBUART_ENDPOINTS_BUFFER_SIZE 140U
-#define USBUART_ENDPOINTS_ACCESS_TYPE 0U
-#define USBUART_USB_CORE 4U
-#define USBUART_HW USBFS0
-#define USBUART_HI_IRQ usb_interrupt_hi_IRQn
-#define USBUART_MED_IRQ usb_interrupt_med_IRQn
-#define USBUART_LO_IRQ usb_interrupt_lo_IRQn
+#define CYBSP_CSD_HW CSD0
+#define CYBSP_CSD_IRQ csd_interrupt_IRQn
 
 extern cy_stc_csd_context_t cy_csd_0_context;
-extern const cy_stc_scb_uart_config_t BT_UART_config;
-extern const cy_stc_scb_ezi2c_config_t CSD_COMM_config;
-extern const cy_stc_scb_uart_config_t KITPROG_UART_config;
-extern const cy_stc_smif_config_t QSPI_config;
-extern const cy_stc_mcwdt_config_t MCWDT0_config;
-extern const cy_stc_rtc_config_t RTC_config;
-extern const cy_stc_tcpwm_pwm_config_t PWM_config;
-extern const cy_stc_usbfs_dev_drv_config_t USBUART_config;
 
 void init_cycfg_peripherals(void);
 
