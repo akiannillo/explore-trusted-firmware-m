@@ -24,7 +24,9 @@
  * this memory region for other purposes will lead to unexpected behavior.
  * 94KB of RAM (just before the memory reserved for system use) are
  * allocated and protected by Cypress Bootloader */
-#define TOTAL_RAM_SIZE (0x00030000) /* CY_SRAM0_SIZE - 96KB */
+/* FixMe: confirm exact available amount of RAM based on the actual
+   system allocation */
+#define TOTAL_RAM_SIZE (0x000E8000) /* CY_SRAM_SIZE - 96KB */
 
 #define BL2_HEAP_SIZE           0x0001000
 #define BL2_MSP_STACK_SIZE      0x0001000
@@ -53,17 +55,7 @@
  */
 
 #ifdef BL2
-#ifndef LINK_TO_SECONDARY_PARTITION
-#define S_IMAGE_PRIMARY_PARTITION_OFFSET    (FLASH_AREA_0_OFFSET)
-#define S_IMAGE_SECONDARY_PARTITION_OFFSET  (FLASH_AREA_2_OFFSET)
-#define NS_IMAGE_PRIMARY_PARTITION_OFFSET (FLASH_AREA_0_OFFSET + \
-                                           FLASH_S_PARTITION_SIZE)
-#else
-#define S_IMAGE_PRIMARY_PARTITION_OFFSET    (FLASH_AREA_2_OFFSET)
-#define S_IMAGE_SECONDARY_PARTITION_OFFSET  (FLASH_AREA_0_OFFSET)
-#define NS_IMAGE_PRIMARY_PARTITION_OFFSET (FLASH_AREA_2_OFFSET + \
-                                           FLASH_S_PARTITION_SIZE)
-#endif /* !LINK_TO_SECONDARY_PARTITION */
+#error "BL2 configuration is not supported"
 #else
 #define S_IMAGE_PRIMARY_PARTITION_OFFSET  SECURE_IMAGE_OFFSET
 #define NS_IMAGE_PRIMARY_PARTITION_OFFSET NON_SECURE_IMAGE_OFFSET
@@ -71,13 +63,16 @@
 
 /* TFM PSoC6 CY8CKIT_064 RAM layout:
  *
- * 0x0800_0000 Non-secure data (NS_DATA_SIZE, 63KB)
- * 0x0800_FC00 Shared memory (NS_DATA_SHARED_SIZE, 1KB)
- * 0x0801_0000 Secure unprivileged data (S_UNPRIV_DATA_SIZE, 32KB)
- * 0x0801_8000 Secure priviliged data (S_PRIV_DATA_SIZE, 92KB)
- * 0x0802_F000 Secure priv code executable from RAM (S_RAM_CODE_SIZE, 4KB)
- * 0x0803_0000 System reserved memory (96KB)
- * 0x0804_8000 End of RAM
+ * 0x0800_0000 - 0x0802_FFFF Secure (192KB)
+ *    0x0800_0000 - 0x0800_FFFF Secure unprivileged data (S_UNPRIV_DATA_SIZE, 64KB)
+ *    0x0801_0000 - 0x0802_EFFF Secure priviliged data (S_PRIV_DATA_SIZE, 124KB)
+ *    0x0802_F000 - 0x0802_FFFF Secure priv code executable from RAM (S_RAM_CODE_SIZE, 4KB)
+ *
+ * 0x0803_0000 - 0x080E_7FFF Non-secure (736KB)
+ *    0x0803_0000 - 0x080E_6FFF Non-secure OS/App (732KB)
+ *    0x080E_7000 - 0x080E_7FFF Shared memory (NS_DATA_SHARED_SIZE, 4KB)
+ * 0x080E_8000 - 0x080F_FFFF System reserved memory (96KB)
+ * 0x0810_0000 End of RAM
  */
 
 /*
@@ -92,8 +87,7 @@
  * bootloader.
  */
 #ifdef BL2
-#define BL2_HEADER_SIZE      (0x400)
-#define BL2_TRAILER_SIZE     (0x400)
+#error "BL2 configuration is not supported"
 #else
 /* Even though TFM BL2 is excluded from the build,
  * CY BL built externally is used and it needs offsets for header and trailer
@@ -123,9 +117,9 @@
 #define S_CODE_SIZE     IMAGE_S_CODE_SIZE
 #define S_CODE_LIMIT    (S_CODE_START + S_CODE_SIZE - 1)
 
-#define S_DATA_START    (S_RAM_ALIAS(NS_DATA_SIZE))
-#define S_UNPRIV_DATA_SIZE  0x8000
-#define S_PRIV_DATA_SIZE    0x17000
+#define S_DATA_START    (S_RAM_ALIAS(0))
+#define S_UNPRIV_DATA_SIZE  0x10000
+#define S_PRIV_DATA_SIZE    0x1F000
 /* Reserve 4KB for RAM-based executable code */
 #define S_RAM_CODE_SIZE     0x1000
 
@@ -145,12 +139,16 @@
  * and SMPU10.
  * Leave the SMPU alignment check in SMPU configuration file.
  */
-#define S_DATA_PRIV_OFFSET       (NS_DATA_SIZE + S_UNPRIV_DATA_SIZE)
-#define S_DATA_PRIV_START        S_RAM_ALIAS(S_DATA_PRIV_OFFSET)
+#define S_DATA_UNPRIV_OFFSET (0)
+#define S_DATA_UNPRIV_START  S_RAM_ALIAS(S_DATA_UNPRIV_OFFSET)
+
+#define S_DATA_PRIV_OFFSET   (S_DATA_UNPRIV_OFFSET + S_UNPRIV_DATA_SIZE)
+#define S_DATA_PRIV_START    S_RAM_ALIAS(S_DATA_PRIV_OFFSET)
 
 /* Reserve area for RAM-based executable code right after secure unprivilaged
  * and privilaged data areas*/
-#define S_RAM_CODE_START (S_DATA_START + S_UNPRIV_DATA_SIZE + S_PRIV_DATA_SIZE)
+#define S_RAM_CODE_OFFSET    (S_DATA_PRIV_OFFSET + S_PRIV_DATA_SIZE)
+#define S_RAM_CODE_START     S_RAM_ALIAS(S_RAM_CODE_OFFSET)
 
 /* Non-secure regions */
 #define NS_IMAGE_PRIMARY_AREA_OFFSET \
@@ -159,12 +157,12 @@
 #define NS_CODE_SIZE    IMAGE_NS_CODE_SIZE
 #define NS_CODE_LIMIT   (NS_CODE_START + NS_CODE_SIZE - 1)
 
-#define NS_DATA_START   (S_RAM_ALIAS(0))
+#define NS_DATA_START   (S_RAM_ALIAS(S_DATA_SIZE))
 #define NS_DATA_SIZE    (TOTAL_RAM_SIZE - S_DATA_SIZE)
 #define NS_DATA_LIMIT   (NS_DATA_START + NS_DATA_SIZE - 1)
 
 /* Shared memory */
-#define NS_DATA_SHARED_SIZE  0x400
+#define NS_DATA_SHARED_SIZE  0x1000
 #define NS_DATA_SHARED_START (NS_DATA_START + NS_DATA_SIZE - \
                               NS_DATA_SHARED_SIZE)
 #define NS_DATA_SHARED_LIMIT (NS_DATA_SHARED_START + NS_DATA_SHARED_SIZE - 1)
@@ -180,21 +178,8 @@
 
 #define NS_PARTITION_SIZE (FLASH_NS_PARTITION_SIZE)
 
-/* Secondary partition for new images in case of firmware upgrade */
-#define SECONDARY_PARTITION_START \
-            (NS_ROM_ALIAS(S_IMAGE_SECONDARY_PARTITION_OFFSET))
-
-#define SECONDARY_PARTITION_SIZE   FLASH_PARTITION_SIZE
-
 #ifdef BL2
-/* Bootloader regions */
-#define BL2_CODE_START    (S_ROM_ALIAS(FLASH_AREA_BL2_OFFSET))
-#define BL2_CODE_SIZE     (FLASH_AREA_BL2_SIZE)
-#define BL2_CODE_LIMIT    (BL2_CODE_START + BL2_CODE_SIZE - 1)
-
-#define BL2_DATA_START    (S_RAM_ALIAS(S_DATA_PRIV_OFFSET))
-#define BL2_DATA_SIZE     (S_PRIV_DATA_SIZE)
-#define BL2_DATA_LIMIT    (BL2_DATA_START + BL2_DATA_SIZE - 1)
+#error "BL2 configuration is not supported"
 #endif /* BL2 */
 
 /* Shared data area between bootloader and runtime firmware.
