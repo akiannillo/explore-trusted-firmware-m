@@ -21,7 +21,7 @@
 
 /* -------------------------------------- HAL API ------------------------------------ */
 
-int32_t tfm_mailbox_notify_peer(void)
+int32_t tfm_mailbox_hal_notify_peer(void)
 {
     return MAILBOX_SUCCESS;
 }
@@ -85,7 +85,7 @@ int32_t tfm_mailbox_hal_init(struct secure_mailbox_queue_t *s_queue)
     return MAILBOX_SUCCESS;
 }
 
-void tfm_mailbox_enter_critical(void)
+void tfm_mailbox_hal_enter_critical(void)
 {
     while (CY_IPC_SEMA_SUCCESS !=
         Cy_IPC_Sema_Set(MAILBOX_SEMAPHORE_NUM, false))
@@ -93,7 +93,7 @@ void tfm_mailbox_enter_critical(void)
     }
 }
 
-void tfm_mailbox_exit_critical(void)
+void tfm_mailbox_hal_exit_critical(void)
 {
     while (CY_IPC_SEMA_SUCCESS !=
         Cy_IPC_Sema_Clear(MAILBOX_SEMAPHORE_NUM, false))
