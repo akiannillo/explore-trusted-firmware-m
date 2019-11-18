@@ -33,7 +33,7 @@ int tfm_ns_wait_for_s_cpu_ready(void);
  * \retval 0               The operation succeeds.
  * \retval else            The operation fails.
  */
-int tfm_platform_ns_wait_for_s_cpu_ready(void);
+int32_t tfm_platform_ns_wait_for_s_cpu_ready(void);
 
 /**
  * \brief Acquire the multi-core lock for synchronizing PSA client call(s)

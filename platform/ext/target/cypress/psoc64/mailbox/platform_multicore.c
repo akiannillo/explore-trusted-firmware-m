@@ -110,7 +110,7 @@ int platform_ns_ipc_init(void)
     return PLATFORM_MAILBOX_SUCCESS;
 }
 
-int tfm_platform_ns_wait_for_s_cpu_ready(void)
+int32_t tfm_platform_ns_wait_for_s_cpu_ready(void)
 {
     uint32_t data = 0;
 
