@@ -19,6 +19,10 @@ add_definitions(-DCYB06447BZI_D54=1)
 add_definitions(-DNDEBUG=1)
 add_definitions(-DTFM_CORE_DEBUG)
 
+# psoc64 platform doesn't use TF-M BL2
+set(BL2 False)
+remove_definitions(-DBL2)
+
 # Skip Core Test temporarily
 set(CORE_TEST OFF)
 # Skip peripheral access test
