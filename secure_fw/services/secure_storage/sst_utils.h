@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2017-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -42,6 +42,11 @@ extern "C" {
 typedef char err_msg[(data_size <= data_buf_size)*2 - 1]
 
 /**
+ * \brief Evaluates to the minimum of the two parameters.
+ */
+#define SST_UTILS_MIN(x, y) (((x) < (y)) ? (x) : (y))
+
+/**
  * \brief Macro to get the number of bytes aligned with the
  *        SST_FLASH_PROGRAM_UNIT.
  *
@@ -60,28 +65,28 @@ typedef char err_msg[(data_size <= data_buf_size)*2 - 1]
  *                           superset region
  * \param[in] subset_size    Size of subset region
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  *
- * \retval PSA_PS_SUCCESS               The subset is contained within the
+ * \retval PSA_SUCCESS                  The subset is contained within the
  *                                      superset
- * \retval PSA_PS_ERROR_OFFSET_INVALID  The subset offset is greater than the
- *                                      size of the superset
- * \retval PSA_PS_ERROR_INCORRECT_SIZE  The subset offset is valid, but the
+ * \retval PSA_ERROR_INVALID_ARGUMENT   The subset offset is greater than the
+ *                                      size of the superset or when
+ *                                      the subset offset is valid, but the
  *                                      subset offset + size is greater than the
  *                                      size of the superset
  */
-psa_ps_status_t sst_utils_check_contained_in(uint32_t superset_size,
-                                             uint32_t subset_offset,
-                                             uint32_t subset_size);
+psa_status_t sst_utils_check_contained_in(uint32_t superset_size,
+                                          uint32_t subset_offset,
+                                          uint32_t subset_size);
 
 /**
  * \brief Validates file ID
  *
  * \param[in] fid  File ID
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-psa_ps_status_t sst_utils_validate_fid(uint32_t fid);
+psa_status_t sst_utils_validate_fid(uint32_t fid);
 
 #ifdef __cplusplus
 }

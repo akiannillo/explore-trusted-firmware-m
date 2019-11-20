@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -46,18 +46,18 @@ static uint8_t sst_crypto_buf[SST_CRYPTO_BUF_LEN];
  *                       is the one stored in the object table for the given
  *                       File ID.
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_object_auth_decrypt(uint32_t fid,
-                                               uint32_t cur_size,
-                                               struct sst_object_t *obj)
+static psa_status_t sst_object_auth_decrypt(uint32_t fid,
+                                            uint32_t cur_size,
+                                            struct sst_object_t *obj)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint8_t *p_obj_data = (uint8_t *)&obj->header.info;
     size_t out_len;
 
     err = sst_crypto_setkey();
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -76,9 +76,9 @@ static psa_ps_status_t sst_object_auth_decrypt(uint32_t fid,
                                       p_obj_data,
                                       sizeof(*obj) - sizeof(obj->header.crypto),
                                       &out_len);
-    if (err != PSA_PS_SUCCESS || out_len != cur_size) {
+    if (err != PSA_SUCCESS || out_len != cur_size) {
         (void)sst_crypto_destroykey();
-        return PSA_PS_ERROR_OPERATION_FAILED;
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     return sst_crypto_destroykey();
@@ -93,18 +93,18 @@ static psa_ps_status_t sst_object_auth_decrypt(uint32_t fid,
  * \param[out] obj       Pointer to the object structure to authenticate and
  *                       fill in with the encrypted data.
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_object_auth_encrypt(uint32_t fid,
-                                               uint32_t cur_size,
-                                               struct sst_object_t *obj)
+static psa_status_t sst_object_auth_encrypt(uint32_t fid,
+                                            uint32_t cur_size,
+                                            struct sst_object_t *obj)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint8_t *p_obj_data = (uint8_t *)&obj->header.info;
     size_t out_len;
 
     err = sst_crypto_setkey();
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -125,9 +125,9 @@ static psa_ps_status_t sst_object_auth_encrypt(uint32_t fid,
                                      sst_crypto_buf,
                                      sizeof(sst_crypto_buf),
                                      &out_len);
-    if (err != PSA_PS_SUCCESS || out_len != cur_size) {
+    if (err != PSA_SUCCESS || out_len != cur_size) {
         (void)sst_crypto_destroykey();
-        return PSA_PS_ERROR_OPERATION_FAILED;
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     (void)tfm_memcpy(p_obj_data, sst_crypto_buf, cur_size);
@@ -135,16 +135,15 @@ static psa_ps_status_t sst_object_auth_encrypt(uint32_t fid,
     return sst_crypto_destroykey();
 }
 
-psa_ps_status_t sst_encrypted_object_read(uint32_t fid,
-                                          struct sst_object_t *obj)
+psa_status_t sst_encrypted_object_read(uint32_t fid, struct sst_object_t *obj)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     struct sst_file_info_t file_info;
     uint32_t decrypt_size;
 
     /* Get the current size of the encrypted object */
     err = sst_flash_fs_file_get_info(fid, &file_info);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -152,7 +151,7 @@ psa_ps_status_t sst_encrypted_object_read(uint32_t fid,
     err = sst_flash_fs_file_read(fid, file_info.size_current,
                                  SST_OBJECT_START_POSITION,
                                  obj->header.crypto.ref.iv);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -162,17 +161,16 @@ psa_ps_status_t sst_encrypted_object_read(uint32_t fid,
 
     /* Decrypt the object data */
     err = sst_object_auth_decrypt(fid, decrypt_size, obj);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_encrypted_object_write(uint32_t fid,
-                                           struct sst_object_t *obj)
+psa_status_t sst_encrypted_object_write(uint32_t fid, struct sst_object_t *obj)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t wrt_size;
 
     wrt_size = SST_ENCRYPT_SIZE(obj->header.info.max_size) +
@@ -190,7 +188,7 @@ psa_ps_status_t sst_encrypted_object_write(uint32_t fid,
 
     /* Create an object in the object system */
     err = sst_flash_fs_file_create(fid, wrt_size, SST_EMPTY_OBJECT_SIZE, NULL);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -199,7 +197,7 @@ psa_ps_status_t sst_encrypted_object_write(uint32_t fid,
 
     /* Authenticate and encrypt the object */
     err = sst_object_auth_encrypt(fid, wrt_size, obj);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2017-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -28,13 +28,13 @@ enum serial_color_t {
 };
 
 /**
- * \brief Translates psa_ps_status_t into a string.
+ * \brief Translates psa_status_t into a string.
  *
- * \param[in] status  psa_ps_status_t status value.
+ * \param[in] status  psa_status_t status value.
  *
- * \return psa_ps_status_t as string.
+ * \return psa_status_t as string.
  */
-const char *psa_ps_status_to_str(psa_ps_status_t status);
+const char *psa_status_to_str(psa_status_t status);
 
 /**
  * \brief Translates asset permissions into a string.

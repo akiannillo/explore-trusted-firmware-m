@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -48,100 +48,100 @@ __STATIC_INLINE uint32_t get_phys_address(uint32_t block_id, uint32_t offset)
 }
 
 #ifdef SST_RAM_FS
-static psa_ps_status_t flash_init(void)
+static psa_status_t flash_init(void)
 {
     /* Nothing needs to be done in case of Flash emulated in RAM */
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_read(uint32_t flash_addr, uint32_t size,
-                                  uint8_t *buff)
+static psa_status_t flash_read(uint32_t flash_addr, uint32_t size,
+                               uint8_t *buff)
 {
     uint32_t idx = flash_addr - SST_FLASH_AREA_ADDR;
 
     (void)tfm_memcpy(buff, &block_data[idx], size);
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_write(uint32_t flash_addr, uint32_t size,
-                                   const uint8_t *buff)
+static psa_status_t flash_write(uint32_t flash_addr, uint32_t size,
+                                const uint8_t *buff)
 {
     uint32_t idx = flash_addr - SST_FLASH_AREA_ADDR;
 
     (void)tfm_memcpy(&block_data[idx], buff, size);
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_erase(uint32_t flash_addr)
+static psa_status_t flash_erase(uint32_t flash_addr)
 {
     uint32_t idx = flash_addr - SST_FLASH_AREA_ADDR;
 
     (void)tfm_memset(&block_data[idx], SST_FLASH_DEFAULT_VAL, SST_SECTOR_SIZE);
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 #else
-static psa_ps_status_t flash_init(void)
+static psa_status_t flash_init(void)
 {
     int32_t err;
 
     err = SST_FLASH_DEV_NAME.Initialize(NULL);
     if (err != ARM_DRIVER_OK) {
-        return PSA_PS_ERROR_STORAGE_FAILURE;
+        return PSA_ERROR_STORAGE_FAILURE;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_read(uint32_t flash_addr, uint32_t size,
-                                  uint8_t *buff)
+static psa_status_t flash_read(uint32_t flash_addr, uint32_t size,
+                               uint8_t *buff)
 {
     int32_t err;
 
     err = SST_FLASH_DEV_NAME.ReadData(flash_addr, buff, size);
     if (err != ARM_DRIVER_OK) {
-        return PSA_PS_ERROR_STORAGE_FAILURE;
+        return PSA_ERROR_STORAGE_FAILURE;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_write(uint32_t flash_addr, uint32_t size,
-                                   const uint8_t *buff)
+static psa_status_t flash_write(uint32_t flash_addr, uint32_t size,
+                                const uint8_t *buff)
 {
     int32_t err;
 
     err = SST_FLASH_DEV_NAME.ProgramData(flash_addr, buff, size);
     if (err != ARM_DRIVER_OK) {
-        return PSA_PS_ERROR_STORAGE_FAILURE;
+        return PSA_ERROR_STORAGE_FAILURE;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-static psa_ps_status_t flash_erase(uint32_t flash_addr)
+static psa_status_t flash_erase(uint32_t flash_addr)
 {
     int32_t err;
 
     err = SST_FLASH_DEV_NAME.EraseSector(flash_addr);
     if (err != ARM_DRIVER_OK) {
-        return PSA_PS_ERROR_STORAGE_FAILURE;
+        return PSA_ERROR_STORAGE_FAILURE;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 #endif /* SST_RAM_FS */
 
-psa_ps_status_t sst_flash_init(void)
+psa_status_t sst_flash_init(void)
 {
     return flash_init();
 }
 
-psa_ps_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
-                               uint32_t offset, uint32_t size)
+psa_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
+                            uint32_t offset, uint32_t size)
 {
     uint32_t flash_addr;
 
@@ -153,8 +153,8 @@ psa_ps_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
     return flash_read(flash_addr, size, buff);
 }
 
-psa_ps_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
-                                uint32_t offset, uint32_t size)
+psa_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
+                             uint32_t offset, uint32_t size)
 {
     uint32_t flash_addr;
 
@@ -166,13 +166,13 @@ psa_ps_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
     return flash_write(flash_addr, size, buff);
 }
 
-psa_ps_status_t sst_flash_block_to_block_move(uint32_t dst_block,
-                                              uint32_t dst_offset,
-                                              uint32_t src_block,
-                                              uint32_t src_offset,
-                                              uint32_t size)
+psa_status_t sst_flash_block_to_block_move(uint32_t dst_block,
+                                           uint32_t dst_offset,
+                                           uint32_t src_block,
+                                           uint32_t src_offset,
+                                           uint32_t size)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint8_t dst_block_data_copy[MAX_BLOCK_DATA_COPY];
     uint32_t dst_flash_addr;
     uint32_t src_flash_addr;
@@ -194,13 +194,13 @@ psa_ps_status_t sst_flash_block_to_block_move(uint32_t dst_block,
          * destination content.
          */
         err = flash_read(src_flash_addr, bytes_to_move, dst_block_data_copy);
-        if (err != PSA_PS_SUCCESS) {
+        if (err != PSA_SUCCESS) {
             return err;
         }
 
         /* Writes in flash the in-memory block content after modification */
         err = flash_write(dst_flash_addr, bytes_to_move, dst_block_data_copy);
-        if (err != PSA_PS_SUCCESS) {
+        if (err != PSA_SUCCESS) {
             return err;
         }
 
@@ -212,15 +212,15 @@ psa_ps_status_t sst_flash_block_to_block_move(uint32_t dst_block,
         dst_flash_addr += bytes_to_move;
     };
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_flash_erase_block(uint32_t block_id)
+psa_status_t sst_flash_erase_block(uint32_t block_id)
 {
     uint32_t flash_addr;
     uint32_t offset = BLOCK_START_OFFSET;
     uint32_t sectors_to_erase = SST_SECTORS_PER_BLOCK;
-    psa_ps_status_t status;
+    psa_status_t status;
 
     while (sectors_to_erase > 0) {
         /* Get the flash address defined by block ID and BLOCK_START_OFFSET
@@ -229,7 +229,7 @@ psa_ps_status_t sst_flash_erase_block(uint32_t block_id)
         flash_addr = get_phys_address(block_id, offset);
 
         status = flash_erase(flash_addr);
-        if (status != PSA_PS_SUCCESS) {
+        if (status != PSA_SUCCESS) {
             break;
         }
 

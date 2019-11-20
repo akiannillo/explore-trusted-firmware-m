@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2017-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -50,10 +50,10 @@ extern "C" {
 /**
  * \brief  Initialize the Flash Interface.
  *
- * \return Returns PSA_PS_SUCCESS if the function is executed correctly.
- *         Otherwise, it returns PSA_PS_ERROR_STORAGE_FAILURE.
+ * \return Returns PSA_SUCCESS if the function is executed correctly.
+ *         Otherwise, it returns PSA_ERROR_STORAGE_FAILURE.
  */
-psa_ps_status_t sst_flash_init(void);
+psa_status_t sst_flash_init(void);
 
 /**
  * \brief Reads block data from the position specified by block ID and offset.
@@ -67,11 +67,11 @@ psa_ps_status_t sst_flash_init(void);
  *       the range of address, based on blockid + offset + size, are always
  *       valid in the memory.
  *
- * \return Returns PSA_PS_SUCCESS if the function is executed correctly.
- *         Otherwise, it returns PSA_PS_ERROR_STORAGE_FAILURE.
+ * \return Returns PSA_SUCCESS if the function is executed correctly.
+ *         Otherwise, it returns PSA_ERROR_STORAGE_FAILURE.
  */
-psa_ps_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
-                               uint32_t offset, uint32_t size);
+psa_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
+                            uint32_t offset, uint32_t size);
 
 /**
  * \brief Writes block data to the position specified by block ID and offset.
@@ -85,11 +85,11 @@ psa_ps_status_t sst_flash_read(uint32_t block_id, uint8_t *buff,
  *       the range of address, based on blockid + offset + size, are always
  *       valid in the memory.
  *
- * \return Returns PSA_PS_SUCCESS if the function is executed correctly.
- *         Otherwise, it returns PSA_PS_ERROR_STORAGE_FAILURE.
+ * \return Returns PSA_SUCCESS if the function is executed correctly.
+ *         Otherwise, it returns PSA_ERROR_STORAGE_FAILURE.
  */
-psa_ps_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
-                                uint32_t offset, uint32_t size);
+psa_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
+                             uint32_t offset, uint32_t size);
 
 /**
  * \brief Moves data from src block ID to destination block ID.
@@ -108,14 +108,14 @@ psa_ps_status_t sst_flash_write(uint32_t block_id, const uint8_t *buff,
  *       It also considers that the destination block is already erased and
  *       ready to be written.
  *
- * \return Returns PSA_PS_SUCCESS if the function is executed correctly.
- *         Otherwise, it returns PSA_PS_ERROR_STORAGE_FAILURE.
+ * \return Returns PSA_SUCCESS if the function is executed correctly.
+ *         Otherwise, it returns PSA_ERROR_STORAGE_FAILURE.
  */
-psa_ps_status_t sst_flash_block_to_block_move(uint32_t dst_block,
-                                              uint32_t dst_offset,
-                                              uint32_t src_block,
-                                              uint32_t src_offset,
-                                              uint32_t size);
+psa_status_t sst_flash_block_to_block_move(uint32_t dst_block,
+                                           uint32_t dst_offset,
+                                           uint32_t src_block,
+                                           uint32_t src_offset,
+                                           uint32_t size);
 
 /**
  * \brief Erases block ID data.
@@ -124,10 +124,10 @@ psa_ps_status_t sst_flash_block_to_block_move(uint32_t dst_block,
  *
  * \note This function considers all input values valids.
  *
- * \return Returns PSA_PS_SUCCESS if the function is executed correctly.
- *         Otherwise, it returns PSA_PS_ERROR_STORAGE_FAILURE.
+ * \return Returns PSA_SUCCESS if the function is executed correctly.
+ *         Otherwise, it returns PSA_ERROR_STORAGE_FAILURE.
  */
-psa_ps_status_t sst_flash_erase_block(uint32_t block_id);
+psa_status_t sst_flash_erase_block(uint32_t block_id);
 
 #ifdef __cplusplus
 }

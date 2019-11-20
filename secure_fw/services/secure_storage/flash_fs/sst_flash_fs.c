@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -17,24 +17,24 @@
 
 #define SST_FLASH_FS_INIT_FILE 0
 
-static psa_ps_status_t sst_flash_fs_file_write_aligned_data(
+static psa_status_t sst_flash_fs_file_write_aligned_data(
                                         const struct sst_file_meta_t *file_meta,
                                         uint32_t offset,
                                         uint32_t size,
                                         const uint8_t *data)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t f_offset;
 
 #if (SST_FLASH_PROGRAM_UNIT != 1)
     /* Check if offset is aligned with SST_FLASH_PROGRAM_UNIT */
     if (GET_ALIGNED_FLASH_BYTES(offset) != offset) {
-        return PSA_PS_ERROR_INVALID_ARGUMENT;
+        return PSA_ERROR_INVALID_ARGUMENT;
     }
 
     /* Check if size is aligned with SST_FLASH_PROGRAM_UNIT */
     if (GET_ALIGNED_FLASH_BYTES(size) != size) {
-        return PSA_PS_ERROR_INVALID_ARGUMENT;
+        return PSA_ERROR_INVALID_ARGUMENT;
     }
 #endif /* (SST_FLASH_PROGRAM_UNIT != 1) */
 
@@ -46,65 +46,65 @@ static psa_ps_status_t sst_flash_fs_file_write_aligned_data(
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_prepare(void)
+psa_status_t sst_flash_fs_prepare(void)
 {
     /* Initialize metadata block with the valid/active metablock */
     return sst_flash_fs_mblock_init();
 }
 
-psa_ps_status_t sst_flash_fs_wipe_all(void)
+psa_status_t sst_flash_fs_wipe_all(void)
 {
     /* Clean and initialize the metadata block */
     return sst_flash_fs_mblock_reset_metablock();
 }
 
-psa_ps_status_t sst_flash_fs_file_exist(uint32_t fid)
+psa_status_t sst_flash_fs_file_exist(uint32_t fid)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t idx;
 
     err = sst_flash_fs_mblock_get_file_idx(fid, &idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_flash_fs_file_create(uint32_t fid,
-                                         uint32_t max_size,
-                                         uint32_t data_size,
-                                         const uint8_t *data)
+psa_status_t sst_flash_fs_file_create(uint32_t fid,
+                                      uint32_t max_size,
+                                      uint32_t data_size,
+                                      const uint8_t *data)
 {
     struct sst_block_meta_t block_meta;
     uint32_t cur_phys_block;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t idx;
     struct sst_file_meta_t file_meta;
 
     /* Check if file already exists */
     err = sst_flash_fs_mblock_get_file_idx(fid, &idx);
-    if (err == PSA_PS_SUCCESS) {
+    if (err == PSA_SUCCESS) {
         /* If it exits return an error as needs to be removed first */
-        return PSA_PS_ERROR_INVALID_ARGUMENT;
+        return PSA_ERROR_INVALID_ARGUMENT;
     }
 
     /* Check if max_size is aligned with SST_FLASH_PROGRAM_UNIT */
     if (GET_ALIGNED_FLASH_BYTES(max_size) != max_size) {
-        return PSA_PS_ERROR_INVALID_ARGUMENT;
+        return PSA_ERROR_INVALID_ARGUMENT;
     }
 
     /* Try to reserve an file based on the input parameters */
     err = sst_flash_fs_mblock_reserve_file(fid, max_size, &idx,
                                            &file_meta, &block_meta);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     /* Check if data needs to be stored in the new file */
     if (data_size != 0) {
         if ((data_size > max_size) || (data == NULL)) {
-            return PSA_PS_ERROR_INVALID_ARGUMENT;
+            return PSA_ERROR_INVALID_ARGUMENT;
         }
 
         /* Write the content into scratch data block */
@@ -112,16 +112,16 @@ psa_ps_status_t sst_flash_fs_file_create(uint32_t fid,
                                                    SST_FLASH_FS_INIT_FILE,
                                                    data_size,
                                                    data);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         /* Add current size the file metadata */
         file_meta.cur_size = data_size;
 
         err = sst_flash_fs_dblock_cp_remaining_data(&block_meta, &file_meta);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         cur_phys_block = block_meta.phy_id;
@@ -138,20 +138,20 @@ psa_ps_status_t sst_flash_fs_file_create(uint32_t fid,
     /* Update metadata block information */
     err = sst_flash_fs_mblock_update_scratch_block_meta(file_meta.lblock,
                                                         &block_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Add file metadata in the metadata block */
     err = sst_flash_fs_mblock_update_scratch_file_meta(idx, &file_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Copy rest of the file metadata entries */
     err = sst_flash_fs_mblock_cp_remaining_file_meta(idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* The file data in the logical block 0 is stored in same physical block
@@ -164,8 +164,8 @@ psa_ps_status_t sst_flash_fs_file_create(uint32_t fid,
      */
     if ((file_meta.lblock != SST_LOGICAL_DBLOCK0) || (data_size == 0)) {
         err = sst_flash_fs_mblock_migrate_lb0_data_to_scratch();
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
     }
 
@@ -175,68 +175,68 @@ psa_ps_status_t sst_flash_fs_file_create(uint32_t fid,
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_file_get_info(uint32_t fid,
-                                           struct sst_file_info_t *info)
+psa_status_t sst_flash_fs_file_get_info(uint32_t fid,
+                                        struct sst_file_info_t *info)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t idx;
     struct sst_file_meta_t tmp_metadata;
 
     /* Get the meta data index */
     err = sst_flash_fs_mblock_get_file_idx(fid, &idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Read file metadata */
     err = sst_flash_fs_mblock_read_file_meta(idx, &tmp_metadata);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     /* Check if index is still referring to same file */
     if (fid != tmp_metadata.id) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     info->size_max = tmp_metadata.max_size;
     info->size_current = tmp_metadata.cur_size;
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
-                                        uint32_t offset, const uint8_t *data)
+psa_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
+                                     uint32_t offset, const uint8_t *data)
 {
     struct sst_block_meta_t block_meta;
     uint32_t cur_phys_block;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t idx;
     struct sst_file_meta_t file_meta;
 
     /* Get the file index */
     err = sst_flash_fs_mblock_get_file_idx(fid, &idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Read file metadata */
     err = sst_flash_fs_mblock_read_file_meta(idx, &file_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Read block metadata */
     err = sst_flash_fs_mblock_read_block_metadata(file_meta.lblock,
                                                   &block_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Write the content into scratch data block */
     err = sst_flash_fs_file_write_aligned_data(&file_meta, offset, size, data);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     if (size > file_meta.cur_size) {
@@ -245,8 +245,8 @@ psa_ps_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
     }
 
     err = sst_flash_fs_dblock_cp_remaining_data(&block_meta, &file_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     cur_phys_block = block_meta.phy_id;
@@ -261,20 +261,20 @@ psa_ps_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
     /* Update block metadata in scratch metadata block */
     err = sst_flash_fs_mblock_update_scratch_block_meta(file_meta.lblock,
                                                         &block_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Update file metadata to reflect new attributes */
     err = sst_flash_fs_mblock_update_scratch_file_meta(idx, &file_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Copy rest of the file metadata entries */
     err = sst_flash_fs_mblock_cp_remaining_file_meta(idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* The file data in the logical block 0 is stored in same physical block
@@ -287,8 +287,8 @@ psa_ps_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
      */
     if (file_meta.lblock != SST_LOGICAL_DBLOCK0) {
         err = sst_flash_fs_mblock_migrate_lb0_data_to_scratch();
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
     }
 
@@ -300,13 +300,13 @@ psa_ps_status_t sst_flash_fs_file_write(uint32_t fid, uint32_t size,
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
+psa_status_t sst_flash_fs_file_delete(uint32_t fid)
 {
     uint32_t del_file_data_idx;
     uint32_t del_file_lblock;
     uint32_t del_file_idx;
     uint32_t del_file_max_size;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t src_offset = SST_BLOCK_SIZE;
     uint32_t nbr_bytes_to_move = 0;
     uint32_t idx;
@@ -314,17 +314,17 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
 
     /* Get the file index */
     err = sst_flash_fs_mblock_get_file_idx(fid, &del_file_idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     err = sst_flash_fs_mblock_read_file_meta(del_file_idx, &file_meta);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
-    if (sst_utils_validate_fid(file_meta.id) != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (sst_utils_validate_fid(file_meta.id) != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Save logical block, data_index and max_size to be used later on */
@@ -341,7 +341,7 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
     /* Update file metadata in to the scratch block */
     err = sst_flash_fs_mblock_update_scratch_file_meta(del_file_idx,
                                                        &file_meta);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -354,7 +354,7 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
 
         /* Read file meta for the given file index */
         err = sst_flash_fs_mblock_read_file_meta(idx, &file_meta);
-        if (err != PSA_PS_SUCCESS) {
+        if (err != PSA_SUCCESS) {
             return err;
         }
 
@@ -385,7 +385,7 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
         }
         /* Update file metadata in to the scratch block */
         err = sst_flash_fs_mblock_update_scratch_file_meta(idx, &file_meta);
-        if (err != PSA_PS_SUCCESS) {
+        if (err != PSA_SUCCESS) {
             return err;
         }
     }
@@ -394,7 +394,7 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
     err = sst_flash_fs_dblock_compact_block(del_file_lblock, del_file_max_size,
                                             src_offset, del_file_data_idx,
                                             nbr_bytes_to_move);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -408,8 +408,8 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
      */
     if (del_file_lblock != SST_LOGICAL_DBLOCK0) {
         err = sst_flash_fs_mblock_migrate_lb0_data_to_scratch();
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
     }
 
@@ -421,41 +421,41 @@ psa_ps_status_t sst_flash_fs_file_delete(uint32_t fid)
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_file_read(uint32_t fid, uint32_t size,
-                                       uint32_t offset, uint8_t *data)
+psa_status_t sst_flash_fs_file_read(uint32_t fid, uint32_t size,
+                                    uint32_t offset, uint8_t *data)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t idx;
     struct sst_file_meta_t tmp_metadata;
 
     /* Get the file index */
     err = sst_flash_fs_mblock_get_file_idx(fid, &idx);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Read file metadata */
     err = sst_flash_fs_mblock_read_file_meta(idx, &tmp_metadata);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Check if index is still referring to same file */
     if (fid != tmp_metadata.id) {
-        return PSA_PS_ERROR_UID_NOT_FOUND;
+        return PSA_ERROR_DOES_NOT_EXIST;
     }
 
     /* Boundary check the incoming request */
     err = sst_utils_check_contained_in(tmp_metadata.cur_size, offset, size);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     /* Read the file from flash */
     err = sst_flash_fs_dblock_read_file(&tmp_metadata, offset, size, data);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }

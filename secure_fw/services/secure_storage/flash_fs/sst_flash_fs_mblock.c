@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -275,42 +275,42 @@ static uint8_t sst_mblock_latest_meta_block(
  *
  * \param[in] file_meta  Pointer to file meta structure
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
 __attribute__((always_inline))
-__STATIC_INLINE psa_ps_status_t sst_mblock_validate_file_meta(
+__STATIC_INLINE psa_status_t sst_mblock_validate_file_meta(
                                         const struct sst_file_meta_t *file_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     /* Logical block ID can not be bigger or equal than number of
      * active blocks.
      */
     if (file_meta->lblock >= SST_NUM_ACTIVE_DBLOCKS) {
-        return PSA_PS_ERROR_DATA_CORRUPT;
+        return PSA_ERROR_DATA_CORRUPT;
     }
 
     /* meta->id can be 0 if the file is not in use. If it is in
      * use, check the metadata.
      */
-    if (sst_utils_validate_fid(file_meta->id) == PSA_PS_SUCCESS) {
+    if (sst_utils_validate_fid(file_meta->id) == PSA_SUCCESS) {
         /* validate files values if file is in use */
         if (file_meta->max_size > SST_MAX_OBJECT_SIZE) {
-            return PSA_PS_ERROR_DATA_CORRUPT;
+            return PSA_ERROR_DATA_CORRUPT;
         }
 
         /* The current file data size must be smaller or equal than
          * file data max size.
          */
         if (file_meta->cur_size > file_meta->max_size) {
-            return PSA_PS_ERROR_DATA_CORRUPT;
+            return PSA_ERROR_DATA_CORRUPT;
         }
 
         if (file_meta->lblock == SST_LOGICAL_DBLOCK0) {
             /* In block 0, data index must be located after the metadata */
             if (file_meta->data_idx <
                 sst_mblock_file_meta_offset(SST_MAX_NUM_OBJECTS)) {
-                return PSA_PS_ERROR_DATA_CORRUPT;
+                return PSA_ERROR_DATA_CORRUPT;
             }
         }
 
@@ -318,12 +318,12 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_file_meta(
         err = sst_utils_check_contained_in(SST_BLOCK_SIZE,
                                            file_meta->data_idx,
                                            file_meta->max_size);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_DATA_CORRUPT;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_DATA_CORRUPT;
         }
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
 /**
@@ -333,18 +333,18 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_file_meta(
  *
  * \param[in] block_meta  Pointer to block meta structure
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
 __attribute__((always_inline))
-__STATIC_INLINE psa_ps_status_t sst_mblock_validate_block_meta(
+__STATIC_INLINE psa_status_t sst_mblock_validate_block_meta(
                                       const struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     /* Data block's data start at position 0 */
     uint32_t valid_data_start_value = 0;
 
     if (block_meta->phy_id >= SST_TOTAL_NUM_OF_BLOCKS) {
-        return PSA_PS_ERROR_DATA_CORRUPT;
+        return PSA_ERROR_DATA_CORRUPT;
     }
 
     /* Boundary check: block data start + free size can not be bigger
@@ -353,8 +353,8 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_block_meta(
     err = sst_utils_check_contained_in(SST_BLOCK_SIZE,
                                        block_meta->data_start,
                                        block_meta->free_size);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_DATA_CORRUPT;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_DATA_CORRUPT;
     }
 
     if (block_meta->phy_id == SST_METADATA_BLOCK0 ||
@@ -368,10 +368,10 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_block_meta(
     }
 
     if (block_meta->data_start != valid_data_start_value) {
-        return PSA_PS_ERROR_DATA_CORRUPT;
+        return PSA_ERROR_DATA_CORRUPT;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 #endif
 
@@ -382,20 +382,20 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_block_meta(
  */
 static uint32_t sst_get_free_file_index(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t i;
     struct sst_file_meta_t tmp_metadata;
 
     for (i = 0; i < SST_MAX_NUM_OBJECTS; i++) {
         err = sst_flash_fs_mblock_read_file_meta(i, &tmp_metadata);
-        if (err != PSA_PS_SUCCESS) {
+        if (err != PSA_SUCCESS) {
             return SST_METADATA_INVALID_INDEX;
         }
 
         /* Check if this entry is free by checking if ID values is an
          * invalid ID.
          */
-        if (sst_utils_validate_fid(tmp_metadata.id) != PSA_PS_SUCCESS) {
+        if (sst_utils_validate_fid(tmp_metadata.id) != PSA_SUCCESS) {
             /* Found */
             return i;
         }
@@ -410,12 +410,12 @@ static uint32_t sst_get_free_file_index(void)
  * \param[in] idx        File metadata entry index in the metadata table
  * \param[in] file_meta  Metadata pointer
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_update_scratch_file_meta(uint32_t idx,
+static psa_status_t sst_mblock_update_scratch_file_meta(uint32_t idx,
                                              struct sst_file_meta_t *file_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t pos;
     uint32_t scratch_block;
 
@@ -431,9 +431,9 @@ static psa_ps_status_t sst_mblock_update_scratch_file_meta(uint32_t idx,
 /**
  * \brief Erases data and meta scratch blocks.
  */
-static psa_ps_status_t sst_mblock_erase_scratch_blocks(void)
+static psa_status_t sst_mblock_erase_scratch_blocks(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t scratch_datablock;
     uint32_t scratch_metablock;
 
@@ -444,7 +444,7 @@ static psa_ps_status_t sst_mblock_erase_scratch_blocks(void)
      * metadata scratch block is erased before data block.
      */
     err = sst_flash_erase_block(scratch_metablock);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -469,12 +469,12 @@ static psa_ps_status_t sst_mblock_erase_scratch_blocks(void)
  * \param[in] block_meta  Pointer to the block metadata data to write in the
  *                        scratch block
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_update_scratch_block_meta(uint32_t lblock,
+static psa_status_t sst_mblock_update_scratch_block_meta(uint32_t lblock,
                                             struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t meta_block;
     uint32_t pos;
 
@@ -491,12 +491,12 @@ static psa_ps_status_t sst_mblock_update_scratch_block_meta(uint32_t lblock,
  *
  * \param[in] lblock  Logical block number to skip
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
+static psa_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
 {
     struct sst_block_meta_t block_meta;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t meta_block;
     uint32_t pos;
     uint32_t scratch_block;
@@ -516,8 +516,8 @@ static psa_ps_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
          */
         err = sst_flash_fs_mblock_read_block_metadata(SST_LOGICAL_DBLOCK0,
                                                       &block_meta);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         /* Update physical ID for logical block 0 to match with the
@@ -526,8 +526,8 @@ static psa_ps_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
         block_meta.phy_id = scratch_block;
         err = sst_mblock_update_scratch_block_meta(SST_LOGICAL_DBLOCK0,
                                                    &block_meta);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         /* Copy the rest of metadata blocks between logical block 0 and
@@ -542,7 +542,7 @@ static psa_ps_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
             /* Data before updated content */
             err = sst_flash_block_to_block_move(scratch_block, pos, meta_block,
                                                 pos, size);
-            if (err != PSA_PS_SUCCESS) {
+            if (err != PSA_SUCCESS) {
                 return err;
             }
         }
@@ -564,13 +564,12 @@ static psa_ps_status_t sst_mblock_copy_remaining_block_meta(uint32_t lblock)
  *
  * \param[in] swap_count  Swap count to validate
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
 __attribute__((always_inline))
-__STATIC_INLINE psa_ps_status_t sst_mblock_validate_swap_count(
-                                                             uint8_t swap_count)
+__STATIC_INLINE psa_status_t sst_mblock_validate_swap_count(uint8_t swap_count)
 {
-    psa_ps_status_t err = PSA_PS_SUCCESS;
+    psa_status_t err = PSA_SUCCESS;
 
     /* When a flash block is erased, the default value
      * is usually 0xFF (i.e. all 1s). Since the swap count
@@ -585,7 +584,7 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_swap_count(
      * back to previous metablock instead.
      */
     if (swap_count == SST_FLASH_DEFAULT_VAL) {
-        err = PSA_PS_ERROR_OPERATION_FAILED;
+        err = PSA_ERROR_GENERIC_ERROR;
     }
 
     return err;
@@ -596,19 +595,18 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_swap_count(
  *
  * \param[in] fs_version  File system version.
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
 __attribute__((always_inline))
-__STATIC_INLINE psa_ps_status_t sst_mblock_validate_fs_version(
-                                                             uint8_t fs_version)
+__STATIC_INLINE psa_status_t sst_mblock_validate_fs_version(uint8_t fs_version)
 {
-    psa_ps_status_t err = PSA_PS_SUCCESS;
+    psa_status_t err = PSA_SUCCESS;
 
     /* Looks for exact version number.
      * FIXME: backward compatibility could be considered in future revisions.
      */
     if (fs_version != SST_SUPPORTED_VERSION) {
-        err = PSA_PS_ERROR_OPERATION_FAILED;
+        err = PSA_ERROR_GENERIC_ERROR;
     }
 
     return err;
@@ -621,15 +619,15 @@ __STATIC_INLINE psa_ps_status_t sst_mblock_validate_fs_version(
  *
  * \param[in] h_meta  Pointer to metadata block header
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_validate_header_meta(
+static psa_status_t sst_mblock_validate_header_meta(
                                      struct sst_metadata_block_header_t *h_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     err = sst_mblock_validate_fs_version(h_meta->fs_version);
-    if (err == PSA_PS_SUCCESS) {
+    if (err == PSA_SUCCESS) {
         err = sst_mblock_validate_swap_count(h_meta->active_swap_count);
     }
 
@@ -639,11 +637,11 @@ static psa_ps_status_t sst_mblock_validate_header_meta(
 /**
  * \brief Writes the scratch metadata's header.
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_write_scratch_meta_header(void)
+static psa_status_t sst_mblock_write_scratch_meta_header(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t scratch_metablock;
 
     scratch_metablock = sst_cur_meta_scratch_id();
@@ -653,7 +651,7 @@ static psa_ps_status_t sst_mblock_write_scratch_meta_header(void)
 
     err = sst_mblock_validate_swap_count(
                         sst_flash_fs_ctx.meta_block_header.active_swap_count);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         /* Reset the swap count to 0 */
         sst_flash_fs_ctx.meta_block_header.active_swap_count = 0;
     }
@@ -669,16 +667,16 @@ static psa_ps_status_t sst_mblock_write_scratch_meta_header(void)
 /**
  * \brief Reads the active metadata block header into sst_system_ctx.
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_read_meta_header(void)
+static psa_status_t sst_mblock_read_meta_header(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     err = sst_flash_read(sst_flash_fs_ctx.active_metablock,
                          (uint8_t *)&sst_flash_fs_ctx.meta_block_header, 0,
                          SST_BLOCK_META_HEADER_SIZE);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -695,19 +693,19 @@ static psa_ps_status_t sst_mblock_read_meta_header(void)
  * \param[out] file_meta    File metadata entry
  * \param[out] block_meta   Block metadata entry
  *
- * \return Returns error code as specified in \ref psa_ps_status_t
+ * \return Returns error code as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_mblock_reserve_file(uint32_t fid, uint32_t size,
+static psa_status_t sst_mblock_reserve_file(uint32_t fid, uint32_t size,
                                           struct sst_file_meta_t *file_meta,
                                           struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t i;
 
     for (i = 0; i < SST_NUM_ACTIVE_DBLOCKS; i++) {
         err = sst_flash_fs_mblock_read_block_metadata(i, block_meta);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         if (block_meta->free_size >= size) {
@@ -720,23 +718,23 @@ static psa_ps_status_t sst_mblock_reserve_file(uint32_t fid, uint32_t size,
 
             /* Update block metadata */
             block_meta->free_size -= size;
-            return PSA_PS_SUCCESS;
+            return PSA_SUCCESS;
         }
     }
 
     /* No block has large enough space to fit the requested file */
-    return PSA_PS_ERROR_INSUFFICIENT_SPACE;
+    return PSA_ERROR_INSUFFICIENT_STORAGE;
 }
 
 /**
  * \brief Validates and find the valid-active metablock
  *
- * \return Returns value as specified in \ref psa_ps_status_t
+ * \return Returns value as specified in \ref psa_status_t
  */
-static psa_ps_status_t sst_init_get_active_metablock(void)
+static psa_status_t sst_init_get_active_metablock(void)
 {
     uint32_t cur_meta_block = SST_BLOCK_INVALID_ID;
-    psa_ps_status_t err;
+    psa_status_t err;
     struct sst_metadata_block_header_t h_meta0;
     struct sst_metadata_block_header_t h_meta1;
     uint8_t num_valid_meta_blocks = 0;
@@ -746,13 +744,13 @@ static psa_ps_status_t sst_init_get_active_metablock(void)
     /* Read the header of both the metdata blocks */
     err = sst_flash_read(SST_METADATA_BLOCK0, (uint8_t *)&h_meta0,
                          0, SST_BLOCK_META_HEADER_SIZE);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     err = sst_flash_read(SST_METADATA_BLOCK1, (uint8_t *)&h_meta1,
                          0, SST_BLOCK_META_HEADER_SIZE);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -761,12 +759,12 @@ static psa_ps_status_t sst_init_get_active_metablock(void)
      * update operation to complete. Need to find out the valid
      * metadata block now.
      */
-    if (sst_mblock_validate_header_meta(&h_meta0) == PSA_PS_SUCCESS) {
+    if (sst_mblock_validate_header_meta(&h_meta0) == PSA_SUCCESS) {
         num_valid_meta_blocks++;
         cur_meta_block = SST_METADATA_BLOCK0;
     }
 
-    if (sst_mblock_validate_header_meta(&h_meta1) == PSA_PS_SUCCESS) {
+    if (sst_mblock_validate_header_meta(&h_meta1) == PSA_SUCCESS) {
         num_valid_meta_blocks++;
         cur_meta_block = SST_METADATA_BLOCK1;
     }
@@ -778,18 +776,18 @@ static psa_ps_status_t sst_init_get_active_metablock(void)
     if (num_valid_meta_blocks > 1) {
         cur_meta_block = sst_mblock_latest_meta_block(&h_meta0, &h_meta1);
     } else if (num_valid_meta_blocks == 0) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     sst_flash_fs_ctx.active_metablock = cur_meta_block;
     sst_flash_fs_ctx.scratch_metablock = SST_OTHER_META_BLOCK(cur_meta_block);
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_cp_remaining_file_meta(uint32_t idx)
+psa_status_t sst_flash_fs_mblock_cp_remaining_file_meta(uint32_t idx)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t end;
     uint32_t meta_block;
     uint32_t pos;
@@ -803,7 +801,7 @@ psa_ps_status_t sst_flash_fs_mblock_cp_remaining_file_meta(uint32_t idx)
     /* Data before updated content */
     err = sst_flash_block_to_block_move(scratch_block, pos, meta_block, pos,
                                         (idx * SST_FILE_METADATA_SIZE));
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -832,47 +830,47 @@ uint32_t sst_flash_fs_mblock_cur_data_scratch_id(uint32_t lblock)
     return sst_flash_fs_ctx.meta_block_header.scratch_dblock;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_get_file_idx(uint32_t fid, uint32_t *idx)
+psa_status_t sst_flash_fs_mblock_get_file_idx(uint32_t fid, uint32_t *idx)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t i;
     struct sst_file_meta_t tmp_metadata;
 
     for (i = 0; i < SST_MAX_NUM_OBJECTS; i++) {
         err = sst_flash_fs_mblock_read_file_meta(i, &tmp_metadata);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
 
         /* ID with value 0x00 means end of file meta section */
         if (tmp_metadata.id == fid) {
             /* Found */
             *idx = i;
-            return PSA_PS_SUCCESS;
+            return PSA_SUCCESS;
         }
     }
 
-    return PSA_PS_ERROR_UID_NOT_FOUND;
+    return PSA_ERROR_DOES_NOT_EXIST;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_init(void)
+psa_status_t sst_flash_fs_mblock_init(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     /* Initialize Flash Interface */
     err = sst_flash_init();
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     err = sst_init_get_active_metablock();
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     err = sst_mblock_read_meta_header();
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Erase the other scratch metadata block */
@@ -881,13 +879,13 @@ psa_ps_status_t sst_flash_fs_mblock_init(void)
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_meta_update_finalize(void)
+psa_status_t sst_flash_fs_mblock_meta_update_finalize(void)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     /* Write the metadata block header to flash */
     err = sst_mblock_write_scratch_meta_header();
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -900,12 +898,12 @@ psa_ps_status_t sst_flash_fs_mblock_meta_update_finalize(void)
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_migrate_lb0_data_to_scratch(void)
+psa_status_t sst_flash_fs_mblock_migrate_lb0_data_to_scratch(void)
 {
     struct sst_block_meta_t block_meta;
     uint32_t current_metablock;
     uint32_t data_size;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t scratch_metablock;
 
     scratch_metablock = sst_cur_meta_scratch_id();
@@ -913,7 +911,7 @@ psa_ps_status_t sst_flash_fs_mblock_migrate_lb0_data_to_scratch(void)
 
     err = sst_flash_fs_mblock_read_block_metadata(SST_LOGICAL_DBLOCK0,
                                                   &block_meta);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -929,10 +927,10 @@ psa_ps_status_t sst_flash_fs_mblock_migrate_lb0_data_to_scratch(void)
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_read_file_meta(uint32_t idx,
+psa_status_t sst_flash_fs_mblock_read_file_meta(uint32_t idx,
                                              struct sst_file_meta_t *file_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t offset;
 
     offset = sst_mblock_file_meta_offset(idx);
@@ -941,7 +939,7 @@ psa_ps_status_t sst_flash_fs_mblock_read_file_meta(uint32_t idx,
                          SST_FILE_METADATA_SIZE);
 
 #ifdef SST_VALIDATE_METADATA_FROM_FLASH
-    if (err == PSA_PS_SUCCESS) {
+    if (err == PSA_SUCCESS) {
         err = sst_mblock_validate_file_meta(file_meta);
     }
 #endif
@@ -949,10 +947,10 @@ psa_ps_status_t sst_flash_fs_mblock_read_file_meta(uint32_t idx,
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_read_block_metadata(uint32_t lblock,
+psa_status_t sst_flash_fs_mblock_read_block_metadata(uint32_t lblock,
                                             struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t metablock;
     uint32_t pos;
 
@@ -962,7 +960,7 @@ psa_ps_status_t sst_flash_fs_mblock_read_block_metadata(uint32_t lblock,
                          pos, SST_BLOCK_METADATA_SIZE);
 
 #ifdef SST_VALIDATE_METADATA_FROM_FLASH
-    if (err == PSA_PS_SUCCESS) {
+    if (err == PSA_SUCCESS) {
         err = sst_mblock_validate_block_meta(block_meta);
     }
 #endif
@@ -970,28 +968,28 @@ psa_ps_status_t sst_flash_fs_mblock_read_block_metadata(uint32_t lblock,
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_reserve_file(uint32_t fid, uint32_t size,
+psa_status_t sst_flash_fs_mblock_reserve_file(uint32_t fid, uint32_t size,
                                             uint32_t *idx,
                                             struct sst_file_meta_t *file_meta,
                                             struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     err = sst_mblock_reserve_file(fid, size, file_meta, block_meta);
 
     *idx = sst_get_free_file_index();
-    if ((err != PSA_PS_SUCCESS) ||
+    if ((err != PSA_SUCCESS) ||
         (*idx == SST_METADATA_INVALID_INDEX)) {
-        return PSA_PS_ERROR_INSUFFICIENT_SPACE;
+        return PSA_ERROR_INSUFFICIENT_STORAGE;
     }
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_reset_metablock(void)
+psa_status_t sst_flash_fs_mblock_reset_metablock(void)
 {
     struct sst_block_meta_t block_meta;
-    psa_ps_status_t err;
+    psa_status_t err;
     uint32_t i;
     uint32_t metablock_to_erase_first = SST_METADATA_BLOCK0;
     struct sst_file_meta_t file_metadata;
@@ -1000,17 +998,17 @@ psa_ps_status_t sst_flash_fs_mblock_reset_metablock(void)
      * ensure that the active metadata block is erased last to prevent rollback
      * in the case of a power failure between the two erases.
      */
-    if (sst_init_get_active_metablock() == PSA_PS_SUCCESS) {
+    if (sst_init_get_active_metablock() == PSA_SUCCESS) {
         metablock_to_erase_first = sst_flash_fs_ctx.scratch_metablock;
     }
 
     err = sst_flash_erase_block(metablock_to_erase_first);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
     err = sst_flash_erase_block(SST_OTHER_META_BLOCK(metablock_to_erase_first));
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -1029,7 +1027,7 @@ psa_ps_status_t sst_flash_fs_mblock_reset_metablock(void)
     block_meta.phy_id = SST_METADATA_BLOCK0;
     err = sst_mblock_update_scratch_block_meta(SST_LOGICAL_DBLOCK0,
                                                &block_meta);
-    if (err != PSA_PS_SUCCESS) {
+    if (err != PSA_SUCCESS) {
         return err;
     }
 
@@ -1050,15 +1048,15 @@ psa_ps_status_t sst_flash_fs_mblock_reset_metablock(void)
     /* If an error is detected while erasing the flash, then return a
      * system error to abort core wipe process.
      */
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_STORAGE_FAILURE;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_STORAGE_FAILURE;
     }
 
     for (i = 0; i < SST_NUM_DEDICATED_DBLOCKS; i++) {
         block_meta.phy_id = i + SST_INIT_DBLOCK_START;
         err = sst_mblock_update_scratch_block_meta(i + 1, &block_meta);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
     }
 
@@ -1069,20 +1067,20 @@ psa_ps_status_t sst_flash_fs_mblock_reset_metablock(void)
         /* In the beginning phys id is same as logical id */
         /* Update file metadata to reflect new attributes */
         err = sst_mblock_update_scratch_file_meta(i, &file_metadata);
-        if (err != PSA_PS_SUCCESS) {
-            return PSA_PS_ERROR_OPERATION_FAILED;
+        if (err != PSA_SUCCESS) {
+            return PSA_ERROR_GENERIC_ERROR;
         }
     }
 
     err = sst_mblock_write_scratch_meta_header();
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     /* Swap active and scratch metablocks */
     sst_mblock_swap_metablocks();
 
-    return PSA_PS_SUCCESS;
+    return PSA_SUCCESS;
 }
 
 void sst_flash_fs_mblock_set_data_scratch(uint32_t phy_id, uint32_t lblock)
@@ -1092,11 +1090,11 @@ void sst_flash_fs_mblock_set_data_scratch(uint32_t phy_id, uint32_t lblock)
     }
 }
 
-psa_ps_status_t sst_flash_fs_mblock_update_scratch_block_meta(
+psa_status_t sst_flash_fs_mblock_update_scratch_block_meta(
                                             uint32_t lblock,
                                             struct sst_block_meta_t *block_meta)
 {
-    psa_ps_status_t err;
+    psa_status_t err;
 
     /* If the file is the logical block 0, then update the physical ID to the
      * current scratch metadata block so that it is correct after the metadata
@@ -1107,8 +1105,8 @@ psa_ps_status_t sst_flash_fs_mblock_update_scratch_block_meta(
     }
 
     err = sst_mblock_update_scratch_block_meta(lblock, block_meta);
-    if (err != PSA_PS_SUCCESS) {
-        return PSA_PS_ERROR_OPERATION_FAILED;
+    if (err != PSA_SUCCESS) {
+        return PSA_ERROR_GENERIC_ERROR;
     }
 
     err = sst_mblock_copy_remaining_block_meta(lblock);
@@ -1116,7 +1114,7 @@ psa_ps_status_t sst_flash_fs_mblock_update_scratch_block_meta(
     return err;
 }
 
-psa_ps_status_t sst_flash_fs_mblock_update_scratch_file_meta(uint32_t idx,
+psa_status_t sst_flash_fs_mblock_update_scratch_file_meta(uint32_t idx,
                                               struct sst_file_meta_t *file_meta)
 {
     return sst_mblock_update_scratch_file_meta(idx, file_meta);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2018-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -26,7 +26,7 @@
 struct sst_object_info_t {
     uint32_t current_size; /*!< Current size of the object content in bytes */
     uint32_t max_size;     /*!< Maximum size of the object content in bytes */
-    psa_ps_create_flags_t create_flags; /*!< Object creation flags */
+    psa_storage_create_flags_t create_flags; /*!< Object creation flags */
 };
 
 /*!
