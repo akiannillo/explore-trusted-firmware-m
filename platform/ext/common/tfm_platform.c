@@ -7,25 +7,22 @@
 
 #include "target_cfg.h"
 #include "platform/include/tfm_spm_hal.h"
+#include "uart_stdout.h"
 
-/**
- * \brief This function initializes platform peripherals.
- *
- * Contrarily to SystemInit() intended for a high-priority hw initialization
- * (for example clock and power subsystems), and called on a very early boot
- * stage from startup code, this function is called from C code, hence
- * variables and other drivers data are protected from being cleared up by the
- * C library init.
- * Implemented as a "weak" function, it can be overwritten by a platform
- * specific implementation.
- *
- * \return Returns values as specified by the \ref tfm_plat_err_t
- */
-
-__WEAK enum tfm_plat_err_t tfm_spm_hal_post_platform_init(void)
+/* platform-specific hw initialization */
+__WEAK enum tfm_plat_err_t tfm_spm_hal_post_init_platform(void)
 {
-    __enable_irq();
-    stdio_init();
     return TFM_PLAT_ERR_SUCCESS;
 }
 
+enum tfm_plat_err_t tfm_spm_hal_post_init(void)
+{
+    if (tfm_spm_hal_post_init_platform() != TFM_PLAT_ERR_SUCCESS) {
+        return TFM_PLAT_ERR_SYSTEM_ERR;
+    }
+
+    __enable_irq();
+    stdio_init();
+
+    return TFM_PLAT_ERR_SUCCESS;
+}
