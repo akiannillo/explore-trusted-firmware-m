@@ -10,23 +10,30 @@
 #include "tfm_api.h"
 #include "tfm_multi_core_api.h"
 
-void *ns_lock_handle = NULL;
+static void *ns_lock_handle = NULL;
 
 __attribute__((weak))
 enum tfm_status_e tfm_ns_interface_init(void)
 {
-    void *handle;
-
-    handle = os_wrapper_mutex_create();
-    if (!handle) {
+    ns_lock_handle = os_wrapper_mutex_create();
+    if (!ns_lock_handle) {
         return TFM_ERROR_GENERIC;
     }
 
-    ns_lock_handle = handle;
     return TFM_SUCCESS;
 }
 
 int tfm_ns_wait_for_s_cpu_ready(void)
 {
     return tfm_platform_ns_wait_for_s_cpu_ready();
+}
+
+uint32_t tfm_ns_multi_core_lock_acquire(void)
+{
+    return os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER);
+}
+
+uint32_t tfm_ns_multi_core_lock_release(void)
+{
+    return os_wrapper_mutex_release(ns_lock_handle);
 }

@@ -13,6 +13,7 @@
 #include "psa/client.h"
 #include "psa/error.h"
 #include "tfm_api.h"
+#include "tfm_multi_core_api.h"
 #include "tfm_ns_mailbox.h"
 
 /*
@@ -37,8 +38,6 @@
  */
 #define PSA_INTER_CORE_COMM_ERR         (INT32_MIN + 0xFF)
 
-extern void *ns_lock_handle;
-
 static void mailbox_wait_reply(mailbox_msg_handle_t handle)
 {
     while (!tfm_ns_mailbox_is_msg_replied(handle)) {};
@@ -53,15 +52,14 @@ uint32_t psa_framework_version(void)
     uint32_t version;
     int32_t ret;
 
-    if (os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER)
-            != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_acquire() != OS_WRAPPER_SUCCESS) {
         return PSA_VERSION_NONE;
     }
 
     handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_FRAMEWORK_VERSION,
                                           &params, NON_SECURE_CLIENT_ID);
     if (handle < 0) {
-        os_wrapper_mutex_release(ns_lock_handle);
+        tfm_ns_multi_core_lock_release();
         return PSA_VERSION_NONE;
     }
 
@@ -72,7 +70,7 @@ uint32_t psa_framework_version(void)
         version = PSA_VERSION_NONE;
     }
 
-    if (os_wrapper_mutex_release(ns_lock_handle) != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_release() != OS_WRAPPER_SUCCESS) {
         return PSA_VERSION_NONE;
     }
 
@@ -88,15 +86,14 @@ uint32_t psa_version(uint32_t sid)
 
     params.psa_version_params.sid = sid;
 
-    if (os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER)
-            != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_acquire() != OS_WRAPPER_SUCCESS) {
         return PSA_VERSION_NONE;
     }
 
     handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_VERSION, &params,
                                           NON_SECURE_CLIENT_ID);
     if (handle < 0) {
-        os_wrapper_mutex_release(ns_lock_handle);
+        tfm_ns_multi_core_lock_release();
         return PSA_VERSION_NONE;
     }
 
@@ -107,7 +104,7 @@ uint32_t psa_version(uint32_t sid)
         version = PSA_VERSION_NONE;
     }
 
-    if (os_wrapper_mutex_release(ns_lock_handle) != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_release() != OS_WRAPPER_SUCCESS) {
         return PSA_VERSION_NONE;
     }
 
@@ -124,15 +121,14 @@ psa_handle_t psa_connect(uint32_t sid, uint32_t minor_version)
     params.psa_connect_params.sid = sid;
     params.psa_connect_params.minor_version = minor_version;
 
-    if (os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER)
-            != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_acquire() != OS_WRAPPER_SUCCESS) {
         return PSA_NULL_HANDLE;
     }
 
     handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CONNECT, &params,
                                           NON_SECURE_CLIENT_ID);
     if (handle < 0) {
-        os_wrapper_mutex_release(ns_lock_handle);
+        tfm_ns_multi_core_lock_release();
         return PSA_NULL_HANDLE;
     }
 
@@ -143,7 +139,7 @@ psa_handle_t psa_connect(uint32_t sid, uint32_t minor_version)
         psa_handle = PSA_NULL_HANDLE;
     }
 
-    if (os_wrapper_mutex_release(ns_lock_handle) != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_release() != OS_WRAPPER_SUCCESS) {
         return PSA_NULL_HANDLE;
     }
 
@@ -166,15 +162,14 @@ psa_status_t psa_call(psa_handle_t handle, int32_t type,
     params.psa_call_params.out_vec = out_vec;
     params.psa_call_params.out_len = out_len;
 
-    if (os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER)
-            != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_acquire() != OS_WRAPPER_SUCCESS) {
         return PSA_ERROR_GENERIC_ERROR;
     }
 
     msg_handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CALL, &params,
                                               NON_SECURE_CLIENT_ID);
     if (msg_handle < 0) {
-        os_wrapper_mutex_release(ns_lock_handle);
+        tfm_ns_multi_core_lock_release();
         return PSA_INTER_CORE_COMM_ERR;
     }
 
@@ -185,7 +180,7 @@ psa_status_t psa_call(psa_handle_t handle, int32_t type,
         status = PSA_INTER_CORE_COMM_ERR;
     }
 
-    if (os_wrapper_mutex_release(ns_lock_handle) != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_release() != OS_WRAPPER_SUCCESS) {
         return PSA_ERROR_GENERIC_ERROR;
     }
 
@@ -200,15 +195,14 @@ void psa_close(psa_handle_t handle)
 
     params.psa_close_params.handle = handle;
 
-    if (os_wrapper_mutex_acquire(ns_lock_handle, OS_WRAPPER_WAIT_FOREVER)
-            != OS_WRAPPER_SUCCESS) {
+    if (tfm_ns_multi_core_lock_acquire() != OS_WRAPPER_SUCCESS) {
         return;
     }
 
     msg_handle = tfm_ns_mailbox_tx_client_req(MAILBOX_PSA_CLOSE, &params,
                                               NON_SECURE_CLIENT_ID);
     if (msg_handle < 0) {
-        os_wrapper_mutex_release(ns_lock_handle);
+        tfm_ns_multi_core_lock_release();
         return;
     }
 
@@ -216,5 +210,5 @@ void psa_close(psa_handle_t handle)
 
     (void)tfm_ns_mailbox_rx_client_reply(msg_handle, &reply);
 
-    os_wrapper_mutex_release(ns_lock_handle);
+    tfm_ns_multi_core_lock_release();
 }

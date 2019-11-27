@@ -8,6 +8,8 @@
 #ifndef __TFM_MULTI_CORE_API__
 #define __TFM_MULTI_CORE_API__
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -32,6 +34,24 @@ int tfm_ns_wait_for_s_cpu_ready(void);
  * \retval else            The operation fails.
  */
 int tfm_platform_ns_wait_for_s_cpu_ready(void);
+
+/**
+ * \brief Acquire the multi-core lock for synchronizing PSA client call(s)
+ *        The actual implementation depends on the use scenario.
+ *
+ * \return \ref OS_WRAPPER_SUCCESS on success
+ * \return \ref OS_WRAPPER_ERROR on error
+ */
+uint32_t tfm_ns_multi_core_lock_acquire(void);
+
+/**
+ * \brief Release the multi-core lock for synchronizing PSA client call(s)
+ *        The actual implementation depends on the use scenario.
+ *
+ * \return \ref OS_WRAPPER_SUCCESS on success
+ * \return \ref OS_WRAPPER_ERROR on error
+ */
+uint32_t tfm_ns_multi_core_lock_release(void);
 
 #ifdef __cplusplus
 }
