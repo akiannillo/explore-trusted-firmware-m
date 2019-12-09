@@ -35,18 +35,18 @@ line arguments:
             ``-DTARGET_PLATFORM=MUSCA_B1``
           - Cortex-M33 SSE-200 subsystem for MPS3 (AN524)
             ``-DTARGET_PLATFORM=AN524``
-          - Cypress PSoC 62 platform
+          - Cypress PSoC62 platform
             refer to target platform name in
-            :doc:`Cypress PSoC 6 platform specifics
-            </platform/ext/target/psoc62/cypress_psoc_6_spec>`.
-          - Cypress PSoC 64 platforms
+            :doc:`Cypress PSoC62 platform specifics
+            </platform/ext/target/cypress/psoc62/cypress_psoc62_spec>`.
+          - Cypress PSoC64 platforms
             refer to target platform name in
-            :doc:`Cypress PSoC 6 platform specifics
-            </platform/ext/target/psoc64/cypress_psoc_6_spec>`.
-          - Cypress PSoC 64 1MB platform
+            :doc:`Cypress PSoC64 platform specifics
+            </platform/ext/target/cypress/psoc64/cypress_psoc64_spec>`.
+          - Cypress PSoC64 1MB platform
             refer to target platform name in
-            :doc:`Cypress PSoC 6 platform specifics
-            </platform/ext/target/psoc64_1m/cypress_psoc_6_spec>`.
+            :doc:`Cypress PSoC64 1M platform specifics
+            </platform/ext/target/cypress/psoc64_1m/cypress_psoc64_1m_spec>`.
 
    * - -DCOMPILER=<compiler name>
      - Specifies the compiler toolchain
@@ -119,14 +119,14 @@ Build steps for the AN521 target platform:
     cmake ../ -G"Unix Makefiles" -DTARGET_PLATFORM=AN521 -DCOMPILER=ARMCLANG
     cmake --build ./ -- install
 
-Build steps for Cypress PSoC 6 platform:
+Build steps for Cypress PSoC6 platforms:
 ========================================
-Please see build steps in :doc:`Cypress PSoC 62 platform specifics
-</platform/ext/target/psoc62/cypress_psoc_6_spec>` or
-:doc:`Cypress PSoC 64 platform specifics
-</platform/ext/target/psoc64/cypress_psoc_6_spec>` or
-:doc:`Cypress PSoC 64 1MB platform specifics
-</platform/ext/target/psoc64_1m/cypress_psoc_6_spec>`.
+Please see build steps in :doc:`Cypress PSoC62 platform specifics
+</platform/ext/target/cypress/psoc62/cypress_psoc62_spec>` or
+:doc:`Cypress PSoC64 platform specifics
+</platform/ext/target/cypress/psoc64/cypress_psoc64_spec>` or
+:doc:`Cypress PSoC64 1MB platform specifics
+</platform/ext/target/cypress/psoc64_1m/cypress_psoc64_1m_spec>`.
 
 Regression Tests for the AN521 target platform
 ==============================================

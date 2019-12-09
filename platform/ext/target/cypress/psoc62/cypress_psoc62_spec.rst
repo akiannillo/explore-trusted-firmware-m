@@ -1,9 +1,9 @@
 ########################
-Cypress PSoC 6 Specifics
+Cypress PSoC62 Specifics
 ########################
 
 ******************************************
-Building Multi-Core TF-M on Cypress PSoC 6
+Building Multi-Core TF-M on Cypress PSoC62
 ******************************************
 
 Please make sure you have all required software installed as explained in the
@@ -81,7 +81,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigCoreIPC.cmake` -DTARGET_PLATFORM=psoc62 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigCoreIPC.cmake` \
+          -DTARGET_PLATFORM=psoc62 \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -97,7 +102,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigRegressionIPC.cmake` -DTARGET_PLATFORM=psoc62 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigRegressionIPC.cmake` \
+          -DTARGET_PLATFORM=psoc62 \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -137,7 +147,7 @@ listed above.
         -DPSA_API_TEST_ATTESTATION=1 \
         -DTARGET_PLATFORM=psoc62 \
         -DCOMPILER=ARMCLANG \
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Release
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -153,7 +163,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigCoreIPCTfmLevel2.cmake` -DTARGET_PLATFORM=psoc62 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigCoreIPCTfmLevel2.cmake` \
+          -DTARGET_PLATFORM=psoc62 \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -169,7 +184,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigRegressionIPCTfmLevel2.cmake` -DTARGET_PLATFORM=psoc62 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigRegressionIPCTfmLevel2.cmake` \
+          -DTARGET_PLATFORM=psoc62 \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -209,7 +229,7 @@ listed above.
         -DPSA_API_TEST_SECURE_STORAGE=1 \
         -DTARGET_PLATFORM=psoc62 \
         -DCOMPILER=ARMCLANG \
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Release
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -240,7 +260,7 @@ To program the primary image to the device:
 Note that the ``0x10020000`` in the command above must match the start address
 of the secure primary image specified in the file::
 
-    platform/ext/target/psoc62/partition/flash_layout.h
+    platform/ext/target/cypress/psoc62/partition/flash_layout.h
 
 so be sure to change it if you change that file.
 

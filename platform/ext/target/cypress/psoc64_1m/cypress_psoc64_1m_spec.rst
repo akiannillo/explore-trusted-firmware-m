@@ -1,26 +1,46 @@
-########################
-Cypress PSoC 6 Specifics
-########################
+############################
+Cypress PSoC64 1MB Specifics
+############################
 
-******************************************
-Building Multi-Core TF-M on Cypress PSoC 6
-******************************************
+*************
+Prerequisites
+*************
+
+PSoC64 must first be provisioned with SecureBoot firmware and a provisioning packet
+containing policy and secure keys. Please refer to the guide at
+https://www.cypress.com/documentation/software-and-drivers/psoc-64-secure-mcu-secure-boot-sdk-user-guide
 
 Please make sure you have all required software installed as explained in the
 :doc:`software requirements </docs/user_guides/tfm_sw_requirement>`.
 
-Please install CySecureTools with (requires Python3.7):
-
-.. code-block:: bash
-
-    pip install cysecuretools
-
-For more details please refer to
-`CySecureTools <https://pypi.org/project/cysecuretools>`_ page.
-
 Please also make sure that all the source code are fetched by following
 :doc:`general building instruction </docs/user_guides/tfm_build_instruction>`.
 
+Install CySecureTools. The exact command to use depends on what version of
+python you are running (which can be determined with "python3 --version").
+
+If you have python 3.7, use
+
+.. code-block:: bash
+
+    pip install cysecuretools==1.0.0
+
+If you have python 3.6.8, use
+
+.. code-block:: bash
+
+    pip3 install --ignore-requires-python git+https://github.com/cypresssemiconductorco/cysecuretools@v1.0.0
+
+For more details please refer to
+`CySecureTools <https://pypi.org/project/cysecuretools/1.0.0/>`_ page.
+
+Install OpenOCD with PSoC6 support. It can be obtained from the Cypress
+Programmer, download it from:
+https://www.cypress.com/products/psoc-programming-solutions
+
+**********************************************
+Building Multi-Core TF-M on Cypress PSoC64 1MB
+**********************************************
 
 Configuring the build
 =====================
@@ -53,8 +73,8 @@ line arguments:
            - IPC model with PSA API test suite in Isolation Level 2
              ``ConfigPsaApiTestIPCTfmLevel2.cmake``
 
-   * - -DTARGET_PLATFORM=psoc64
-     - Specifies target platform name ``psoc64``
+   * - -DTARGET_PLATFORM=psoc64_1m
+     - Specifies target platform name ``psoc64_1m``
 
    * - -DCOMPILER=<compiler name>
      - Specifies the compiler toolchain
@@ -70,6 +90,9 @@ line arguments:
          - ``Debug``
          - ``Release``
 
+         Note: due to the limited Flash memory space, in some combinations of
+         compilers and build configurations, Debug image may not fit into the
+         availabe space.
 
 Build Instructions
 ==================
@@ -86,7 +109,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigCoreIPC.cmake` -DTARGET_PLATFORM=psoc64 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigCoreIPC.cmake` \
+          -DTARGET_PLATFORM=psoc64_1m \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -102,7 +130,11 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigRegressionIPC.cmake` -DTARGET_PLATFORM=psoc64 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigRegressionIPC.cmake` \
+          -DTARGET_PLATFORM=psoc64_1m \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -140,9 +172,9 @@ listed above.
         -DPROJ_CONFIG=`readlink -f ../configs/ConfigPsaApiTestIPC.cmake` \
         -DPSA_API_TEST_BUILD_PATH=../psa-arch-tests/api-tests/BUILD_ATT.GNUARM
         -DPSA_API_TEST_ATTESTATION=1 \
-        -DTARGET_PLATFORM=psoc64 \
+        -DTARGET_PLATFORM=psoc64_1m \
         -DCOMPILER=ARMCLANG \
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Release
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -158,7 +190,12 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigCoreIPCTfmLevel2.cmake` -DTARGET_PLATFORM=psoc64 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink -f ../configs/ConfigCoreIPCTfmLevel2.cmake` \
+          -DTARGET_PLATFORM=psoc64_1m \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -174,7 +211,13 @@ listed above.
 
     mkdir <build folder>
     pushd <build folder>
-    cmake -G"Unix Makefiles" -DPROJ_CONFIG=`readlink -f ../configs/ConfigRegressionIPCTfmLevel2.cmake` -DTARGET_PLATFORM=psoc64 -DCOMPILER=ARMCLANG -DCMAKE_BUILD_TYPE=Debug ../
+    cmake -G"Unix Makefiles" \
+          -DPROJ_CONFIG=`readlink \
+          -f ../configs/ConfigRegressionIPCTfmLevel2.cmake` \
+          -DTARGET_PLATFORM=psoc64_1m \
+          -DCOMPILER=ARMCLANG \
+          -DCMAKE_BUILD_TYPE=Release \
+          ../
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -212,9 +255,9 @@ listed above.
         -DPROJ_CONFIG=`readlink -f ../configs/ConfigPsaApiTestIPCTfmLevel2.cmake` \
         -DPSA_API_TEST_BUILD_PATH=../psa-arch-tests/api-tests/BUILD_PS.GNUARM
         -DPSA_API_TEST_SECURE_STORAGE=1 \
-        -DTARGET_PLATFORM=psoc64 \
+        -DTARGET_PLATFORM=psoc64_1m \
         -DCOMPILER=ARMCLANG \
-        -DCMAKE_BUILD_TYPE=Debug
+        -DCMAKE_BUILD_TYPE=Release
     popd
     cmake --build <build folder> -- -j VERBOSE=1
 
@@ -240,10 +283,10 @@ ARMCLANG build:
     fromelf --i32 --output=<build folder>/tfm_ns.hex <build folder>/app/tfm_ns.axf
 
 Copy secure keys used in the board provisioning process to
-platform/ext/target/psoc64/security/keys:
+platform/ext/target/cypress/psoc64_1m/security/keys:
 
-MCUBOOT_CM0P_KEY.json - private OEM key for signing CM0P image
-USERAPP_CM4_KEY.json  - private OEM key for signing CM4 image
+-MCUBOOT_CM0P_KEY_PRIV.pem - private OEM key for signing CM0P image
+-USERAPP_CM4_KEY_PRIV.pem  - private OEM key for signing CM4 image
 
 Note: provisioned board in SECURE claimed state is required, otherwise refer to
 Cypress documentation for details on the provisioning process.
@@ -252,26 +295,38 @@ Sign the images (sign.py overwrites unsigned files with signed ones):
 
 .. code-block:: bash
 
-    ./platform/ext/target/psoc64/security/sign.py \
+    ./platform/ext/target/cypress/psoc64_1m/security/sign.py \
       -s <build folder>/tfm_s.hex \
       -n <build folder>/tfm_ns.hex \
-      -p platform/ext/target/psoc6/security/policy_dual_stage_CM0p_CM4.json
+      -p platform/ext/target/cypress/psoc64_1m/security/policy_dual_stage_CM0p_CM4.json
+
+Note: each image can be signed individually, for example:
+
+.. code-block:: bash
+
+    ./platform/ext/target/cypress/psoc64_1m/security/sign.py \
+      -n <build folder>/tfm_ns.hex \
+      -p platform/ext/target/cypress/psoc64_1m/security/policy_dual_stage_CM0p_CM4.json
+
+.. code-block:: bash
+
+    ./platform/ext/target/cypress/psoc64_1m/security/sign.py \
+      -s <build folder>/tfm_s.hex \
+      -p platform/ext/target/cypress/psoc64_1m/security/policy_dual_stage_CM0p_CM4.json
 
 **********************
 Programming the Device
 **********************
 
 After building and signing, the TFM images must be programmed into flash
-memory on the PSoC 6 device.
-
-There are two methods to program psoc6 device.
+memory on the PSoC64 device. There are two methods to program it.
 
 DAPLink mode
 ============
 
 Using KitProg3 mode button, switch it to DAPLink mode.
 Mode LED should start blinking rapidly and depending on the host computer
-settings DAPLINK will be mounted as a media storage device. 
+settings DAPLINK will be mounted as a media storage device.
 Otherwise, mount it manually.
 
 Copy tfm hex files one by one to the DAPLINK device:
@@ -292,20 +347,25 @@ following commands:
 
 .. code-block:: bash
 
+    OPENOCD_PATH=<cyprogrammer dir>/openocd
+    BUILD_DIR=<build folder>
+
     ${OPENOCD_PATH}/bin/openocd \
             -s ${OPENOCD_PATH}/scripts \
             -f interface/kitprog3.cfg \
+            -c "set FLASH_RESTRICTION_SIZE 0xD0000" \
             -c "set ENABLE_ACQUIRE 0" \
             -f target/psoc6_secure.cfg \
-            -c "init; reset init; flash write_image erase <build folder>/tfm_s.hex" \
+            -c "init; reset init; flash write_image erase ${BUILD_DIR}/tfm_s.hex" \
             -c "resume; reset; exit"
 
     ${OPENOCD_PATH}/bin/openocd \
             -s ${OPENOCD_PATH}/scripts \
             -f interface/kitprog3.cfg \
+            -c "set FLASH_RESTRICTION_SIZE 0xD0000" \
             -c "set ENABLE_ACQUIRE 0" \
             -f target/psoc6_secure.cfg \
-            -c "init; reset init; flash write_image erase <build folder>/tfm_ns.hex" \
+            -c "init; reset init; flash write_image erase ${BUILD_DIR}/tfm_ns.hex" \
             -c "resume; reset; exit"
 
 Optionally, erase SST partition:
@@ -315,6 +375,7 @@ Optionally, erase SST partition:
     ${OPENOCD_PATH}/bin/openocd \
             -s ${OPENOCD_PATH}/scripts \
             -f interface/kitprog3.cfg \
+            -c "set FLASH_RESTRICTION_SIZE 0xD0000" \
             -f target/psoc6_secure.cfg \
             -c "init; reset init" \
             -c "flash erase_address 0x100c0000 0x10000" \
@@ -323,7 +384,7 @@ Optionally, erase SST partition:
 Note that the ``0x100C0000`` in the command above must match the SST start
 address of the secure primary image specified in the file:
 
-    platform/ext/target/psoc64/partition/flash_layout.h
+    platform/ext/target/cypress/psoc64_1m/partition/flash_layout.h
 
 so be sure to change it if you change that file.
 
