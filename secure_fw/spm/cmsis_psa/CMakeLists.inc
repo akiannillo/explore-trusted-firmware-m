@@ -60,6 +60,15 @@ else ()
 			)
 endif ()
 
+#Workarounds for adding stacks for PSA_API_TEST_IPC
+if (PSA_API_TEST_IPC)
+	list(APPEND SFW_IPC_SPM_SRC
+		"${TFM_ROOT_DIR}/secure_fw/partitions/auto_generated/intermedia_client_partition.c"
+		"${TFM_ROOT_DIR}/secure_fw/partitions/auto_generated/intermedia_server_partition.c"
+		"${TFM_ROOT_DIR}/secure_fw/partitions/auto_generated/intermedia_driver_partition.c"
+		)
+endif()
+
 #Append all our source files to global lists.
 list(APPEND ALL_SRC_C ${SFW_IPC_SPM_SRC})
 unset(SFW_IPC_SPM_SRC)

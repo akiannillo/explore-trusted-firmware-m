@@ -26,7 +26,8 @@ endif()
 
 set (PLATFORM_SERVICE_C_SRC
 	"${PLATFORM_SERVICE_DIR}/platform_sp.c"
-	"${PLATFORM_SERVICE_DIR}/tfm_platform_secure_api.c")
+	"${PLATFORM_SERVICE_DIR}/tfm_platform_secure_api.c"
+	"${PLATFORM_SERVICE_DIR}/auto_generated/intermedia_tfm_platform.c")
 
 #Append all our source files to global lists.
 list(APPEND ALL_SRC_C ${PLATFORM_SERVICE_C_SRC})

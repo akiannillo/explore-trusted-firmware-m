@@ -68,8 +68,7 @@ REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _DATA$$RW$$Base);
 REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _DATA$$RW$$Limit);
 REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _DATA$$ZI$$Base);
 REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _DATA$$ZI$$Limit);
-REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _STACK$$ZI$$Base);
-REGION_DECLARE(Image$$, {{manifest.manifest.name}}_LINKER, _STACK$$ZI$$Limit);
+extern uint8_t {{manifest.manifest.name.lower()}}_stack[];
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
@@ -228,8 +227,8 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
         .rw_limit             = PART_REGION_ADDR({{manifest.manifest.name}}_LINKER, _DATA$$RW$$Limit),
         .zi_start             = PART_REGION_ADDR({{manifest.manifest.name}}_LINKER, _DATA$$ZI$$Base),
         .zi_limit             = PART_REGION_ADDR({{manifest.manifest.name}}_LINKER, _DATA$$ZI$$Limit),
-        .stack_bottom         = PART_REGION_ADDR({{manifest.manifest.name}}_LINKER, _STACK$$ZI$$Base),
-        .stack_top            = PART_REGION_ADDR({{manifest.manifest.name}}_LINKER, _STACK$$ZI$$Limit),
+        .stack_bottom         = (uint32_t){{manifest.manifest.name.lower()}}_stack,
+        .stack_top            = (uint32_t)(&{{manifest.manifest.name.lower()}}_stack[{{manifest.manifest.stack_size}}]),
     {{'},'}}
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */

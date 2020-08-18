@@ -51,6 +51,7 @@ if (ENABLE_CRYPTO)
                     "${CRYPTO_DIR}/crypto_asymmetric.c"
                     "${CRYPTO_DIR}/crypto_key_derivation.c"
                     "${CRYPTO_DIR}/tfm_crypto_secure_api.c"
+                    "${CRYPTO_DIR}/auto_generated/intermedia_tfm_crypto.c"
       )
 
   if (CRYPTO_ENGINE_MBEDTLS)

@@ -56,6 +56,7 @@ set (PROTECTED_STORAGE_C_SRC
 	"${PROTECTED_STORAGE_DIR}/ps_object_system.c"
 	"${PROTECTED_STORAGE_DIR}/ps_object_table.c"
 	"${PROTECTED_STORAGE_DIR}/ps_utils.c"
+	"${PROTECTED_STORAGE_DIR}/auto_generated/intermedia_tfm_protected_storage.c"
 )
 
 if (PS_ENCRYPTION)

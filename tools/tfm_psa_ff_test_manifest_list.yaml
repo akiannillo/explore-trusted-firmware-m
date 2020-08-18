@@ -15,6 +15,7 @@
       "name": "PSA FF Test Client Partition",
       "short_name": "PSA_FF_TEST_CLIENT",
       "manifest": "../psa-arch-tests/api-tests/platform/manifests/client_partition_psa.json",
+      "generated_intermedia_file": "secure_fw/partitions/auto_generated/intermedia_client_partition.c",
       "tfm_partition_ipc": true,
       "conditional": "PSA_API_TEST_IPC",
       "version_major": 0,
@@ -23,6 +24,9 @@
       "linker_pattern": {
         "library_list":[
           "*client_partition.a"
+        ],
+        "object_list":[
+          "*intermedia_client_partition.*"
         ]
       }
     },
@@ -30,6 +34,7 @@
       "name": "PSA FF Test Server Partition",
       "short_name": "PSA_FF_TEST_SERVER",
       "manifest": "../psa-arch-tests/api-tests/platform/manifests/server_partition_psa.json",
+      "generated_intermedia_file": "secure_fw/partitions/auto_generated/intermedia_server_partition.c",
       "tfm_partition_ipc": true,
       "conditional": "PSA_API_TEST_IPC",
       "version_major": 0,
@@ -38,6 +43,9 @@
       "linker_pattern": {
         "library_list":[
           "*server_partition.a"
+        ],
+         "object_list":[
+          "*intermedia_server_partition.*"
         ]
       }
     },
@@ -45,6 +53,7 @@
       "name": "PSA FF Test Driver Partition",
       "short_name": "PSA_FF_TEST_DRIVER",
       "manifest": "../psa-arch-tests/api-tests/platform/manifests/driver_partition_psa.json",
+      "generated_intermedia_file": "secure_fw/partitions/auto_generated/intermedia_driver_partition.c",
       "tfm_partition_ipc": true,
       "conditional": "PSA_API_TEST_IPC",
       "version_major": 0,
@@ -53,6 +62,9 @@
       "linker_pattern": {
         "library_list":[
           "*driver_partition.a"
+        ],
+        "object_list":[
+          "*intermedia_driver_partition.*"
         ]
       }
     }

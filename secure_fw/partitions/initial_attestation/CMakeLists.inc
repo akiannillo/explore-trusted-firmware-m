@@ -42,6 +42,7 @@ list(APPEND ATTEST_C_SRC
 	"${INITIAL_ATTESTATION_DIR}/tfm_attest_req_mngr.c"
 	"${INITIAL_ATTESTATION_DIR}/attest_core.c"
 	"${INITIAL_ATTESTATION_DIR}/attest_token_encode.c"
+	"${INITIAL_ATTESTATION_DIR}/auto_generated/intermedia_tfm_initial_attestation.c"
 	)
 
 if (SYMMETRIC_INITIAL_ATTESTATION)

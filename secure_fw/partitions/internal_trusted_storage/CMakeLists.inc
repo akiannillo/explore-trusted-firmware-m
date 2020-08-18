@@ -51,6 +51,7 @@ set(INTERNAL_TRUSTED_STORAGE_C_SRC
     "${INTERNAL_TRUSTED_STORAGE_DIR}/flash_fs/its_flash_fs.c"
     "${INTERNAL_TRUSTED_STORAGE_DIR}/flash_fs/its_flash_fs_dblock.c"
     "${INTERNAL_TRUSTED_STORAGE_DIR}/flash_fs/its_flash_fs_mblock.c"
+    "${INTERNAL_TRUSTED_STORAGE_DIR}/auto_generated/intermedia_tfm_internal_trusted_storage.c"
 )
 
 # If either ITS or PS requires metadata to be validated, then compile the
