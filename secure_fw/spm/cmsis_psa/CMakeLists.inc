@@ -45,6 +45,7 @@ set (SFW_IPC_SPM_SRC
 		"${SFW_IPC_SPM_DIR}/tfm_pools.c"
 		"${SFW_IPC_SPM_DIR}/tfm_thread.c"
 		"${SFW_IPC_SPM_DIR}/tfm_wait.c"
+		"${SFW_IPC_SPM_DIR}/isolation.c"
 	)
 
 if (DEFINED TFM_MULTI_CORE_TOPOLOGY AND TFM_MULTI_CORE_TOPOLOGY)
