@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2019-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -8,8 +8,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
-#include "log/tfm_log_raw.h"
-#include "uart_stdout.h"
+#include "tfm_hal_sp_logdev.h"
 
 #define PRINT_BUFF_SIZE 32
 #define NUM_BUFF_SIZE 12
@@ -31,7 +30,7 @@ static void _tfm_flush_formatted_buffer(struct formatted_buffer_t *pb,
     if (pb->pos >= PRINT_BUFF_SIZE) {
         pb->pos = 0;
         /* uart flush and print here. */
-        stdio_output_string(pb->buf, PRINT_BUFF_SIZE);
+        tfm_hal_output_sp_log(pb->buf, PRINT_BUFF_SIZE);
     }
 }
 
@@ -152,7 +151,7 @@ static int _tfm_log_vprintf(const char *fmt, va_list ap)
 
     /* End of printf, flush buf */
     if (outputbuf.pos) {
-        count += stdio_output_string(outputbuf.buf, outputbuf.pos);
+        count += tfm_hal_output_sp_log(outputbuf.buf, outputbuf.pos);
     }
 
     return count;

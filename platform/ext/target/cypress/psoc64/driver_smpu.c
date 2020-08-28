@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, Cypress Semiconductor Corporation. All rights reserved.
+ * Copyright (c) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 #include "region_defs.h"
 #include "RTE_Device.h"
 #include "smpu_config.h"
-#include "log/tfm_log.h"
 
 #include "cy_prot.h"
 

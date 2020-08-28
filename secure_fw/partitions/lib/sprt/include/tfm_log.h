@@ -12,6 +12,6 @@
 
 /* Functions and macros in this file is for 'thread mode' usage. */
 
-#define LOG_MSG(...) tfm_log_printf(__VA_ARGS__)
+#define SPLOG_MSG(...) tfm_log_printf(__VA_ARGS__)
 
 #endif /* __TFM_LOG_H__ */

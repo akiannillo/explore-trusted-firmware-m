@@ -30,7 +30,8 @@ set (LIBSPRT_C_SRC
     "${LIBSPRT_DIR}/crt_memcmp.c"
     "${LIBSPRT_DIR}/crt_memset.c"
     "${LIBSPRT_DIR}/service_api.c"
-    "${TFM_ROOT_DIR}/interface/src/log/tfm_log_raw.c")
+    "${LIBSPRT_DIR}/tfm_log_raw.c"
+    "${TFM_ROOT_DIR}/platform/ext/common/tfm_hal_sp_logdev_peripheral.c")
 
 if (TFM_PSA_API)
     list(APPEND LIBSPRT_C_SRC
