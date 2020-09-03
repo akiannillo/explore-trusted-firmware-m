@@ -32,93 +32,84 @@
 
 LR_CODE S_CODE_START {
 
-    /****  This initial section contains common code for secure binary */
-    ER_TFM_CODE S_CODE_START S_CODE_SIZE {
+    /**** This initial section contains mainly the SPM code */
+    ER_TFM_CODE S_CODE_START {
         *.o (RESET +First)
-        * (+RO)
+        * (+RO-CODE)
     }
 
-    /**** Unprivileged Secure code start here */
-    ER_UNPRIV_CODE +0 ALIGN 32 {
-        platform_retarget_dev.o (+RO)
-        device_definition.o (+RO)
-        *(SFN)
-        *armlib*
-        *libtfmsprt.a (+RO)
-    }
-
-    /**** PSA RoT RO part (CODE + RODATA) start here */
+    /**** PSA RoT CODE starts here */
     PT_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
-    ER_TFM_SP_ITS_CODE_RO +0 ALIGN 32 {
-        *tfm_internal_trusted_storage* (+RO)
+    ER_TFM_SP_ITS_CODE +0 ALIGN 32 {
+        *tfm_internal_trusted_storage* (+RO-CODE)
         *(TFM_SP_ITS_ATTR_FN)
     }
 #endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
 
 #ifdef TFM_PARTITION_AUDIT_LOG
-    ER_TFM_SP_AUDIT_LOG_CODE_RO +0 ALIGN 32 {
-        *tfm_audit* (+RO)
+    ER_TFM_SP_AUDIT_LOG_CODE +0 ALIGN 32 {
+        *tfm_audit* (+RO-CODE)
         *(TFM_SP_AUDIT_LOG_ATTR_FN)
     }
 #endif /* TFM_PARTITION_AUDIT_LOG */
 
 #ifdef TFM_PARTITION_CRYPTO
-    ER_TFM_SP_CRYPTO_CODE_RO +0 ALIGN 32 {
-        *tfm_crypto* (+RO)
+    ER_TFM_SP_CRYPTO_CODE +0 ALIGN 32 {
+        *tfm_crypto* (+RO-CODE)
         *(TFM_SP_CRYPTO_ATTR_FN)
     }
 #endif /* TFM_PARTITION_CRYPTO */
 
 #ifdef TFM_PARTITION_PLATFORM
-    ER_TFM_SP_PLATFORM_CODE_RO +0 ALIGN 32 {
-        *tfm_platform* (+RO)
+    ER_TFM_SP_PLATFORM_CODE +0 ALIGN 32 {
+        *tfm_platform* (+RO-CODE)
         *(TFM_SP_PLATFORM_ATTR_FN)
     }
 #endif /* TFM_PARTITION_PLATFORM */
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
-    ER_TFM_SP_INITIAL_ATTESTATION_CODE_RO +0 ALIGN 32 {
-        *tfm_attest* (+RO)
+    ER_TFM_SP_INITIAL_ATTESTATION_CODE +0 ALIGN 32 {
+        *tfm_attest* (+RO-CODE)
         *(TFM_SP_INITIAL_ATTESTATION_ATTR_FN)
     }
 #endif /* TFM_PARTITION_INITIAL_ATTESTATION */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    ER_TFM_SP_CORE_TEST_CODE_RO +0 ALIGN 32 {
-        *tfm_ss_core_test.* (+RO)
+    ER_TFM_SP_CORE_TEST_CODE +0 ALIGN 32 {
+        *tfm_ss_core_test.* (+RO-CODE)
         *(TFM_SP_CORE_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    ER_TFM_SP_SECURE_TEST_PARTITION_CODE_RO +0 ALIGN 32 {
-        *tfm_secure_client_service.* (+RO)
-        *test_framework* (+RO)
-        *uart_stdout.* (+RO)
-        *Driver_USART.* (+RO)
-        *arm_uart_drv.* (+RO)
-        *uart_pl011_drv.* (+RO)
-        *uart_cmsdk_drv* (+RO)
-        *secure_suites.* (+RO)
-        *attestation_s_interface_testsuite.* (+RO)
+    ER_TFM_SP_SECURE_TEST_PARTITION_CODE +0 ALIGN 32 {
+        *tfm_secure_client_service.* (+RO-CODE)
+        *test_framework* (+RO-CODE)
+        *uart_stdout.* (+RO-CODE)
+        *Driver_USART.* (+RO-CODE)
+        *arm_uart_drv.* (+RO-CODE)
+        *uart_pl011_drv.* (+RO-CODE)
+        *uart_cmsdk_drv* (+RO-CODE)
+        *secure_suites.* (+RO-CODE)
+        *attestation_s_interface_testsuite.* (+RO-CODE)
         *(TFM_SP_SECURE_TEST_PARTITION_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    ER_TFM_SP_IPC_SERVICE_TEST_CODE_RO +0 ALIGN 32 {
-        *tfm_ipc_service_test.* (+RO)
+    ER_TFM_SP_IPC_SERVICE_TEST_CODE +0 ALIGN 32 {
+        *tfm_ipc_service_test.* (+RO-CODE)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_PARTITION_TEST_PS
-    ER_TFM_SP_PS_TEST_CODE_RO +0 ALIGN 32 {
-        *tfm_ps_test_service.* (+RO)
+    ER_TFM_SP_PS_TEST_CODE +0 ALIGN 32 {
+        *tfm_ps_test_service.* (+RO-CODE)
         *(TFM_SP_PS_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_PS */
@@ -128,44 +119,44 @@ LR_CODE S_CODE_START {
         /* Position tag */
     }
 
-    /**** APPLICATION RoT RO part (CODE + RODATA) start here */
+    /**** APPLICATION RoT CODE starts here */
     PT_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
 
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
-    ER_TFM_SP_PS_CODE_RO +0 ALIGN 32 {
-        *tfm_storage* (+RO)
-        *test_ps_nv_counters.* (+RO)
+    ER_TFM_SP_PS_CODE +0 ALIGN 32 {
+        *tfm_storage* (+RO-CODE)
+        *test_ps_nv_counters.* (+RO-CODE)
         *(TFM_SP_PS_ATTR_FN)
     }
 #endif /* TFM_PARTITION_PROTECTED_STORAGE */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    ER_TFM_SP_CORE_TEST_2_CODE_RO +0 ALIGN 32 {
-        *tfm_ss_core_test_2.* (+RO)
+    ER_TFM_SP_CORE_TEST_2_CODE +0 ALIGN 32 {
+        *tfm_ss_core_test_2.* (+RO-CODE)
         *(TFM_SP_CORE_TEST_2_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    ER_TFM_SP_IPC_CLIENT_TEST_CODE_RO +0 ALIGN 32 {
-        *tfm_ipc_client_test.* (+RO)
+    ER_TFM_SP_IPC_CLIENT_TEST_CODE +0 ALIGN 32 {
+        *tfm_ipc_client_test.* (+RO-CODE)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_ENABLE_IRQ_TEST
-    ER_TFM_IRQ_TEST_1_CODE_RO +0 ALIGN 32 {
-        *tfm_irq_test_service_1.* (+RO)
-        *timer_cmsdk* (+RO)
+    ER_TFM_IRQ_TEST_1_CODE +0 ALIGN 32 {
+        *tfm_irq_test_service_1.* (+RO-CODE)
+        *timer_cmsdk* (+RO-CODE)
         *(TFM_IRQ_TEST_1_ATTR_FN)
     }
 #endif /* TFM_ENABLE_IRQ_TEST */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    ER_TFM_SP_SECURE_CLIENT_2_CODE_RO +0 ALIGN 32 {
-        *tfm_secure_client_2.* (+RO)
+    ER_TFM_SP_SECURE_CLIENT_2_CODE +0 ALIGN 32 {
+        *tfm_secure_client_2.* (+RO-CODE)
         *(TFM_SP_SECURE_CLIENT_2_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
@@ -175,14 +166,155 @@ LR_CODE S_CODE_START {
         /* Position tag */
     }
 
-#if defined(S_CODE_SRAM_ALIAS_BASE)
-    /* eFlash driver code that gets copied from Flash to SRAM */
-    ER_CODE_SRAM S_CODE_SRAM_ALIAS_BASE ALIGN 4 {
-        Driver_GFC100_EFlash.o (+RO)
-        gfc100_eflash_drv.o (+RO)
-        musca_b1_eflash_drv.o (+RO)
+    /**** Unprivileged Secure code start here */
+    ER_UNPRIV_CODE +0 ALIGN 32 {
+        platform_retarget_dev.o (+RO-CODE)
+        device_definition.o (+RO-CODE)
+        *(SFN)
+        *armlib* (+RO-CODE)
+        *libtfmsprt.a (+RO-CODE)
     }
-#endif
+
+    /****  This initial section contains mainly SPM RO data */
+    ER_TFM_RODATA +0 ALIGN 32 {
+        * (+RO-DATA)
+    }
+
+    /**** PSA RoT RO data starts here */
+    PT_PSA_RODATA_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
+#ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
+    TFM_SP_ITS_RODATA +0 ALIGN 32 {
+        *tfm_internal_trusted_storage* (+RO-DATA)
+        *(TFM_SP_ITS_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
+
+#ifdef TFM_PARTITION_AUDIT_LOG
+    TFM_SP_AUDIT_LOG_RODATA +0 ALIGN 32 {
+        *tfm_audit* (+RO-DATA)
+        *(TFM_SP_AUDIT_LOG_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_AUDIT_LOG */
+
+#ifdef TFM_PARTITION_CRYPTO
+    TFM_SP_CRYPTO_RODATA +0 ALIGN 32 {
+        *tfm_crypto* (+RO-DATA)
+        *(TFM_SP_CRYPTO_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_CRYPTO */
+
+#ifdef TFM_PARTITION_PLATFORM
+    TFM_SP_PLATFORM_RODATA +0 ALIGN 32 {
+        *tfm_platform* (+RO-DATA)
+        *(TFM_SP_PLATFORM_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_PLATFORM */
+
+#ifdef TFM_PARTITION_INITIAL_ATTESTATION
+    TFM_SP_INITIAL_ATTESTATION_RODATA +0 ALIGN 32 {
+        *tfm_attest* (+RO-DATA)
+        *(TFM_SP_INITIAL_ATTESTATION_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_INITIAL_ATTESTATION */
+
+#ifdef TFM_PARTITION_TEST_CORE
+    TFM_SP_CORE_TEST_RODATA +0 ALIGN 32 {
+        *tfm_ss_core_test.* (+RO-DATA)
+        *(TFM_SP_CORE_TEST_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_CORE */
+
+#ifdef TFM_PARTITION_TEST_SECURE_SERVICES
+    TFM_SP_SECURE_TEST_PARTITION_RODATA +0 ALIGN 32 {
+        *tfm_secure_client_service.* (+RO-DATA)
+        *test_framework* (+RO-DATA)
+        *uart_stdout.* (+RO-DATA)
+        *Driver_USART.* (+RO-DATA)
+        *arm_uart_drv.* (+RO-DATA)
+        *uart_pl011_drv.* (+RO-DATA)
+        *uart_cmsdk_drv* (+RO-DATA)
+        *secure_suites.* (+RO-DATA)
+        *attestation_s_interface_testsuite.* (+RO-DATA)
+        *(TFM_SP_SECURE_TEST_PARTITION_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
+
+#ifdef TFM_PARTITION_TEST_CORE_IPC
+    TFM_SP_IPC_SERVICE_TEST_RODATA +0 ALIGN 32 {
+        *tfm_ipc_service_test.* (+RO-DATA)
+        *(TFM_SP_IPC_SERVICE_TEST_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_CORE_IPC */
+
+#ifdef TFM_PARTITION_TEST_PS
+    TFM_SP_PS_TEST_RODATA +0 ALIGN 32 {
+        *tfm_ps_test_service.* (+RO-DATA)
+        *(TFM_SP_PS_TEST_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_PS */
+
+
+    PT_PSA_RODATA_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
+    /**** APPLICATION RoT RO data starts here */
+    PT_APP_RODATA_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
+#ifdef TFM_PARTITION_PROTECTED_STORAGE
+    TFM_SP_PS_RODATA +0 ALIGN 32 {
+        *tfm_storage* (+RO-DATA)
+        *test_ps_nv_counters.* (+RO-DATA)
+        *(TFM_SP_PS_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_PROTECTED_STORAGE */
+
+#ifdef TFM_PARTITION_TEST_CORE
+    TFM_SP_CORE_TEST_2_RODATA +0 ALIGN 32 {
+        *tfm_ss_core_test_2.* (+RO-DATA)
+        *(TFM_SP_CORE_TEST_2_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_CORE */
+
+#ifdef TFM_PARTITION_TEST_CORE_IPC
+    TFM_SP_IPC_CLIENT_TEST_RODATA +0 ALIGN 32 {
+        *tfm_ipc_client_test.* (+RO-DATA)
+        *(TFM_SP_IPC_CLIENT_TEST_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_CORE_IPC */
+
+#ifdef TFM_ENABLE_IRQ_TEST
+    TFM_IRQ_TEST_1_RODATA +0 ALIGN 32 {
+        *tfm_irq_test_service_1.* (+RO-DATA)
+        *timer_cmsdk* (+RO-DATA)
+        *(TFM_IRQ_TEST_1_ATTR_RODATA)
+    }
+#endif /* TFM_ENABLE_IRQ_TEST */
+
+#ifdef TFM_PARTITION_TEST_SECURE_SERVICES
+    TFM_SP_SECURE_CLIENT_2_RODATA +0 ALIGN 32 {
+        *tfm_secure_client_2.* (+RO-DATA)
+        *(TFM_SP_SECURE_CLIENT_2_ATTR_RODATA)
+    }
+#endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
+
+
+    PT_APP_RODATA_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
+    /**** Unprivileged Secure RO data starts here */
+    ER_UNPRIV_RODATA +0 ALIGN 32 {
+        platform_retarget_dev.o (+RO-DATA)
+        device_definition.o (+RO-DATA)
+        *armlib* (+RO-DATA)
+        *libtfmsprt.a (+RO-DATA)
+    }
 
     /**** Base address of secure data area */
     PT_SECURE_DATA_START S_DATA_START EMPTY 0x0 {
@@ -425,6 +557,21 @@ LR_CODE S_CODE_START {
      * size of the SRAM available.
      */
     ScatterAssert(ImageLimit(PT_SRAM_WATERMARK) <= S_DATA_START + S_DATA_SIZE)
+
+#if defined(S_CODE_SRAM_ALIAS_BASE)
+    /* eFlash driver code that gets copied from Flash to SRAM */
+    ER_EFLASH_DRIVER_CODE S_CODE_SRAM_ALIAS_BASE ALIGN 32 {
+        Driver_GFC100_EFlash.o (+RO-CODE)
+        gfc100_eflash_drv.o (+RO-CODE)
+        musca_b1_eflash_drv.o (+RO-CODE)
+    }
+
+    ER_EFLASH_DRIVER_RODATA +0 ALIGN 32 {
+        Driver_GFC100_EFlash.o (+RO-DATA)
+        gfc100_eflash_drv.o (+RO-DATA)
+        musca_b1_eflash_drv.o (+RO-DATA)
+    }
+#endif
 }
 
 #ifndef TFM_MULTI_CORE_TOPOLOGY
