@@ -7,6 +7,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include "isolation.h"
 #include "psa/client.h"
 #include "psa/service.h"
 #include "tfm_thread.h"
@@ -755,7 +756,7 @@ uint32_t tfm_spm_init(void)
 
 void tfm_pendsv_do_schedule(struct tfm_arch_ctx_t *p_actx)
 {
-#if TFM_LVL == 2
+#if TFM_LVL != 1
     struct partition_t *p_next_partition;
     uint32_t is_privileged;
 #endif
@@ -763,7 +764,7 @@ void tfm_pendsv_do_schedule(struct tfm_arch_ctx_t *p_actx)
     struct tfm_core_thread_t *pth_curr = tfm_core_thrd_get_curr_thread();
 
     if (pth_next != NULL && pth_curr != pth_next) {
-#if TFM_LVL == 2
+#if TFM_LVL != 1
         p_next_partition = TFM_GET_CONTAINER_PTR(pth_next,
                                                  struct partition_t,
                                                  sp_thread);
@@ -776,7 +777,21 @@ void tfm_pendsv_do_schedule(struct tfm_arch_ctx_t *p_actx)
         }
 
         tfm_spm_partition_change_privilege(is_privileged);
-#endif
+#if TFM_LVL == 3
+        /* Fixme: PRoT is running as privileged now,
+         * and eventually unprivileged in level 3.
+         */
+        if (is_privileged == TFM_PARTITION_UNPRIVILEGED_MODE) {
+            if (tfm_hal_enable_memory_access(
+                    p_next_partition->memory_data->data_start,
+                    p_next_partition->memory_data->data_limit,
+                    TFM_HAL_ACCESS_MODE_ALL_PRIVILEGE_RW,
+                    ISOLATION_IDX_UNPRIV_ACTIVE) != TFM_HAL_SUCCESS) {
+                tfm_core_panic();
+            }
+        }
+#endif /* TFM_LVL == 3 */
+#endif /* TFM_LVL != 1 */
 
         tfm_core_thrd_switch_context(p_actx, pth_curr, pth_next);
     }

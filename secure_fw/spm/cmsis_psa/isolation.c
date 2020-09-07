@@ -26,6 +26,9 @@ REGION_DECLARE(Image$$, PT_UNPRIV_RWZI_START, $$Base);
 REGION_DECLARE(Image$$, PT_UNPRIV_RWZI_END, $$Base);
 REGION_DECLARE(Image$$, PT_PRIV_RWZI_START, $$Base);
 REGION_DECLARE(Image$$, PT_PRIV_RWZI_END, $$Base);
+#elif TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_PRIV_RWZI_START, $$Base);
+REGION_DECLARE(Image$$, PT_PRIV_RWZI_END, $$Base);
 #endif
 
 int32_t tfm_spm_setup_static_isolation(void)
@@ -92,6 +95,18 @@ int32_t tfm_spm_setup_static_isolation(void)
                 (uint32_t)&REGION_NAME(Image$$, PT_UNPRIV_RWZI_END, $$Base),
                 TFM_HAL_ACCESS_MODE_ALL_PRIVILEGE_RW,
                 ISOLATION_IDX_UNPRIV_RW_DATA);
+    if (status != TFM_HAL_SUCCESS) {
+        return IPC_ERROR_GENERIC;
+    }
+#elif TFM_LVL == 3
+    /* For isolation Level 3, set up static isolation for privileged data.
+     * Unprivileged data is dynamiclly set during Partition sheduling.
+     */
+    status = tfm_hal_enable_memory_access(
+                (uint32_t)&REGION_NAME(Image$$, PT_PRIV_RWZI_START, $$Base),
+                (uint32_t)&REGION_NAME(Image$$, PT_PRIV_RWZI_END, $$Base),
+                TFM_HAL_ACCESS_MODE_PRIVILEGED_RW,
+                ISOLATION_IDX_PRIV_RW_DATA);
     if (status != TFM_HAL_SUCCESS) {
         return IPC_ERROR_GENERIC;
     }

@@ -16,8 +16,11 @@
 #elif TFM_LVL == 2
 #define ISOLATION_IDX_PRIV_RW_DATA   3 /* RW data with privileged access only */
 #define ISOLATION_IDX_UNPRIV_RW_DATA 4 /* RW data with unprivileged access */
+#elif TFM_LVL == 3
+#define ISOLATION_IDX_PRIV_RW_DATA   3 /* RW data with privileged access only */
+#define ISOLATION_IDX_UNPRIV_ACTIVE  4 /* Active unprivileged RW data region */
 #else
-#error TFM_LVL 3 is not supported yet!
+#error TFM_LVL ONLY supports 1, 2, and 3!
 #endif
 
 /**
