@@ -255,6 +255,11 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
+#if TFM_LVL == 3
+    PT_{{manifest.manifest.name}}_PRIVATE_DATA_START +0 ALIGN 32 {
+        /* Position tag */
+    }
+#endif
     ER_{{manifest.manifest.name}}_RWZI +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
@@ -269,7 +274,11 @@ LR_CODE S_CODE_START {
         *({{manifest.manifest.name}}_ATTR_RW)
         *({{manifest.manifest.name}}_ATTR_ZI)
     }
-
+#if TFM_LVL == 3
+    PT_{{manifest.manifest.name}}_PRIVATE_DATA_END +0 ALIGN 32 {
+        /* Position tag */
+    }
+#endif
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
@@ -321,7 +330,7 @@ LR_CODE S_CODE_START {
         * (+RW +ZI)
     }
 
-#if TFM_LVL == 2
+#if TFM_LVL == 2 || TFM_LVL == 3
     PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
@@ -334,6 +343,11 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
+#if TFM_LVL == 3
+    PT_{{manifest.manifest.name}}_PRIVATE_DATA_START +0 ALIGN 32 {
+        /* Position tag */
+    }
+#endif
     ER_{{manifest.manifest.name}}_RWZI +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
@@ -348,7 +362,11 @@ LR_CODE S_CODE_START {
         *({{manifest.manifest.name}}_ATTR_RW)
         *({{manifest.manifest.name}}_ATTR_ZI)
     }
-
+#if TFM_LVL == 3
+    PT_{{manifest.manifest.name}}_PRIVATE_DATA_END +0 ALIGN 32 {
+        /* Position tag */
+    }
+#endif
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
@@ -362,7 +380,7 @@ LR_CODE S_CODE_START {
     PT_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
-#elif TFM_LVL == 2
+#elif TFM_LVL == 2 || TFM_LVL == 3
     PT_PRIV_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
