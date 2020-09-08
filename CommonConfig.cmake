@@ -29,11 +29,7 @@ set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type (i.e. Debug)")
 #Ignore case on the cmake build types
 string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
-if(CORE_IPC)
-	if (TFM_LVL EQUAL 3)
-		message(FATAL_ERROR "ERROR: Invalid isolation level!")
-	endif()
-else()
+if(NOT CORE_IPC)
 	if(NOT TFM_LVL EQUAL 1)
 		message(FATAL_ERROR "ERROR: Invalid isolation level!")
 	endif()
