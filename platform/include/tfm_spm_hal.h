@@ -43,6 +43,12 @@ enum irq_target_state_t {
  */
 struct tfm_spm_partition_memory_data_t
 {
+#if TFM_LVL == 3
+    uint32_t data_start;    /*!< Start of the data region of this partition. */
+    uint32_t data_limit;    /*!< Address of the byte beyond the end of the data
+                            *   region of this partition.
+                            */
+#endif
     uint32_t stack_bottom; /*!< The bottom of the stack for the partition. */
     uint32_t stack_top;    /*!< The top of the stack for the partition. */
 };

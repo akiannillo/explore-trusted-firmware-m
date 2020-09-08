@@ -60,6 +60,10 @@ REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Limit);
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_{{manifest.manifest.name}}_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_{{manifest.manifest.name}}_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t {{manifest.manifest.name.lower()}}_stack[];
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
@@ -202,6 +206,10 @@ const struct tfm_spm_partition_platform_data_t **platform_data_list_list[] =
 const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 {
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
+        .data_limit           = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Limit),
+#endif
         .stack_bottom         = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
         .stack_top            = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Limit),
     },
@@ -210,6 +218,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
     {{'{'}}
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_{{manifest.manifest.name}}_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_{{manifest.manifest.name}}_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t){{manifest.manifest.name.lower()}}_stack,
         .stack_top            = (uint32_t)(&{{manifest.manifest.name.lower()}}_stack[{{manifest.manifest.stack_size}}]),
     {{'},'}}

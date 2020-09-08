@@ -139,58 +139,114 @@ REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Limit);
 
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_PS_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_PS_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_ps_stack[];
 #endif /* TFM_PARTITION_PROTECTED_STORAGE */
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_ITS_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_ITS_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_its_stack[];
 #endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
 
 #ifdef TFM_PARTITION_AUDIT_LOG
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_AUDIT_LOG_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_AUDIT_LOG_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_audit_log_stack[];
 #endif /* TFM_PARTITION_AUDIT_LOG */
 
 #ifdef TFM_PARTITION_CRYPTO
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_CRYPTO_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_CRYPTO_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_crypto_stack[];
 #endif /* TFM_PARTITION_CRYPTO */
 
 #ifdef TFM_PARTITION_PLATFORM
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_PLATFORM_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_PLATFORM_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_platform_stack[];
 #endif /* TFM_PARTITION_PLATFORM */
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_INITIAL_ATTESTATION_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_INITIAL_ATTESTATION_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_initial_attestation_stack[];
 #endif /* TFM_PARTITION_INITIAL_ATTESTATION */
 
 #ifdef TFM_PARTITION_TEST_CORE
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_CORE_TEST_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_CORE_TEST_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_core_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_CORE
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_CORE_TEST_2_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_CORE_TEST_2_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_core_test_2_stack[];
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_SECURE_TEST_PARTITION_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_SECURE_TEST_PARTITION_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_secure_test_partition_stack[];
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_IPC_SERVICE_TEST_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_IPC_SERVICE_TEST_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_ipc_service_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_IPC_CLIENT_TEST_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_IPC_CLIENT_TEST_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_ipc_client_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_ENABLE_IRQ_TEST
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_IRQ_TEST_1_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_IRQ_TEST_1_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_irq_test_1_stack[];
 #endif /* TFM_ENABLE_IRQ_TEST */
 
 #ifdef TFM_PARTITION_TEST_PS
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_PS_TEST_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_PS_TEST_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_ps_test_stack[];
 #endif /* TFM_PARTITION_TEST_PS */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
+#if TFM_LVL == 3
+REGION_DECLARE(Image$$, PT_TFM_SP_SECURE_CLIENT_2_PRIVATE, _DATA_START$$Base);
+REGION_DECLARE(Image$$, PT_TFM_SP_SECURE_CLIENT_2_PRIVATE, _DATA_END$$Base);
+#endif
 extern uint8_t tfm_sp_secure_client_2_stack[];
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
@@ -609,11 +665,19 @@ const struct tfm_spm_partition_platform_data_t **platform_data_list_list[] =
 const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 {
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
+        .data_limit           = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Limit),
+#endif
         .stack_bottom         = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
         .stack_top            = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Limit),
     },
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_PS_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_PS_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_ps_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ps_stack[0x800]),
     },
@@ -621,6 +685,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_ITS_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_ITS_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_its_stack,
         .stack_top            = (uint32_t)(&tfm_sp_its_stack[0x680]),
     },
@@ -628,6 +696,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_AUDIT_LOG
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_AUDIT_LOG_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_AUDIT_LOG_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_audit_log_stack,
         .stack_top            = (uint32_t)(&tfm_sp_audit_log_stack[0x0200]),
     },
@@ -635,6 +707,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_CRYPTO
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_CRYPTO_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_CRYPTO_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_crypto_stack,
         .stack_top            = (uint32_t)(&tfm_sp_crypto_stack[0x2000]),
     },
@@ -642,6 +718,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_PLATFORM
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_PLATFORM_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_PLATFORM_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_platform_stack,
         .stack_top            = (uint32_t)(&tfm_sp_platform_stack[0x0400]),
     },
@@ -649,6 +729,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_INITIAL_ATTESTATION_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_INITIAL_ATTESTATION_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_initial_attestation_stack,
         .stack_top            = (uint32_t)(&tfm_sp_initial_attestation_stack[0x0A80]),
     },
@@ -656,6 +740,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_CORE_TEST_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_CORE_TEST_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_core_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_core_test_stack[0x0380]),
     },
@@ -663,6 +751,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_CORE_TEST_2_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_CORE_TEST_2_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_core_test_2_stack,
         .stack_top            = (uint32_t)(&tfm_sp_core_test_2_stack[0x0280]),
     },
@@ -670,6 +762,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_SECURE_TEST_PARTITION_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_SECURE_TEST_PARTITION_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_secure_test_partition_stack,
         .stack_top            = (uint32_t)(&tfm_sp_secure_test_partition_stack[0x0D00]),
     },
@@ -677,6 +773,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_IPC_SERVICE_TEST_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_IPC_SERVICE_TEST_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_ipc_service_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ipc_service_test_stack[0x0220]),
     },
@@ -684,6 +784,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_IPC_CLIENT_TEST_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_IPC_CLIENT_TEST_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_ipc_client_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ipc_client_test_stack[0x0300]),
     },
@@ -691,6 +795,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_ENABLE_IRQ_TEST
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_IRQ_TEST_1_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_IRQ_TEST_1_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_irq_test_1_stack,
         .stack_top            = (uint32_t)(&tfm_irq_test_1_stack[0x0400]),
     },
@@ -698,6 +806,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_PS
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_PS_TEST_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_PS_TEST_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_ps_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ps_test_stack[0x500]),
     },
@@ -705,6 +817,10 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
     {
+#if TFM_LVL == 3
+        .data_start           = PART_REGION_ADDR(PT_TFM_SP_SECURE_CLIENT_2_PRIVATE, _DATA_START$$Base),
+        .data_limit           = PART_REGION_ADDR(PT_TFM_SP_SECURE_CLIENT_2_PRIVATE, _DATA_END$$Base),
+#endif
         .stack_bottom         = (uint32_t)tfm_sp_secure_client_2_stack,
         .stack_top            = (uint32_t)(&tfm_sp_secure_client_2_stack[0x300]),
     },
