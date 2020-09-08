@@ -420,8 +420,8 @@ SECTIONS
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     .TFM_SP_IPC_SERVICE_TEST_LINKER : ALIGN(32)
     {
-        *ipc_service_test.*(.text*)
-        *ipc_service_test.*(.rodata*)
+        *tfm_ipc_service_test.*(.text*)
+        *tfm_ipc_service_test.*(.rodata*)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_FN)
         . = ALIGN(32);
     } > FLASH
@@ -484,8 +484,8 @@ SECTIONS
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     .TFM_SP_IPC_CLIENT_TEST_LINKER : ALIGN(32)
     {
-        *ipc_client_test.*(.text*)
-        *ipc_client_test.*(.rodata*)
+        *tfm_ipc_client_test.*(.text*)
+        *tfm_ipc_client_test.*(.rodata*)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_FN)
         . = ALIGN(32);
     } > FLASH
@@ -740,7 +740,7 @@ SECTIONS
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     .TFM_SP_IPC_CLIENT_TEST_LINKER_DATA : ALIGN(32)
     {
-        *ipc_client_test.*(.data*)
+        *tfm_ipc_client_test.*(.data*)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_RW)
         . = ALIGN(32);
     } > RAM AT> FLASH
@@ -750,8 +750,8 @@ SECTIONS
     .TFM_SP_IPC_CLIENT_TEST_LINKER_BSS : ALIGN(32)
     {
         start_of_TFM_SP_IPC_CLIENT_TEST_LINKER = .;
-        *ipc_client_test.*(.bss*)
-        *ipc_client_test.*(COMMON)
+        *tfm_ipc_client_test.*(.bss*)
+        *tfm_ipc_client_test.*(COMMON)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_ZI)
         . += (. - start_of_TFM_SP_IPC_CLIENT_TEST_LINKER) ? 0 : 4;
         . = ALIGN(32);
@@ -1177,7 +1177,7 @@ SECTIONS
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     .TFM_SP_IPC_SERVICE_TEST_LINKER_DATA : ALIGN(32)
     {
-        *ipc_service_test.*(.data*)
+        *tfm_ipc_service_test.*(.data*)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_RW)
         . = ALIGN(32);
     } > RAM AT> FLASH
@@ -1187,8 +1187,8 @@ SECTIONS
     .TFM_SP_IPC_SERVICE_TEST_LINKER_BSS : ALIGN(32)
     {
         start_of_TFM_SP_IPC_SERVICE_TEST_LINKER = .;
-        *ipc_service_test.*(.bss*)
-        *ipc_service_test.*(COMMON)
+        *tfm_ipc_service_test.*(.bss*)
+        *tfm_ipc_service_test.*(COMMON)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_ZI)
         . += (. - start_of_TFM_SP_IPC_SERVICE_TEST_LINKER) ? 0 : 4;
         . = ALIGN(32);

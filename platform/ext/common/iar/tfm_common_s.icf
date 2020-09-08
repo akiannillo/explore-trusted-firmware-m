@@ -93,7 +93,7 @@ define block TFM_SP_SECURE_TEST_PARTITION_LINKER with alignment = 32 {
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
 define block TFM_SP_IPC_SERVICE_TEST_LINKER with alignment = 32 {
-        ro object *ipc_service_test.*,
+        ro object *tfm_ipc_service_test.*,
     };
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
@@ -131,7 +131,7 @@ define block TFM_SP_CORE_TEST_2_LINKER with alignment = 32 {
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
 define block TFM_SP_IPC_CLIENT_TEST_LINKER with alignment = 32 {
-        ro object *ipc_client_test.*,
+        ro object *tfm_ipc_client_test.*,
     };
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
@@ -201,7 +201,7 @@ define block TFM_SP_CORE_TEST_2_LINKER_STACK with alignment = 128, size = 0x0280
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
 define block TFM_SP_IPC_CLIENT_TEST_LINKER_DATA with alignment = 32 {
-        rw object *ipc_client_test.*,
+        rw object *tfm_ipc_client_test.*,
     };
 
 #if defined (TFM_PSA_API)
@@ -354,7 +354,7 @@ define block TFM_SP_SECURE_TEST_PARTITION_LINKER_STACK with alignment = 128, siz
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
 define block TFM_SP_IPC_SERVICE_TEST_LINKER_DATA with alignment = 32 {
-        rw object *ipc_service_test.*,
+        rw object *tfm_ipc_service_test.*,
     };
 
 #if defined (TFM_PSA_API)
