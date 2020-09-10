@@ -111,7 +111,7 @@ Define HAL API for SPM log system:
 .. code-block:: c
 
   /* SPM log HAL API */
-  int32_t tfm_hal_output_spm_log(const unsigned char *str, uint32_t len);
+  int32_t tfm_hal_output_spm_log(const char *str, uint32_t len);
 
 Take debug message as an example:
 
