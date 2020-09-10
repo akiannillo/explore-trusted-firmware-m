@@ -1,5 +1,5 @@
 ;/*
-; * Copyright (c) 2009-2019 Arm Limited. All rights reserved.
+; * Copyright (c) 2009-2020 Arm Limited. All rights reserved.
 ; *
 ; * Licensed under the Apache License, Version 2.0 (the "License");
 ; * you may not use this file except in compliance with the License.
@@ -257,10 +257,7 @@ Reset_Handler:
     ldr     r0, =Image$$ARM_LIB_STACK$$ZI$$Limit
     msr     psp, r0
 
-#ifndef __START
-#define __START _start
-#endif
-    bl    __START
+    bl    main
 
     .pool
     .size    Reset_Handler, . - Reset_Handler
