@@ -18,8 +18,8 @@
 #include "common/psa_client_service_apis.h"
 
 /* The section names come from the scatter file */
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
 
 #ifdef PLATFORM_SVC_HANDLERS
 extern int32_t platform_svc_handlers(tfm_svc_number_t svc_num,
@@ -32,9 +32,9 @@ static int32_t SVC_Handler_IPC(tfm_svc_number_t svc_num, uint32_t *ctx,
     bool ns_caller = false;
     struct partition_t *partition = NULL;
     uint32_t veneer_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
     uint32_t veneer_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
 
     /*
      * The caller security attribute detection bases on LR of state context.

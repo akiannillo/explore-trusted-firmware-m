@@ -59,16 +59,16 @@ enum tfm_plat_err_t tfm_spm_hal_configure_default_isolation(
 
 #ifdef CONFIG_TFM_ENABLE_MEMORY_PROTECT
 
-#define MPU_REGION_TFM_UNPRIV_CODE   1
-#define MPU_REGION_TFM_UNPRIV_DATA   2
+#define MPU_REGION_ER_UNPRIV_CODE    1
+#define MPU_REGION_ER_UNPRIV_RWZI    2
 #define MPU_REGION_NS_DATA           3
 #define PARTITION_REGION_RO          4
 #define PARTITION_REGION_RW_STACK    5
 #define PARTITION_REGION_PERIPH      6
 #define PARTITION_REGION_SHARE       7
 
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
 REGION_DECLARE(Image$$, TFM_UNPRIV_RO_DATA, $$RW$$Base);
 REGION_DECLARE(Image$$, TFM_UNPRIV_RO_DATA, $$ZI$$Limit);
 REGION_DECLARE(Image$$, TFM_UNPRIV_SCRATCH, $$ZI$$Base);
@@ -82,11 +82,11 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     mpu_armv8m_clean(&dev_mpu_s);
 
     /* TFM Core unprivileged code region */
-    region_cfg.region_nr = MPU_REGION_TFM_UNPRIV_CODE;
+    region_cfg.region_nr = MPU_REGION_ER_UNPRIV_CODE;
     region_cfg.region_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
     region_cfg.region_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
     region_cfg.attr_access = MPU_ARMV8M_AP_RO_PRIV_UNPRIV;
     region_cfg.attr_sh = MPU_ARMV8M_SH_NONE;
     region_cfg.attr_exec = MPU_ARMV8M_XN_EXEC_OK;
@@ -95,7 +95,7 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     }
 
     /* TFM Core unprivileged data region */
-    region_cfg.region_nr = MPU_REGION_TFM_UNPRIV_DATA;
+    region_cfg.region_nr = MPU_REGION_ER_UNPRIV_RWZI;
     region_cfg.region_base =
         (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_RO_DATA, $$RW$$Base);
     region_cfg.region_limit =

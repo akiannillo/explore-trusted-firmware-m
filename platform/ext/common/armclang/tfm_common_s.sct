@@ -18,6 +18,16 @@
 
 /*********** WARNING: This is an auto-generated file. Do not edit! ***********/
 
+/*
+ * Customized region name prefix abbreviation:
+ *  LR : A Load region.
+ *  ER : A typical execution region.
+ *  PT : An empty execution region used as position-tag/address-alignment.
+ *
+ * No applying customzied prefixes on linker/system reserved/intentional
+ * names, such as 'ARM_LIB_STACK' or 'WATERMARK'.
+ */
+
 #include "region_defs.h"
 
 LR_CODE S_CODE_START {
@@ -29,7 +39,7 @@ LR_CODE S_CODE_START {
     }
 
     /**** Unprivileged Secure code start here */
-    TFM_UNPRIV_CODE +0 ALIGN 32 {
+    ER_UNPRIV_CODE +0 ALIGN 32 {
         platform_retarget_dev.o (+RO)
         device_definition.o (+RO)
         *(SFN)
@@ -38,57 +48,54 @@ LR_CODE S_CODE_START {
     }
 
     /**** PSA RoT RO part (CODE + RODATA) start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of PSA RoT code.
-     */
-    TFM_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
-    TFM_SP_ITS_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_ITS_CODE_RO +0 ALIGN 32 {
         *tfm_internal_trusted_storage* (+RO)
         *(TFM_SP_ITS_ATTR_FN)
     }
 #endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
 
 #ifdef TFM_PARTITION_AUDIT_LOG
-    TFM_SP_AUDIT_LOG_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_AUDIT_LOG_CODE_RO +0 ALIGN 32 {
         *tfm_audit* (+RO)
         *(TFM_SP_AUDIT_LOG_ATTR_FN)
     }
 #endif /* TFM_PARTITION_AUDIT_LOG */
 
 #ifdef TFM_PARTITION_CRYPTO
-    TFM_SP_CRYPTO_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_CRYPTO_CODE_RO +0 ALIGN 32 {
         *tfm_crypto* (+RO)
         *(TFM_SP_CRYPTO_ATTR_FN)
     }
 #endif /* TFM_PARTITION_CRYPTO */
 
 #ifdef TFM_PARTITION_PLATFORM
-    TFM_SP_PLATFORM_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_PLATFORM_CODE_RO +0 ALIGN 32 {
         *tfm_platform* (+RO)
         *(TFM_SP_PLATFORM_ATTR_FN)
     }
 #endif /* TFM_PARTITION_PLATFORM */
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
-    TFM_SP_INITIAL_ATTESTATION_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_INITIAL_ATTESTATION_CODE_RO +0 ALIGN 32 {
         *tfm_attest* (+RO)
         *(TFM_SP_INITIAL_ATTESTATION_ATTR_FN)
     }
 #endif /* TFM_PARTITION_INITIAL_ATTESTATION */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    TFM_SP_CORE_TEST_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_CORE_TEST_CODE_RO +0 ALIGN 32 {
         *tfm_ss_core_test.* (+RO)
         *(TFM_SP_CORE_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    TFM_SP_SECURE_TEST_PARTITION_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_SECURE_TEST_PARTITION_CODE_RO +0 ALIGN 32 {
         *tfm_secure_client_service.* (+RO)
         *test_framework* (+RO)
         *uart_stdout.* (+RO)
@@ -103,36 +110,31 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    TFM_SP_IPC_SERVICE_TEST_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_IPC_SERVICE_TEST_CODE_RO +0 ALIGN 32 {
         *tfm_ipc_service_test.* (+RO)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_PARTITION_TEST_PS
-    TFM_SP_PS_TEST_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_PS_TEST_CODE_RO +0 ALIGN 32 {
         *tfm_ps_test_service.* (+RO)
         *(TFM_SP_PS_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_PS */
 
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of PSA RoT code.
-     */
-    TFM_PSA_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_PSA_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
     /**** APPLICATION RoT RO part (CODE + RODATA) start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of APP RoT code.
-     */
-    TFM_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
-    TFM_SP_PS_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_PS_CODE_RO +0 ALIGN 32 {
         *tfm_storage* (+RO)
         *test_ps_nv_counters.* (+RO)
         *(TFM_SP_PS_ATTR_FN)
@@ -140,21 +142,21 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_PROTECTED_STORAGE */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    TFM_SP_CORE_TEST_2_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_CORE_TEST_2_CODE_RO +0 ALIGN 32 {
         *tfm_ss_core_test_2.* (+RO)
         *(TFM_SP_CORE_TEST_2_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    TFM_SP_IPC_CLIENT_TEST_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_IPC_CLIENT_TEST_CODE_RO +0 ALIGN 32 {
         *tfm_ipc_client_test.* (+RO)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_ENABLE_IRQ_TEST
-    TFM_IRQ_TEST_1_LINKER +0 ALIGN 32 {
+    ER_TFM_IRQ_TEST_1_CODE_RO +0 ALIGN 32 {
         *tfm_irq_test_service_1.* (+RO)
         *timer_cmsdk* (+RO)
         *(TFM_IRQ_TEST_1_ATTR_FN)
@@ -162,17 +164,15 @@ LR_CODE S_CODE_START {
 #endif /* TFM_ENABLE_IRQ_TEST */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    TFM_SP_SECURE_CLIENT_2_LINKER +0 ALIGN 32 {
+    ER_TFM_SP_SECURE_CLIENT_2_CODE_RO +0 ALIGN 32 {
         *tfm_secure_client_2.* (+RO)
         *(TFM_SP_SECURE_CLIENT_2_ATTR_FN)
     }
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of APP RoT code.
-     */
-    TFM_APP_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_APP_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #if defined(S_CODE_SRAM_ALIAS_BASE)
@@ -185,7 +185,8 @@ LR_CODE S_CODE_START {
 #endif
 
     /**** Base address of secure data area */
-    TFM_SECURE_DATA_START S_DATA_START {
+    PT_SECURE_DATA_START S_DATA_START EMPTY 0x0 {
+        /* Position tag */
     }
 
     /*
@@ -218,19 +219,16 @@ LR_CODE S_CODE_START {
     }
 #endif /* !defined(TFM_PSA_API) */
 
-    TFM_UNPRIV_DATA +0 ALIGN 32 {
+    ER_UNPRIV_RWZI +0 ALIGN 32 {
     }
 
     /**** APP RoT DATA start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of APP RoT RW and Stack.
-     */
-    TFM_APP_RW_STACK_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_APP_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
-    TFM_SP_PS_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_PS_RWZI +0 ALIGN 32 {
         *tfm_storage* (+RW +ZI)
         *test_ps_nv_counters.* (+RW +ZI)
         *(TFM_SP_PS_ATTR_RW)
@@ -240,7 +238,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_PROTECTED_STORAGE */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    TFM_SP_CORE_TEST_2_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_CORE_TEST_2_RWZI +0 ALIGN 32 {
         *tfm_ss_core_test_2.* (+RW +ZI)
         *(TFM_SP_CORE_TEST_2_ATTR_RW)
         *(TFM_SP_CORE_TEST_2_ATTR_ZI)
@@ -249,7 +247,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    TFM_SP_IPC_CLIENT_TEST_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_IPC_CLIENT_TEST_RWZI +0 ALIGN 32 {
         *tfm_ipc_client_test.* (+RW +ZI)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_RW)
         *(TFM_SP_IPC_CLIENT_TEST_ATTR_ZI)
@@ -258,7 +256,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_ENABLE_IRQ_TEST
-    TFM_IRQ_TEST_1_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_IRQ_TEST_1_RWZI +0 ALIGN 32 {
         *tfm_irq_test_service_1.* (+RW +ZI)
         *timer_cmsdk* (+RW +ZI)
         *(TFM_IRQ_TEST_1_ATTR_RW)
@@ -268,7 +266,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_ENABLE_IRQ_TEST */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    TFM_SP_SECURE_CLIENT_2_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_SECURE_CLIENT_2_RWZI +0 ALIGN 32 {
         *tfm_secure_client_2.* (+RW +ZI)
         *(TFM_SP_SECURE_CLIENT_2_ATTR_RW)
         *(TFM_SP_SECURE_CLIENT_2_ATTR_ZI)
@@ -276,17 +274,16 @@ LR_CODE S_CODE_START {
 
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of APP RoT RW and Stack.
-     */
-    TFM_APP_RW_STACK_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_APP_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_MULTI_CORE_TOPOLOGY
 #ifdef S_DATA_PRIV_START
     /**** Privileged data area base address specified by multi-core platform */
-    TFM_SECURE_PRIV_DATA_BOUNDARY S_DATA_PRIV_START {
+    PT_SECURE_PRIV_DATA_BOUNDARY S_DATA_PRIV_START EMPTY 0x0 {
+        /* Position tag */
     }
 #endif
 
@@ -315,15 +312,12 @@ LR_CODE S_CODE_START {
     }
 
     /**** PSA RoT DATA start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of PSA RoT RW and Stack.
-     */
-    TFM_PSA_RW_STACK_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_PSA_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
-    TFM_SP_ITS_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_ITS_RWZI +0 ALIGN 32 {
         *tfm_internal_trusted_storage* (+RW +ZI)
         *(TFM_SP_ITS_ATTR_RW)
         *(TFM_SP_ITS_ATTR_ZI)
@@ -332,7 +326,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
 
 #ifdef TFM_PARTITION_AUDIT_LOG
-    TFM_SP_AUDIT_LOG_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_AUDIT_LOG_RWZI +0 ALIGN 32 {
         *tfm_audit* (+RW +ZI)
         *(TFM_SP_AUDIT_LOG_ATTR_RW)
         *(TFM_SP_AUDIT_LOG_ATTR_ZI)
@@ -341,7 +335,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_AUDIT_LOG */
 
 #ifdef TFM_PARTITION_CRYPTO
-    TFM_SP_CRYPTO_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_CRYPTO_RWZI +0 ALIGN 32 {
         *tfm_crypto* (+RW +ZI)
         *(TFM_SP_CRYPTO_ATTR_RW)
         *(TFM_SP_CRYPTO_ATTR_ZI)
@@ -350,7 +344,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_CRYPTO */
 
 #ifdef TFM_PARTITION_PLATFORM
-    TFM_SP_PLATFORM_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_PLATFORM_RWZI +0 ALIGN 32 {
         *tfm_platform* (+RW +ZI)
         *(TFM_SP_PLATFORM_ATTR_RW)
         *(TFM_SP_PLATFORM_ATTR_ZI)
@@ -359,7 +353,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_PLATFORM */
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
-    TFM_SP_INITIAL_ATTESTATION_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_INITIAL_ATTESTATION_RWZI +0 ALIGN 32 {
         *tfm_attest* (+RW +ZI)
         *(TFM_SP_INITIAL_ATTESTATION_ATTR_RW)
         *(TFM_SP_INITIAL_ATTESTATION_ATTR_ZI)
@@ -368,7 +362,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_INITIAL_ATTESTATION */
 
 #ifdef TFM_PARTITION_TEST_CORE
-    TFM_SP_CORE_TEST_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_CORE_TEST_RWZI +0 ALIGN 32 {
         *tfm_ss_core_test.* (+RW +ZI)
         *(TFM_SP_CORE_TEST_ATTR_RW)
         *(TFM_SP_CORE_TEST_ATTR_ZI)
@@ -377,7 +371,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-    TFM_SP_SECURE_TEST_PARTITION_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_SECURE_TEST_PARTITION_RWZI +0 ALIGN 32 {
         *tfm_secure_client_service.* (+RW +ZI)
         *test_framework* (+RW +ZI)
         *uart_stdout.* (+RW +ZI)
@@ -394,7 +388,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-    TFM_SP_IPC_SERVICE_TEST_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_IPC_SERVICE_TEST_RWZI +0 ALIGN 32 {
         *tfm_ipc_service_test.* (+RW +ZI)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_RW)
         *(TFM_SP_IPC_SERVICE_TEST_ATTR_ZI)
@@ -403,7 +397,7 @@ LR_CODE S_CODE_START {
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_PARTITION_TEST_PS
-    TFM_SP_PS_TEST_LINKER_DATA +0 ALIGN 32 {
+    ER_TFM_SP_PS_TEST_RWZI +0 ALIGN 32 {
         *tfm_ps_test_service.* (+RW +ZI)
         *(TFM_SP_PS_TEST_ATTR_RW)
         *(TFM_SP_PS_TEST_ATTR_ZI)
@@ -411,11 +405,9 @@ LR_CODE S_CODE_START {
 
 #endif /* TFM_PARTITION_TEST_PS */
 
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of PSA RoT RW and Stack.
-     */
-    TFM_PSA_RW_STACK_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_PSA_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #if defined (S_RAM_CODE_START)
@@ -425,16 +417,14 @@ LR_CODE S_CODE_START {
     }
 #endif
 
-    /* This empty, zero long execution region is here to mark the limit address
-     * of the last execution region that is allocated in SRAM.
-     */
-    SRAM_WATERMARK +0 EMPTY 0x0 {
+    PT_SRAM_WATERMARK +0 EMPTY 0x0 {
+        /* Position tag */
     }
 
     /* Make sure that the sections allocated in the SRAM does not exceed the
      * size of the SRAM available.
      */
-    ScatterAssert(ImageLimit(SRAM_WATERMARK) <= S_DATA_START + S_DATA_SIZE)
+    ScatterAssert(ImageLimit(PT_SRAM_WATERMARK) <= S_DATA_START + S_DATA_SIZE)
 }
 
 #ifndef TFM_MULTI_CORE_TOPOLOGY

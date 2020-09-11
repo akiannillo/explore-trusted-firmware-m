@@ -28,8 +28,8 @@ struct mpu_armv8m_dev_t dev_mpu_s = { MPU_BASE };
 
 #ifdef CONFIG_TFM_ENABLE_MEMORY_PROTECT
 #define MPU_REGION_VENEERS              0
-#define MPU_REGION_TFM_UNPRIV_CODE      1
-#define MPU_REGION_TFM_UNPRIV_DATA      2
+#define MPU_REGION_ER_UNPRIV_CODE       1
+#define MPU_REGION_ER_UNPRIV_RWZI       2
 #define MPU_REGION_NS_STACK             3
 #define PARTITION_REGION_RO             4
 #define PARTITION_REGION_RW_STACK       5
@@ -108,14 +108,14 @@ enum tfm_plat_err_t tfm_spm_hal_configure_default_isolation(
 #ifdef CONFIG_TFM_ENABLE_MEMORY_PROTECT
 REGION_DECLARE(Load$$LR$$, LR_VENEER, $$Base);
 REGION_DECLARE(Load$$LR$$, LR_VENEER, $$Limit);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$RW$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit);
-REGION_DECLARE(Image$$, TFM_APP_CODE_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_CODE_END, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_END, $$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$RW$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit);
+REGION_DECLARE(Image$$, PT_APP_CODE_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_CODE_END, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_END, $$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Limit);
 
@@ -132,9 +132,9 @@ const struct mpu_armv8m_region_cfg_t region_cfg[] = {
            },
            /* TFM Core unprivileged code region */
            {
-               MPU_REGION_TFM_UNPRIV_CODE,
-               (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Base),
-               (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit),
+               MPU_REGION_ER_UNPRIV_CODE,
+               (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Base),
+               (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Limit),
                MPU_ARMV8M_MAIR_ATTR_CODE_IDX,
                MPU_ARMV8M_XN_EXEC_OK,
                MPU_ARMV8M_AP_RO_PRIV_UNPRIV,
@@ -142,9 +142,9 @@ const struct mpu_armv8m_region_cfg_t region_cfg[] = {
            },
            /* TFM Core unprivileged data region */
            {
-               MPU_REGION_TFM_UNPRIV_DATA,
-               (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$RW$$Base),
-               (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit),
+               MPU_REGION_ER_UNPRIV_RWZI,
+               (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$RW$$Base),
+               (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit),
                MPU_ARMV8M_MAIR_ATTR_DATA_IDX,
                MPU_ARMV8M_XN_EXEC_NEVER,
                MPU_ARMV8M_AP_RW_PRIV_UNPRIV,
@@ -163,8 +163,8 @@ const struct mpu_armv8m_region_cfg_t region_cfg[] = {
            /* RO region */
            {
                PARTITION_REGION_RO,
-               (uint32_t)&REGION_NAME(Image$$, TFM_APP_CODE_START, $$Base),
-               (uint32_t)&REGION_NAME(Image$$, TFM_APP_CODE_END, $$Base),
+               (uint32_t)&REGION_NAME(Image$$, PT_APP_CODE_START, $$Base),
+               (uint32_t)&REGION_NAME(Image$$, PT_APP_CODE_END, $$Base),
                MPU_ARMV8M_MAIR_ATTR_CODE_IDX,
                MPU_ARMV8M_XN_EXEC_OK,
                MPU_ARMV8M_AP_RO_PRIV_UNPRIV,
@@ -173,8 +173,8 @@ const struct mpu_armv8m_region_cfg_t region_cfg[] = {
            /* RW, ZI and stack as one region */
            {
                PARTITION_REGION_RW_STACK,
-               (uint32_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_START, $$Base),
-               (uint32_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_END, $$Base),
+               (uint32_t)&REGION_NAME(Image$$, PT_APP_RWZI_START, $$Base),
+               (uint32_t)&REGION_NAME(Image$$, PT_APP_RWZI_END, $$Base),
                MPU_ARMV8M_MAIR_ATTR_DATA_IDX,
                MPU_ARMV8M_XN_EXEC_NEVER,
                MPU_ARMV8M_AP_RW_PRIV_UNPRIV,

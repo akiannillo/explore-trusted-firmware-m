@@ -18,6 +18,16 @@
 
 {{utilities.donotedit_warning}}
 
+/*
+ * Customized region name prefix abbreviation:
+ *  LR : A Load region.
+ *  ER : A typical execution region.
+ *  PT : An empty execution region used as position-tag/address-alignment.
+ *
+ * No applying customzied prefixes on linker/system reserved/intentional
+ * names, such as 'ARM_LIB_STACK' or 'WATERMARK'.
+ */
+
 #include "region_defs.h"
 
 LR_CODE S_CODE_START {
@@ -29,7 +39,7 @@ LR_CODE S_CODE_START {
     }
 
     /**** Unprivileged Secure code start here */
-    TFM_UNPRIV_CODE +0 ALIGN 32 {
+    ER_UNPRIV_CODE +0 ALIGN 32 {
         platform_retarget_dev.o (+RO)
         device_definition.o (+RO)
         *(SFN)
@@ -38,11 +48,8 @@ LR_CODE S_CODE_START {
     }
 
     /**** PSA RoT RO part (CODE + RODATA) start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of PSA RoT code.
-     */
-    TFM_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 {% for manifest in manifests %}
@@ -50,7 +57,7 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    {{manifest.manifest.name}}_LINKER +0 ALIGN 32 {
+    ER_{{manifest.manifest.name}}_CODE_RO +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}} (+RO)
@@ -69,19 +76,14 @@ LR_CODE S_CODE_START {
 
     {% endif %}
 {% endfor %}
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of PSA RoT code.
-     */
-    TFM_PSA_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_PSA_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
     /**** APPLICATION RoT RO part (CODE + RODATA) start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of APP RoT code.
-     */
-    TFM_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 {% for manifest in manifests %}
@@ -89,7 +91,7 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    {{manifest.manifest.name}}_LINKER +0 ALIGN 32 {
+    ER_{{manifest.manifest.name}}_CODE_RO +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}} (+RO)
@@ -108,11 +110,9 @@ LR_CODE S_CODE_START {
 
     {% endif %}
 {% endfor %}
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of APP RoT code.
-     */
-    TFM_APP_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_APP_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #if defined(S_CODE_SRAM_ALIAS_BASE)
@@ -125,7 +125,8 @@ LR_CODE S_CODE_START {
 #endif
 
     /**** Base address of secure data area */
-    TFM_SECURE_DATA_START S_DATA_START {
+    PT_SECURE_DATA_START S_DATA_START EMPTY 0x0 {
+        /* Position tag */
     }
 
     /*
@@ -158,15 +159,12 @@ LR_CODE S_CODE_START {
     }
 #endif /* !defined(TFM_PSA_API) */
 
-    TFM_UNPRIV_DATA +0 ALIGN 32 {
+    ER_UNPRIV_RWZI +0 ALIGN 32 {
     }
 
     /**** APP RoT DATA start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of APP RoT RW and Stack.
-     */
-    TFM_APP_RW_STACK_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_APP_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 {% for manifest in manifests %}
@@ -174,7 +172,7 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    {{manifest.manifest.name}}_LINKER_DATA +0 ALIGN 32 {
+    ER_{{manifest.manifest.name}}_RWZI +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}} (+RW +ZI)
@@ -195,17 +193,16 @@ LR_CODE S_CODE_START {
 
     {% endif %}
 {% endfor %}
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of APP RoT RW and Stack.
-     */
-    TFM_APP_RW_STACK_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_APP_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #ifdef TFM_MULTI_CORE_TOPOLOGY
 #ifdef S_DATA_PRIV_START
     /**** Privileged data area base address specified by multi-core platform */
-    TFM_SECURE_PRIV_DATA_BOUNDARY S_DATA_PRIV_START {
+    PT_SECURE_PRIV_DATA_BOUNDARY S_DATA_PRIV_START EMPTY 0x0 {
+        /* Position tag */
     }
 #endif
 
@@ -234,11 +231,8 @@ LR_CODE S_CODE_START {
     }
 
     /**** PSA RoT DATA start here */
-    /*
-     * This empty, zero long execution region is here to mark the start address
-     * of PSA RoT RW and Stack.
-     */
-    TFM_PSA_RW_STACK_START +0 ALIGN 32 EMPTY 0x0 {
+    PT_PSA_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 {% for manifest in manifests %}
@@ -246,7 +240,7 @@ LR_CODE S_CODE_START {
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    {{manifest.manifest.name}}_LINKER_DATA +0 ALIGN 32 {
+    ER_{{manifest.manifest.name}}_RWZI +0 ALIGN 32 {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}} (+RW +ZI)
@@ -267,11 +261,9 @@ LR_CODE S_CODE_START {
 
     {% endif %}
 {% endfor %}
-    /*
-     * This empty, zero long execution region is here to mark the end address
-     * of PSA RoT RW and Stack.
-     */
-    TFM_PSA_RW_STACK_END +0 ALIGN 32 EMPTY 0x0 {
+
+    PT_PSA_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
     }
 
 #if defined (S_RAM_CODE_START)
@@ -281,16 +273,14 @@ LR_CODE S_CODE_START {
     }
 #endif
 
-    /* This empty, zero long execution region is here to mark the limit address
-     * of the last execution region that is allocated in SRAM.
-     */
-    SRAM_WATERMARK +0 EMPTY 0x0 {
+    PT_SRAM_WATERMARK +0 EMPTY 0x0 {
+        /* Position tag */
     }
 
     /* Make sure that the sections allocated in the SRAM does not exceed the
      * size of the SRAM available.
      */
-    ScatterAssert(ImageLimit(SRAM_WATERMARK) <= S_DATA_START + S_DATA_SIZE)
+    ScatterAssert(ImageLimit(PT_SRAM_WATERMARK) <= S_DATA_START + S_DATA_SIZE)
 }
 
 #ifndef TFM_MULTI_CORE_TOPOLOGY

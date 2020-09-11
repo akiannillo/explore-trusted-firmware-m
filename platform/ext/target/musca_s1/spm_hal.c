@@ -65,22 +65,22 @@ enum tfm_plat_err_t tfm_spm_hal_configure_default_isolation(
 #ifdef CONFIG_TFM_ENABLE_MEMORY_PROTECT
 
 #define MPU_REGION_VENEERS           0
-#define MPU_REGION_TFM_UNPRIV_CODE   1
-#define MPU_REGION_TFM_UNPRIV_DATA   2
+#define MPU_REGION_ER_UNPRIV_CODE    1
+#define MPU_REGION_ER_UNPRIV_RWZI    2
 #define MPU_REGION_NS_STACK          3
 #define PARTITION_REGION_RO          4
 #define PARTITION_REGION_RW_STACK    5
 #define PARTITION_REGION_PERIPH      6
 
 
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$RW$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit);
-REGION_DECLARE(Image$$, TFM_APP_CODE_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_CODE_END, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_END, $$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$RW$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit);
+REGION_DECLARE(Image$$, PT_APP_CODE_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_CODE_END, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_END, $$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Limit);
 
@@ -103,11 +103,11 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     }
 
     /* TFM Core unprivileged code region */
-    region_cfg.region_nr = MPU_REGION_TFM_UNPRIV_CODE;
+    region_cfg.region_nr = MPU_REGION_ER_UNPRIV_CODE;
     region_cfg.region_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
     region_cfg.region_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
     region_cfg.region_attridx = MPU_ARMV8M_MAIR_ATTR_CODE_IDX;
     region_cfg.attr_access = MPU_ARMV8M_AP_RO_PRIV_UNPRIV;
     region_cfg.attr_sh = MPU_ARMV8M_SH_NONE;
@@ -117,11 +117,11 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     }
 
     /* TFM Core unprivileged data region */
-    region_cfg.region_nr = MPU_REGION_TFM_UNPRIV_DATA;
+    region_cfg.region_nr = MPU_REGION_ER_UNPRIV_RWZI;
     region_cfg.region_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$RW$$Base);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$RW$$Base);
     region_cfg.region_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit);
+        (uint32_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit);
     region_cfg.region_attridx = MPU_ARMV8M_MAIR_ATTR_DATA_IDX;
     region_cfg.attr_access = MPU_ARMV8M_AP_RW_PRIV_UNPRIV;
     region_cfg.attr_sh = MPU_ARMV8M_SH_NONE;
@@ -147,9 +147,9 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     /* RO region */
     region_cfg.region_nr = PARTITION_REGION_RO;
     region_cfg.region_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_APP_CODE_START, $$Base);
+        (uint32_t)&REGION_NAME(Image$$, PT_APP_CODE_START, $$Base);
     region_cfg.region_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_APP_CODE_END, $$Base);
+        (uint32_t)&REGION_NAME(Image$$, PT_APP_CODE_END, $$Base);
     region_cfg.region_attridx = MPU_ARMV8M_MAIR_ATTR_CODE_IDX;
     region_cfg.attr_access = MPU_ARMV8M_AP_RO_PRIV_UNPRIV;
     region_cfg.attr_sh = MPU_ARMV8M_SH_NONE;
@@ -161,9 +161,9 @@ static enum tfm_plat_err_t tfm_spm_mpu_init(void)
     /* RW, ZI and stack as one region */
     region_cfg.region_nr = PARTITION_REGION_RW_STACK;
     region_cfg.region_base =
-        (uint32_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_START, $$Base);
+        (uint32_t)&REGION_NAME(Image$$, PT_APP_RWZI_START, $$Base);
     region_cfg.region_limit =
-        (uint32_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_END, $$Base);
+        (uint32_t)&REGION_NAME(Image$$, PT_APP_RWZI_END, $$Base);
     region_cfg.region_attridx = MPU_ARMV8M_MAIR_ATTR_DATA_IDX;
     region_cfg.attr_access = MPU_ARMV8M_AP_RW_PRIV_UNPRIV;
     region_cfg.attr_sh = MPU_ARMV8M_SH_NONE;

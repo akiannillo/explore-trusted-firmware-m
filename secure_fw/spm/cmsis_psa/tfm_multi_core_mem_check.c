@@ -94,14 +94,14 @@ void tfm_get_mem_region_security_attr(const void *p, size_t s,
 }
 
 #if TFM_LVL == 2
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$RW$$Base);
-REGION_DECLARE(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit);
-REGION_DECLARE(Image$$, TFM_APP_CODE_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_CODE_END, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_START, $$Base);
-REGION_DECLARE(Image$$, TFM_APP_RW_STACK_END, $$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_CODE, $$RO$$Limit);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$RW$$Base);
+REGION_DECLARE(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit);
+REGION_DECLARE(Image$$, PT_APP_CODE_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_CODE_END, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_START, $$Base);
+REGION_DECLARE(Image$$, PT_APP_RWZI_END, $$Base);
 #endif
 
 void tfm_get_secure_mem_region_attr(const void *p, size_t s,
@@ -137,8 +137,8 @@ void tfm_get_secure_mem_region_attr(const void *p, size_t s,
     p_attr->is_valid = true;
 
     /* TFM Core unprivileged code region */
-    base = (uintptr_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Base);
-    limit = (uintptr_t)&REGION_NAME(Image$$, TFM_UNPRIV_CODE, $$RO$$Limit) - 1;
+    base = (uintptr_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Base);
+    limit = (uintptr_t)&REGION_NAME(Image$$, ER_UNPRIV_CODE, $$RO$$Limit) - 1;
     if (check_address_range(p, s, base, limit) == TFM_SUCCESS) {
         p_attr->is_priv_rd_allow = true;
         p_attr->is_priv_wr_allow = false;
@@ -149,8 +149,8 @@ void tfm_get_secure_mem_region_attr(const void *p, size_t s,
     }
 
     /* TFM Core unprivileged data region */
-    base = (uintptr_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$RW$$Base);
-    limit = (uintptr_t)&REGION_NAME(Image$$, TFM_UNPRIV_DATA, $$ZI$$Limit) - 1;
+    base = (uintptr_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$RW$$Base);
+    limit = (uintptr_t)&REGION_NAME(Image$$, ER_UNPRIV_RWZI, $$ZI$$Limit) - 1;
     if (check_address_range(p, s, base, limit) == TFM_SUCCESS) {
         p_attr->is_priv_rd_allow = true;
         p_attr->is_priv_wr_allow = true;
@@ -161,8 +161,8 @@ void tfm_get_secure_mem_region_attr(const void *p, size_t s,
     }
 
     /* APP RoT partition RO region */
-    base = (uintptr_t)&REGION_NAME(Image$$, TFM_APP_CODE_START, $$Base);
-    limit = (uintptr_t)&REGION_NAME(Image$$, TFM_APP_CODE_END, $$Base) - 1;
+    base = (uintptr_t)&REGION_NAME(Image$$, PT_APP_CODE_START, $$Base);
+    limit = (uintptr_t)&REGION_NAME(Image$$, PT_APP_CODE_END, $$Base) - 1;
     if (check_address_range(p, s, base, limit) == TFM_SUCCESS) {
         p_attr->is_priv_rd_allow = true;
         p_attr->is_priv_wr_allow = false;
@@ -173,8 +173,8 @@ void tfm_get_secure_mem_region_attr(const void *p, size_t s,
     }
 
     /* RW, ZI and stack as one region */
-    base = (uintptr_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_START, $$Base);
-    limit = (uintptr_t)&REGION_NAME(Image$$, TFM_APP_RW_STACK_END, $$Base) - 1;
+    base = (uintptr_t)&REGION_NAME(Image$$, PT_APP_RWZI_START, $$Base);
+    limit = (uintptr_t)&REGION_NAME(Image$$, PT_APP_RWZI_END, $$Base) - 1;
     if (check_address_range(p, s, base, limit) == TFM_SUCCESS) {
         p_attr->is_priv_rd_allow = true;
         p_attr->is_priv_wr_allow = true;
