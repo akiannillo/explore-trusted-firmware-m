@@ -32,16 +32,16 @@
 
 LR_CODE S_CODE_START {
 
+    PT_CODE_START S_CODE_START ALIGN 32 EMPTY 0x0 {
+    }
+
     /**** This initial section contains mainly the SPM code */
-    ER_TFM_CODE S_CODE_START {
+    ER_TFM_CODE +0 ALIGN 32 {
         *.o (RESET +First)
         * (+RO-CODE)
     }
 
     /**** PSA RoT CODE starts here */
-    PT_PSA_CODE_START +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'PSA-ROT' %}
@@ -68,9 +68,7 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
-    PT_PSA_CODE_END +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
+    /**** PSA RoT CODE ends here */
 
     /**** APPLICATION RoT CODE starts here */
     PT_APP_CODE_START +0 ALIGN 32 EMPTY 0x0 {
@@ -102,11 +100,12 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
+    /**** APPLICATION RoT CODE ends here */
     PT_APP_CODE_END +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
 
-    /**** Unprivileged Secure code start here */
+    /**** Unprivileged Secure code starts here */
     ER_UNPRIV_CODE +0 ALIGN 32 {
         platform_retarget_dev.o (+RO-CODE)
         device_definition.o (+RO-CODE)
@@ -115,15 +114,20 @@ LR_CODE S_CODE_START {
         *libtfmsprt.a (+RO-CODE)
     }
 
+    PT_CODE_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
+    PT_RODATA_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
     /****  This initial section contains mainly SPM RO data */
     ER_TFM_RODATA +0 ALIGN 32 {
         * (+RO-DATA)
     }
 
     /**** PSA RoT RO data starts here */
-    PT_PSA_RODATA_START +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'PSA-ROT' %}
@@ -150,14 +154,8 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
-    PT_PSA_RODATA_END +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
-
+    /**** PSA RoT RO data ends here */
     /**** APPLICATION RoT RO data starts here */
-    PT_APP_RODATA_START +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'APPLICATION-ROT' %}
@@ -184,10 +182,6 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
-    PT_APP_RODATA_END +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
-
     /**** Unprivileged Secure RO data starts here */
     ER_UNPRIV_RODATA +0 ALIGN 32 {
         platform_retarget_dev.o (+RO-DATA)
@@ -196,10 +190,20 @@ LR_CODE S_CODE_START {
         *libtfmsprt.a (+RO-DATA)
     }
 
+    PT_RODATA_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+
     /**** Base address of secure data area */
     PT_SECURE_DATA_START S_DATA_START EMPTY 0x0 {
         /* Position tag */
     }
+
+#if TFM_LVL == 1
+    PT_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+#endif
 
     /*
      * MPU on Armv6-M/v7-M core in multi-core topology may require more strict
@@ -213,6 +217,7 @@ LR_CODE S_CODE_START {
      * beginning of privileged data region in multi-core topology.
      */
 #ifndef TFM_MULTI_CORE_TOPOLOGY
+
     /* Shared area between BL2 and runtime to exchange data */
     TFM_SHARED_DATA +0 ALIGN 32 OVERLAY EMPTY BOOT_TFM_SHARED_DATA_SIZE {
     }
@@ -220,6 +225,12 @@ LR_CODE S_CODE_START {
     /* MSP */
     ARM_LIB_STACK_MSP +0 ALIGN 32 OVERLAY EMPTY S_MSP_STACK_SIZE {
     }
+
+#if TFM_LVL == 2
+    PT_UNPRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+#endif
 
     /* PSP is unprivileged in single-core topology */
     ARM_LIB_STACK +0 ALIGN 32 EMPTY S_PSP_STACK_SIZE {
@@ -234,7 +245,7 @@ LR_CODE S_CODE_START {
     ER_UNPRIV_RWZI +0 ALIGN 32 {
     }
 
-    /**** APP RoT DATA start here */
+    /**** APPLICATION RoT RWZI starts here */
     PT_APP_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
@@ -266,11 +277,19 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
+    /**** APPLICATION RoT RWZI ends here */
     PT_APP_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
 
+#if TFM_LVL == 2
+    PT_UNPRIV_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+#endif
+
 #ifdef TFM_MULTI_CORE_TOPOLOGY
+
 #ifdef S_DATA_PRIV_START
     /**** Privileged data area base address specified by multi-core platform */
     PT_SECURE_PRIV_DATA_BOUNDARY S_DATA_PRIV_START EMPTY 0x0 {
@@ -302,10 +321,13 @@ LR_CODE S_CODE_START {
         * (+RW +ZI)
     }
 
-    /**** PSA RoT DATA start here */
-    PT_PSA_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+#if TFM_LVL == 2
+    PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
+#endif
+
+    /**** PSA RoT RWZI starts here */
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'PSA-ROT' %}
@@ -334,9 +356,17 @@ LR_CODE S_CODE_START {
     {% endif %}
 {% endfor %}
 
-    PT_PSA_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+    /**** PSA RoT RWZI ends here */
+
+#if TFM_LVL == 1
+    PT_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
         /* Position tag */
     }
+#elif TFM_LVL == 2
+    PT_PRIV_RWZI_END +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+#endif
 
 #if defined (S_RAM_CODE_START)
     /* Executable code allocated in RAM */
