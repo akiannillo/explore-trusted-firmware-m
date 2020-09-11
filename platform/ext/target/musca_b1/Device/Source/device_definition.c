@@ -365,7 +365,7 @@ struct uart_pl011_dev_t UART1_PL011_DEV_NS = {&(UART1_PL011_DEV_CFG_NS),
 /** CMSDK Timers driver structures */
 #ifdef CMSDK_TIMER0_S
 static const struct timer_cmsdk_dev_cfg_t CMSDK_TIMER0_DEV_CFG_S
-    TFM_LINK_SET_RO_IN_PARTITION_SECTION("TFM_IRQ_TEST_1")
+    TFM_LINK_SET_RODATA_IN_PARTITION_SECTION("TFM_IRQ_TEST_1")
     = {.base = MUSCA_B1_CMSDK_TIMER0_S_BASE};
 static struct timer_cmsdk_dev_data_t CMSDK_TIMER0_DEV_DATA_S
     TFM_LINK_SET_RW_IN_PARTITION_SECTION("TFM_IRQ_TEST_1")

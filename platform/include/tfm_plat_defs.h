@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2019, Arm Limited. All rights reserved.
+ * Copyright (c) 2017-2020, Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
  *
@@ -28,17 +28,28 @@ enum tfm_plat_err_t {
 #if defined(TFM_PSA_API) && defined(TFM_LVL) && (TFM_LVL != 1)
 
 /*!
- * \def TFM_LINK_SET_RO_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
+ * \def TFM_LINK_SET_CODE_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
  *
- * \brief This macro provides a mechanism to place a function code or a data
- *        variable in the code section (e.g. RO) of a specific secure partition
- *        at linker time.
+ * \brief This macro provides a mechanism to place a function code in the code
+ *        section (e.g. RO-CODE) of a specific secure partition at linker time.
  *
  * \param[in] TFM_PARTITION_NAME  TF-M partition name assigned in the manifest
  *                                file "name" field.
  */
-#define TFM_LINK_SET_RO_IN_PARTITION_SECTION(TFM_PARTITION_NAME) \
+#define TFM_LINK_SET_CODE_IN_PARTITION_SECTION(TFM_PARTITION_NAME) \
                 __attribute__((section(TFM_PARTITION_NAME"_ATTR_FN")))
+
+/*!
+ * \def TFM_LINK_SET_RODATA_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
+ *
+ * \brief This macro provides a mechanism to place RO data in the RO data
+ *        section (e.g. RO-DATA) of a specific secure partition at linker time.
+ *
+ * \param[in] TFM_PARTITION_NAME  TF-M partition name assigned in the manifest
+ *                                file "name" field.
+ */
+#define TFM_LINK_SET_RODATA_IN_PARTITION_SECTION(TFM_PARTITION_NAME) \
+                __attribute__((section(TFM_PARTITION_NAME"_ATTR_RODATA")))
 
 /*!
  * \def TFM_LINK_SET_RW_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
@@ -64,7 +75,8 @@ enum tfm_plat_err_t {
 #define TFM_LINK_SET_ZI_IN_PARTITION_SECTION(TFM_PARTITION_NAME) \
                 __attribute__((section(TFM_PARTITION_NAME"_ATTR_ZI")))
 #else
-#define TFM_LINK_SET_RO_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
+#define TFM_LINK_SET_CODE_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
+#define TFM_LINK_SET_RODATA_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
 #define TFM_LINK_SET_RW_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
 #define TFM_LINK_SET_ZI_IN_PARTITION_SECTION(TFM_PARTITION_NAME)
 #endif
