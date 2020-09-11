@@ -139,170 +139,58 @@ REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Base);
 REGION_DECLARE(Image$$, ARM_LIB_STACK, $$ZI$$Limit);
 
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_ps_stack[];
 #endif /* TFM_PARTITION_PROTECTED_STORAGE */
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_ITS_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_its_stack[];
 #endif /* TFM_PARTITION_INTERNAL_TRUSTED_STORAGE */
 
 #ifdef TFM_PARTITION_AUDIT_LOG
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_AUDIT_LOG_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_audit_log_stack[];
 #endif /* TFM_PARTITION_AUDIT_LOG */
 
 #ifdef TFM_PARTITION_CRYPTO
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CRYPTO_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_crypto_stack[];
 #endif /* TFM_PARTITION_CRYPTO */
 
 #ifdef TFM_PARTITION_PLATFORM
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PLATFORM_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_platform_stack[];
 #endif /* TFM_PARTITION_PLATFORM */
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_initial_attestation_stack[];
 #endif /* TFM_PARTITION_INITIAL_ATTESTATION */
 
 #ifdef TFM_PARTITION_TEST_CORE
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_core_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_CORE
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_CORE_TEST_2_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_core_test_2_stack[];
 #endif /* TFM_PARTITION_TEST_CORE */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_secure_test_partition_stack[];
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_ipc_service_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_ipc_client_test_stack[];
 #endif /* TFM_PARTITION_TEST_CORE_IPC */
 
 #ifdef TFM_ENABLE_IRQ_TEST
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_IRQ_TEST_1_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_irq_test_1_stack[];
 #endif /* TFM_ENABLE_IRQ_TEST */
 
 #ifdef TFM_PARTITION_TEST_PS
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_PS_TEST_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_ps_test_stack[];
 #endif /* TFM_PARTITION_TEST_PS */
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, $$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, $$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, $$RO$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, $$RO$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$RW$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$RW$$Limit);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$ZI$$Base);
-REGION_DECLARE(Image$$, TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$ZI$$Limit);
 extern uint8_t tfm_sp_secure_client_2_stack[];
 #endif /* TFM_PARTITION_TEST_SECURE_SERVICES */
 
@@ -723,18 +611,9 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
     {
         .stack_bottom         = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
         .stack_top            = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Limit),
-        .rw_start             = PART_REGION_ADDR(ARM_LIB_STACK, $$ZI$$Base),
     },
 #ifdef TFM_PARTITION_PROTECTED_STORAGE
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_PS_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_PS_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_PS_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_PS_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_PS_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_PS_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_PS_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_PS_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_ps_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ps_stack[0x800]),
     },
@@ -742,14 +621,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_INTERNAL_TRUSTED_STORAGE
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_ITS_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_ITS_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_ITS_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_its_stack,
         .stack_top            = (uint32_t)(&tfm_sp_its_stack[0x680]),
     },
@@ -757,14 +628,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_AUDIT_LOG
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_AUDIT_LOG_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_audit_log_stack,
         .stack_top            = (uint32_t)(&tfm_sp_audit_log_stack[0x0200]),
     },
@@ -772,14 +635,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_CRYPTO
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_CRYPTO_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_crypto_stack,
         .stack_top            = (uint32_t)(&tfm_sp_crypto_stack[0x2000]),
     },
@@ -787,14 +642,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_PLATFORM
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_PLATFORM_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_platform_stack,
         .stack_top            = (uint32_t)(&tfm_sp_platform_stack[0x0400]),
     },
@@ -802,14 +649,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_INITIAL_ATTESTATION
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_INITIAL_ATTESTATION_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_initial_attestation_stack,
         .stack_top            = (uint32_t)(&tfm_sp_initial_attestation_stack[0x0A80]),
     },
@@ -817,14 +656,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_core_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_core_test_stack[0x0380]),
     },
@@ -832,14 +663,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_CORE_TEST_2_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_core_test_2_stack,
         .stack_top            = (uint32_t)(&tfm_sp_core_test_2_stack[0x0280]),
     },
@@ -847,14 +670,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_SECURE_TEST_PARTITION_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_secure_test_partition_stack,
         .stack_top            = (uint32_t)(&tfm_sp_secure_test_partition_stack[0x0D00]),
     },
@@ -862,14 +677,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_IPC_SERVICE_TEST_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_ipc_service_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ipc_service_test_stack[0x0220]),
     },
@@ -877,14 +684,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_CORE_IPC
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_IPC_CLIENT_TEST_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_ipc_client_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ipc_client_test_stack[0x0300]),
     },
@@ -892,14 +691,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_ENABLE_IRQ_TEST
     {
-        .code_start           = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_IRQ_TEST_1_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_irq_test_1_stack,
         .stack_top            = (uint32_t)(&tfm_irq_test_1_stack[0x0400]),
     },
@@ -907,14 +698,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_PS
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_PS_TEST_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_ps_test_stack,
         .stack_top            = (uint32_t)(&tfm_sp_ps_test_stack[0x500]),
     },
@@ -922,14 +705,6 @@ const struct tfm_spm_partition_memory_data_t memory_data_list[] =
 
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
     {
-        .code_start           = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, $$Base),
-        .code_limit           = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, $$Limit),
-        .ro_start             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, $$RO$$Base),
-        .ro_limit             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, $$RO$$Limit),
-        .rw_start             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$RW$$Base),
-        .rw_limit             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$RW$$Limit),
-        .zi_start             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$ZI$$Base),
-        .zi_limit             = PART_REGION_ADDR(TFM_SP_SECURE_CLIENT_2_LINKER, _DATA$$ZI$$Limit),
         .stack_bottom         = (uint32_t)tfm_sp_secure_client_2_stack,
         .stack_top            = (uint32_t)(&tfm_sp_secure_client_2_stack[0x300]),
     },
