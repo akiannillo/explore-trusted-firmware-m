@@ -69,6 +69,8 @@ embedded_include_directories(PATH "${PLATFORM_DIR}/target/sse-200_aws/native_dri
 embedded_include_directories(PATH "${PLATFORM_DIR}/target/sse-200_aws/partition" ABSOLUTE)
 embedded_include_directories(PATH "${PLATFORM_DIR}/../include" ABSOLUTE)
 
+add_definitions(-DTFM_SPM_LOG_LEVEL=1)
+
 #Gather all source files we need.
 if (NOT DEFINED BUILD_CMSIS_CORE)
   message(FATAL_ERROR "Configuration variable BUILD_CMSIS_CORE (true|false) is undefined!")
@@ -90,7 +92,8 @@ elseif(BUILD_UART_STDOUT)
   elseif(SECURE_UART1)
     add_definitions(-DSECURE_UART1)
   endif()
-  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c")
+  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c"
+                        "${PLATFORM_DIR}/common/tfm_hal_spm_logdev_peripheral.c")
   embedded_include_directories(PATH "${PLATFORM_DIR}/common" ABSOLUTE)
   set(BUILD_NATIVE_DRIVERS true)
   set(BUILD_CMSIS_DRIVERS true)

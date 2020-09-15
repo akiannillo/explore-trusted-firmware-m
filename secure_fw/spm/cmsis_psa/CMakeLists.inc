@@ -39,6 +39,7 @@ set (SFW_IPC_SPM_SRC
 		"${SFW_SPM_COMMON_DIR}/tfm_boot_data.c"
 		"${SFW_SPM_COMMON_DIR}/tfm_core_utils.c"
 		"${SFW_SPM_COMMON_DIR}/utilities.c"
+		"${SFW_SPM_COMMON_DIR}/spm_log.c"
 		"${SFW_IPC_SPM_DIR}/main.c"
 		"${SFW_IPC_SPM_DIR}/spm_ipc.c"
 		"${SFW_IPC_SPM_DIR}/tfm_core_svcalls_ipc.c"

@@ -37,6 +37,7 @@ set (SFW_FUNC_SPM_SRC
 		"${SFW_SPM_COMMON_DIR}/tfm_core_mem_check.c"
 		"${SFW_SPM_COMMON_DIR}/tfm_core_utils.c"
 		"${SFW_SPM_COMMON_DIR}/utilities.c"
+		"${SFW_SPM_COMMON_DIR}/spm_log.c"
 		"${SFW_FUNC_SPM_DIR}/main.c"
 		"${SFW_FUNC_SPM_DIR}/tfm_core_svcalls_func.c"
 		"${SFW_FUNC_SPM_DIR}/tfm_secure_api.c"

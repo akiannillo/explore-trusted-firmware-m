@@ -71,6 +71,8 @@ embedded_include_directories(PATH "${AN539_DIR}/device/config" ABSOLUTE)
 embedded_include_directories(PATH "${AN539_DIR}/cmsis_drivers/config" ABSOLUTE)
 embedded_include_directories(PATH "${AN539_DIR}/native_drivers" ABSOLUTE)
 
+add_definitions(-DTFM_SPM_LOG_LEVEL=1)
+
 #Gather all source files we need.
 if (NOT DEFINED BUILD_CMSIS_CORE)
   message(FATAL_ERROR "Configuration variable BUILD_CMSIS_CORE (true|false) is undefined!")
@@ -87,7 +89,8 @@ endif()
 if (NOT DEFINED BUILD_UART_STDOUT)
   message(FATAL_ERROR "Configuration variable BUILD_UART_STDOUT (true|false) is undefined!")
 elseif(BUILD_UART_STDOUT)
-  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c")
+  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c"
+                        "${PLATFORM_DIR}/common/tfm_hal_spm_logdev_peripheral.c")
   embedded_include_directories(PATH "${PLATFORM_DIR}/common" ABSOLUTE)
   set(BUILD_NATIVE_DRIVERS true)
   set(BUILD_CMSIS_DRIVERS true)

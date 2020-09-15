@@ -87,6 +87,8 @@ embedded_include_directories(PATH "${TFM_ROOT_DIR}/platform/include" ABSOLUTE)
 embedded_include_directories(PATH "${TFM_ROOT_DIR}/secure_fw/spm/arch" ABSOLUTE)
 embedded_include_directories(PATH "${TFM_ROOT_DIR}/secure_fw/spm/model_ipc/include" ABSOLUTE)
 
+add_definitions(-DTFM_SPM_LOG_LEVEL=1)
+
 #Gather all source files we need.
 list(APPEND ALL_SRC_C "${PLATFORM_DIR}/target/cypress/psoc64/mailbox/platform_multicore.c")
 list(APPEND ALL_SRC_C_NS "${PLATFORM_DIR}/target/cypress/psoc64/mailbox/platform_ns_mailbox.c")
@@ -122,7 +124,8 @@ elseif(BUILD_UART_STDOUT)
   elseif(SECURE_UART1)
     message(FATAL_ERROR "Configuration SECURE_UART1 TRUE is invalid for this target!")
   endif()
-  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c")
+  list(APPEND ALL_SRC_C "${PLATFORM_DIR}/common/uart_stdout.c"
+                        "${PLATFORM_DIR}/common/tfm_hal_spm_logdev_peripheral.c")
   embedded_include_directories(PATH "${PLATFORM_DIR}/common" ABSOLUTE)
   set(BUILD_NATIVE_DRIVERS true)
   set(BUILD_CMSIS_DRIVERS true)
