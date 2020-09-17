@@ -9,6 +9,7 @@
 #define __SPM_IPC_H__
 
 #include <stdint.h>
+#include "isolation.h"
 #include "spm_partition_defs.h"
 #include "tfm_arch.h"
 #include "tfm_list.h"
