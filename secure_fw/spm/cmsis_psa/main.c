@@ -6,7 +6,6 @@
  */
 
 #include "common/tfm_boot_data.h"
-#include "log/tfm_log.h"
 #include "region.h"
 #include "spm_ipc.h"
 #include "tfm_hal_platform.h"
@@ -15,6 +14,7 @@
 #include "tfm_irq_list.h"
 #include "tfm_nspm.h"
 #include "tfm_spm_hal.h"
+#include "tfm_spm_log.h"
 #include "tfm_version.h"
 
 /*
@@ -28,6 +28,12 @@ __asm("  .global __ARM_use_no_argv\n");
 #ifndef TFM_LVL
 #error TFM_LVL is not defined!
 #endif
+
+#define PRINT_TFM_VERSION  SPMLOG_INFMSGVAL("Booting TFM v", VERSION_MAJOR); \
+                           SPMLOG_INFMSGVAL(".", VERSION_MINOR); \
+                           SPMLOG_INFMSG(" "); \
+                           SPMLOG_INFMSG(VERSION_STRING); \
+                           SPMLOG_INFMSG("\r\n")
 
 REGION_DECLARE(Image$$, ARM_LIB_STACK_MSP,  $$ZI$$Base);
 
@@ -73,10 +79,11 @@ static int32_t tfm_core_init(void)
     /* Configures architecture-specific coprocessors */
     tfm_arch_configure_coprocessors();
 
-    LOG_MSG("\033[1;34m[Sec Thread] Secure image initializing!\033[0m\r\n");
+    SPMLOG_INFMSG("\033[1;34m[Sec Thread] Secure image initializing!\033[0m\r\n");
 
 #ifdef TFM_CORE_DEBUG
-    LOG_MSG("TF-M isolation level is: %d\r\n", TFM_LVL);
+    SPMLOG_DBGMSGVAL("TF-M isolation level is: ", TFM_LVL);
+    SPMLOG_DBGMSG("\r\n");
 #endif
 
     tfm_core_validate_boot_data();
@@ -142,8 +149,7 @@ int main(void)
         tfm_core_panic();
     }
     /* Print the TF-M version */
-    LOG_MSG("\033[1;34mBooting TFM v%d.%d %s\033[0m\r\n",
-            VERSION_MAJOR, VERSION_MINOR, VERSION_STRING);
+    PRINT_TFM_VERSION;
 
     if (tfm_spm_db_init() != SPM_ERR_OK) {
         tfm_core_panic();
