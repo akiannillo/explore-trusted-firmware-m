@@ -54,9 +54,9 @@ be equal to one of the three log levels.
 
 API Definition
 --------------
-The following three APIs output a combined message with 'msg' and 'val' in HEX
-string. This is useful for outputting digits. As SPM is a constrained module,
-rich formatting is not supported in it.
+The following three APIs convert 'val' to HEX string, and output the 'msg' and
+the HEX string. This is useful for outputting digits. As SPM is a constrained
+module, rich formatting is not supported in it.
 
   SPMLOG_DBGMSGVAL(msg, val);
 
@@ -64,21 +64,21 @@ rich formatting is not supported in it.
 
   SPMLOG_ERRMSGVAL(msg, val);
 
-A wrapper layer API is added to combine the message and the value, and call the
-HAL API ``tfm_hal_output_spm_log``.
+A wrapper layer API is added to convert 'val' and call the HAL API
+``tfm_hal_output_spm_log`` twice to output 'MSG' and 'val' in string format.
 
 .. code-block:: c
 
   /*
-   * SPM output API to combine message and value together as a joint message,
-   * and call the HAL API tfm_hal_output_spm_log.
-   * msg:   a message in HEX string
+   * SPM output API to convert digit number into HEX string and call the HAL API
+   * tfm_hal_output_spm_log.
+   * msg:   a message in string
    * len:   the length of the message
    * value: a value need to be output
    */
   spm_log_msgval(const char *msg, size_t len, uint32_t value)
 
-The following three APIs output a message in HEX string.
+The following three APIs output a message in string.
 
   SPMLOG_DBGMSG(msg);
 
