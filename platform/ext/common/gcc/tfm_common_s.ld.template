@@ -62,18 +62,13 @@ SECTIONS
         LONG (LOADADDR(.TFM_DATA))
         LONG (ADDR(.TFM_DATA))
         LONG (SIZEOF(.TFM_DATA))
-#if defined(TFM_PSA_API)
-        LONG (LOADADDR(.TFM_UNPRIV_DATA))
-        LONG (ADDR(.TFM_UNPRIV_DATA))
-        LONG (SIZEOF(.TFM_UNPRIV_DATA))
-#endif /* defined(TFM_PSA_API) */
 {% for manifest in manifests %}
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-        LONG (LOADADDR(.{{manifest.manifest.name}}_LINKER_DATA))
-        LONG (ADDR(.{{manifest.manifest.name}}_LINKER_DATA))
-        LONG (SIZEOF(.{{manifest.manifest.name}}_LINKER_DATA))
+        LONG (LOADADDR(.ER_{{manifest.manifest.name}}_RWZI))
+        LONG (ADDR(.ER_{{manifest.manifest.name}}_RWZI))
+        LONG (SIZEOF(.ER_{{manifest.manifest.name}}_RWZI))
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
@@ -84,9 +79,9 @@ SECTIONS
         LONG (SIZEOF(.TFM_RAM_CODE))
 #endif
 #if defined(S_CODE_SRAM_ALIAS_BASE)
-        LONG (LOADADDR(.ER_CODE_SRAM))
-        LONG (ADDR(.ER_CODE_SRAM))
-        LONG (SIZEOF(.ER_CODE_SRAM))
+        LONG (LOADADDR(.ER_EFLASH_DRIVER_CODE))
+        LONG (ADDR(.ER_EFLASH_DRIVER_CODE))
+        LONG (SIZEOF(.ER_EFLASH_DRIVER_CODE))
 #endif
         __copy_table_end__ = .;
     } > FLASH
@@ -104,8 +99,8 @@ SECTIONS
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-        LONG (ADDR(.{{manifest.manifest.name}}_LINKER_BSS))
-        LONG (SIZEOF(.{{manifest.manifest.name}}_LINKER_BSS))
+        LONG (ADDR(.{{manifest.manifest.name}}_RWZI_BSS))
+        LONG (SIZEOF(.{{manifest.manifest.name}}_RWZI_BSS))
         {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
@@ -113,139 +108,93 @@ SECTIONS
         __zero_table_end__ = .;
     } > FLASH
 
-    .TFM_UNPRIV_CODE : ALIGN(32)
-    {
-        *libc_nano*:*(.text*)
-        *libc_nano*:*(.rodata*)
-        *platform_retarget_dev.*(.text*)
-        *platform_retarget_dev.*(.rodata*)
-        *device_definition.*(.text*)
-        *device_definition.*(.rodata*)
-        *(SFN)
-        *libgcc*:*(.text*)
-        *libgcc*:*(.rodata*)
-        *libtfmsprt*:*(.text*)
-        *libtfmsprt*:*(.rodata*)
-        *psa_client.*(.text*)              /* NXP */
-        *psa_client.*(.rodata*)
-        *psa_service.*(.text*)             /* NXP */
-        *psa_service.*(.rodata*)
-        *psa_lifecycle.*(.text*)             /* NXP */
-        *psa_lifecycle.*(.rodata*)
-        *tfm_log_raw.*(.text*)             /* NXP */
-        *tfm_log_raw.*(.rodata*)
-        . = ALIGN(32);
-    } > FLASH
-    Image$$TFM_UNPRIV_CODE$$RO$$Base = ADDR(.TFM_UNPRIV_CODE);
-    Image$$TFM_UNPRIV_CODE$$RO$$Limit = ADDR(.TFM_UNPRIV_CODE) + SIZEOF(.TFM_UNPRIV_CODE);
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_CODE_START$$Base = .;
 
-    /**** PSA RoT RO part (CODE + RODATA) start here */
-    Image$$TFM_PSA_CODE_START$$Base = .;
 
+    /**** PSA RoT RO CODE starts here */
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'PSA-ROT' %}
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    .{{manifest.manifest.name}}_LINKER : ALIGN(32)
+    .{{manifest.manifest.name}}_CODE : ALIGN(32)
     {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}}:*(.text*)
-        {{pattern}}:*(.rodata*)
         {% endfor %}
     {% endif %}
     {% if manifest.attr.linker_pattern.object_list %}
         {% for pattern in manifest.attr.linker_pattern.object_list %}
         {{pattern}}(.text*)
-        {{pattern}}(.rodata*)
         {% endfor %}
     {% endif %}
         *({{manifest.manifest.name}}_ATTR_FN)
         . = ALIGN(32);
     } > FLASH
-    Image$${{manifest.manifest.name}}_LINKER$$RO$$Base = ADDR(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$RO$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER) + SIZEOF(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$Base = ADDR(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER) + SIZEOF(.{{manifest.manifest.name}}_LINKER);
+    Image$${{manifest.manifest.name}}_CODE$$Base = ADDR(.{{manifest.manifest.name}}_CODE);
+    Image$${{manifest.manifest.name}}_CODE$$Limit = ADDR(.{{manifest.manifest.name}}_CODE) + SIZEOF(.{{manifest.manifest.name}}_CODE);
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
 
     {% endif %}
 {% endfor %}
-    /**** PSA RoT RO part (CODE + RODATA) end here */
-    Image$$TFM_PSA_CODE_END$$Base = .;
+    /**** PSA RoT RO CODE ends here */
+    /**** APPLICATION RoT RO CODE starts here */
 
-    /**** APPLICATION RoT RO part (CODE + RODATA) start here */
-    Image$$TFM_APP_CODE_START$$Base = .;
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_APP_CODE_START$$Base = .;
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'APPLICATION-ROT' %}
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    .{{manifest.manifest.name}}_LINKER : ALIGN(32)
+    .{{manifest.manifest.name}}_CODE : ALIGN(32)
     {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}}:*(.text*)
-        {{pattern}}:*(.rodata*)
         {% endfor %}
     {% endif %}
     {% if manifest.attr.linker_pattern.object_list %}
         {% for pattern in manifest.attr.linker_pattern.object_list %}
         {{pattern}}(.text*)
-        {{pattern}}(.rodata*)
         {% endfor %}
     {% endif %}
         *({{manifest.manifest.name}}_ATTR_FN)
         . = ALIGN(32);
     } > FLASH
-    Image$${{manifest.manifest.name}}_LINKER$$RO$$Base = ADDR(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$RO$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER) + SIZEOF(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$Base = ADDR(.{{manifest.manifest.name}}_LINKER);
-    Image$${{manifest.manifest.name}}_LINKER$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER) + SIZEOF(.{{manifest.manifest.name}}_LINKER);
+    Image$${{manifest.manifest.name}}_CODE$$Base = ADDR(.{{manifest.manifest.name}}_CODE);
+    Image$${{manifest.manifest.name}}_CODE$$Limit = ADDR(.{{manifest.manifest.name}}_CODE) + SIZEOF(.{{manifest.manifest.name}}_CODE);
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
     {% endif %}
 
     {% endif %}
 {% endfor %}
-    /**** APPLICATION RoT RO part (CODE + RODATA) end here */
-    Image$$TFM_APP_CODE_END$$Base = .;
+    /**** APPLICATION RoT RO CODE ends here */
 
-#if defined(S_CODE_SRAM_ALIAS_BASE)
-    .ER_CODE_SRAM : ALIGN(4)
-    {
-        *Driver_GFC100_EFlash.o(.text*)
-        *Driver_GFC100_EFlash.o(.rodata*)
-        *gfc100_eflash_drv.o(.text*)
-        *gfc100_eflash_drv.o(.rodata*)
-        *musca_b1_eflash_drv.o(.text*)
-        *musca_b1_eflash_drv.o(.rodata*)
-        . = ALIGN(4); /* This alignment is needed to make the section size 4 bytes aligned */
-    } > CODE_RAM AT > FLASH
-    Image$$ER_CODE_SRAM$$RO$$Base = ADDR(.ER_CODE_SRAM);
-    Image$$ER_CODE_SRAM$$RO$$Limit = ADDR(.ER_CODE_SRAM) + SIZEOF(.ER_CODE_SRAM);
-    Image$$ER_CODE_SRAM$$Base = ADDR(.ER_CODE_SRAM);
-    Image$$ER_CODE_SRAM$$Limit = ADDR(.ER_CODE_SRAM) + SIZEOF(.ER_CODE_SRAM);
-#endif
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_APP_CODE_END$$Base = .;
 
-#if TFM_LVL != 1
-    .ARM.extab :
+    /**** Unprivileged Secure code starts here */
+    .ER_UNPRIV_CODE : ALIGN(32)
     {
-        *(.ARM.extab* .gnu.linkonce.armextab.*)
+        *platform_retarget_dev.*(.text*)
+        *device_definition.*(.text*)
+        *(SFN)
+        *armlib*:*(.text*)
+        *libtfmsprt*:*(.text*)
+        . = ALIGN(32);
     } > FLASH
-
-    __exidx_start = .;
-    .ARM.exidx :
-    {
-        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > FLASH
-    __exidx_end = .;
-
-#endif /* TFM_LVL != 1 */
+    Image$$ER_UNPRIV_CODE$$RO$$Base = ADDR(.ER_UNPRIV_CODE);
+    Image$$ER_UNPRIV_CODE$$RO$$Limit = ADDR(.ER_UNPRIV_CODE) + SIZEOF(.ER_UNPRIV_CODE);
 
     .ER_TFM_CODE : ALIGN(4)
     {
@@ -269,10 +218,138 @@ SECTIONS
          *(SORT(.dtors.*))
          *(.dtors)
 
-        *(.rodata*)
-
         KEEP(*(.eh_frame*))
     } > FLASH
+
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_CODE_END$$Base = .;
+    Image$$PT_RODATA_START$$Base = .;
+
+    /**** PSA RoT RO part (RODATA) start here */
+{% for manifest in manifests %}
+    {% if manifest.manifest.type == 'PSA-ROT' %}
+    {% if manifest.attr.conditional %}
+#ifdef {{manifest.attr.conditional}}
+    {% endif %}
+    .{{manifest.manifest.name}}_RODATA : ALIGN(32)
+    {
+    {% if manifest.attr.linker_pattern.library_list %}
+        {% for pattern in manifest.attr.linker_pattern.library_list %}
+        {{pattern}}:*(.rodata*)
+        {% endfor %}
+    {% endif %}
+    {% if manifest.attr.linker_pattern.object_list %}
+        {% for pattern in manifest.attr.linker_pattern.object_list %}
+        {{pattern}}(.rodata*)
+        {% endfor %}
+    {% endif %}
+        *({{manifest.manifest.name}}_ATTR_RODATA)
+        . = ALIGN(32);
+    } > FLASH
+    Image$${{manifest.manifest.name}}_RODATA$$RO$$Base = ADDR(.{{manifest.manifest.name}}_RODATA);
+    Image$${{manifest.manifest.name}}_RODATA$$RO$$Limit = ADDR(.{{manifest.manifest.name}}_RODATA) + SIZEOF(.{{manifest.manifest.name}}_RODATA);
+    {% if manifest.attr.conditional %}
+#endif /* {{manifest.attr.conditional}} */
+    {% endif %}
+    {% endif %}
+{% endfor %}
+    /**** PSA RoT RO part (RODATA) end here */
+
+    /**** APPLICATION RoT RO part (RODATA) start here */
+
+    /* Position tag */
+    Image$$TFM_APP_RODATA_START$$Base = .;
+{% for manifest in manifests %}
+    {% if manifest.manifest.type == 'APPLICATION-ROT' %}
+    {% if manifest.attr.conditional %}
+#ifdef {{manifest.attr.conditional}}
+    {% endif %}
+    .{{manifest.manifest.name}}_RODATA : ALIGN(32)
+    {
+    {% if manifest.attr.linker_pattern.library_list %}
+        {% for pattern in manifest.attr.linker_pattern.library_list %}
+        {{pattern}}:*(.rodata*)
+        {% endfor %}
+    {% endif %}
+    {% if manifest.attr.linker_pattern.object_list %}
+        {% for pattern in manifest.attr.linker_pattern.object_list %}
+        {{pattern}}(.rodata*)
+        {% endfor %}
+    {% endif %}
+        *({{manifest.manifest.name}}_ATTR_RODATA)
+        . = ALIGN(32);
+    } > FLASH
+    Image$${{manifest.manifest.name}}_RODATA$$RO$$Base = ADDR(.{{manifest.manifest.name}}_RODATA);
+    Image$${{manifest.manifest.name}}_RODATA$$RO$$Limit = ADDR(.{{manifest.manifest.name}}_RODATA) + SIZEOF(.{{manifest.manifest.name}}_RODATA);
+    {% if manifest.attr.conditional %}
+#endif /* {{manifest.attr.conditional}} */
+    {% endif %}
+    {% endif %}
+{% endfor %}
+    /**** APPLICATION RoT RO part (RODATA) end here */
+
+    /**** Unprivileged Secure RO data starts here */
+    .ER_UNPRIV_RODATA : ALIGN(32)
+    {
+        *platform_retarget_dev.*(.rodata*)
+        *device_definition.*(.rodata*)
+        *armlib*:*(.rodata*)
+        *libtfmsprt*:*(.rodata*)
+        . = ALIGN(32);
+    } > FLASH
+    Image$$ER_UNPRIV_RODATA$$RO$$Base = ADDR(.ER_UNPRIV_RODATA);
+    Image$$ER_UNPRIV_RODATA$$RO$$Limit = ADDR(.ER_UNPRIV_RODATA) + SIZEOF(.ER_UNPRIV_RODATA);
+
+    /****  This initial section contains mainly SPM RO data */
+    .ER_TFM_RODATA : ALIGN(32)
+    {
+        *(.rodata*)
+        . = ALIGN(32);
+    } > FLASH
+    Image$$ER_TFM_RODATA$$RO$$Base = ADDR(.ER_TFM_RODATA);
+    Image$$ER_TFM_RODATA$$RO$$Limit = ADDR(.ER_TFM_RODATA) + SIZEOF(.ER_TFM_RODATA);
+
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_RODATA_END$$Base = .;
+
+#if defined(S_CODE_SRAM_ALIAS_BASE)
+    .ER_EFLASH_DRIVER_CODE : ALIGN(4)
+    {
+        *Driver_GFC100_EFlash.o(.text*)
+        *gfc100_eflash_drv.o(.text*)
+        *musca_b1_eflash_drv.o(.text*)
+        . = ALIGN(4); /* This alignment is needed to make the section size 4 bytes aligned */
+    } > CODE_RAM AT > FLASH
+    Image$$ER_EFLASH_DRIVER_CODE$$Base = ADDR(.ER_EFLASH_DRIVER_CODE);
+    Image$$ER_EFLASH_DRIVER_CODE$$Limit = ADDR(.ER_EFLASH_DRIVER_CODE) + SIZEOF(.ER_EFLASH_DRIVER_CODE);
+
+    .ER_EFLASH_DRIVER_RODATA : ALIGN(4)
+    {
+        *Driver_GFC100_EFlash.o(.rodata*)
+        *gfc100_eflash_drv.o(.rodata*)
+        *musca_b1_eflash_drv.o(.rodata*)
+        . = ALIGN(4); /* This alignment is needed to make the section size 4 bytes aligned */
+    } > CODE_RAM AT > FLASH
+    Image$$ER_EFLASH_DRIVER_RODATA$$RO$$Base = ADDR(.ER_EFLASH_DRIVER_RODATA);
+    Image$$ER_EFLASH_DRIVER_RODATA$$RO$$Limit = ADDR(.ER_EFLASH_DRIVER_RODATA) + SIZEOF(.ER_EFLASH_DRIVER_RODATA);
+#endif
+
+#if TFM_LVL != 1
+    .ARM.extab :
+    {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } > FLASH
+
+    __exidx_start = .;
+    .ARM.exidx :
+    {
+        *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > FLASH
+    __exidx_end = .;
+
+#endif /* TFM_LVL != 1 */
 
     /**** Base address of secure data area */
     .tfm_secure_data_start :
@@ -280,6 +357,10 @@ SECTIONS
         . = ABSOLUTE(S_DATA_START) ;
     } > RAM
 
+#if TFM_LVL == 1
+    . = ALIGN(32);
+    Image$$PT_RWZI_START$$Base = .;
+#endif
     /*
      * MPU on Armv6-M/v7-M core in multi-core topology may require more strict
      * alignment that MPU region base address must align with the MPU region
@@ -308,6 +389,12 @@ SECTIONS
     Image$$ARM_LIB_STACK_MSP$$ZI$$Base = ADDR(.msp_stack);
     Image$$ARM_LIB_STACK_MSP$$ZI$$Limit = ADDR(.msp_stack) + SIZEOF(.msp_stack);
 
+    #if TFM_LVL == 2
+        /* Position tag */
+        . = ALIGN(32);
+        Image$$PT_UNPRIV_RWZI_START$$Base = .;
+    #endif
+
     /* PSP is unprivileged in single-core topology */
     .psp_stack : ALIGN(32)
     {
@@ -315,6 +402,10 @@ SECTIONS
     } > RAM
     Image$$ARM_LIB_STACK$$ZI$$Base = ADDR(.psp_stack);
     Image$$ARM_LIB_STACK$$ZI$$Limit = ADDR(.psp_stack) + SIZEOF(.psp_stack);
+#elif TFM_LVL == 2 /* Multi-core TFM LVL 2 */
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_UNPRIV_RWZI_START$$Base = .;
 #endif
 
 #if !defined(TFM_PSA_API)
@@ -338,29 +429,27 @@ SECTIONS
     } > RAM
 #endif /* TFM_LVL == 1 */
 
-#if defined(TFM_PSA_API)
-    .TFM_UNPRIV_DATA : ALIGN(32)
-    {
-    } > RAM AT> FLASH
-    Image$$TFM_UNPRIV_DATA$$RW$$Base = ADDR(.TFM_UNPRIV_DATA);
-    Image$$TFM_UNPRIV_DATA$$RW$$Limit = ADDR(.TFM_UNPRIV_DATA) + SIZEOF(.TFM_UNPRIV_DATA);
-
-    .TFM_UNPRIV_BSS : ALIGN(32)
+    .ER_UNPRIV_RWZI : ALIGN(32)
     {
     } > RAM AT> RAM
-    Image$$TFM_UNPRIV_DATA$$ZI$$Base = ADDR(.TFM_UNPRIV_BSS);
-    Image$$TFM_UNPRIV_DATA$$ZI$$Limit = ADDR(.TFM_UNPRIV_BSS) + SIZEOF(.TFM_UNPRIV_BSS);
-#endif /* defined(TFM_PSA_API) */
 
     /**** APPLICATION RoT DATA start here */
-    Image$$TFM_APP_RW_STACK_START$$Base = .;
+
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_APP_RWZI_START$$Base = .;
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'APPLICATION-ROT' %}
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    .{{manifest.manifest.name}}_LINKER_DATA : ALIGN(32)
+    #if TFM_LVL == 3
+        /* Position tag */
+        . = ALIGN(32);
+        Image$$PT_{{manifest.manifest.name}}_PRIVATE_DATA_START$$Base = .;
+    #endif
+    .ER_{{manifest.manifest.name}}_RWZI : ALIGN(32)
     {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
@@ -375,12 +464,12 @@ SECTIONS
         *({{manifest.manifest.name}}_ATTR_RW)
         . = ALIGN(32);
     } > RAM AT> FLASH
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$RW$$Base = ADDR(.{{manifest.manifest.name}}_LINKER_DATA);
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$RW$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER_DATA) + SIZEOF(.{{manifest.manifest.name}}_LINKER_DATA);
+    Image$$.ER_{{manifest.manifest.name}}_RWZI$$RW$$Base = ADDR(.ER_{{manifest.manifest.name}}_RWZI);
+    Image$$.ER_{{manifest.manifest.name}}_RWZI$$RW$$Limit = ADDR(.ER_{{manifest.manifest.name}}_RWZI) + SIZEOF(.ER_{{manifest.manifest.name}}_RWZI);
 
-    .{{manifest.manifest.name}}_LINKER_BSS : ALIGN(32)
+    .{{manifest.manifest.name}}_RWZI_BSS : ALIGN(32)
     {
-        start_of_{{manifest.manifest.name}}_LINKER = .;
+        start_of_{{manifest.manifest.name}}_RWZI = .;
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}}:*(.bss*)
@@ -394,11 +483,17 @@ SECTIONS
         {% endfor %}
     {% endif %}
         *({{manifest.manifest.name}}_ATTR_ZI)
-        . += (. - start_of_{{manifest.manifest.name}}_LINKER) ? 0 : 4;
+        . += (. - start_of_{{manifest.manifest.name}}_RWZI) ? 0 : 4;
         . = ALIGN(32);
     } > RAM AT> RAM
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$ZI$$Base = ADDR(.{{manifest.manifest.name}}_LINKER_BSS);
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$ZI$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER_BSS) + SIZEOF(.{{manifest.manifest.name}}_LINKER_BSS);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$ZI$$Base = ADDR(.{{manifest.manifest.name}}_RWZI_BSS);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$ZI$$Limit = ADDR(.{{manifest.manifest.name}}_RWZI_BSS) + SIZEOF(.{{manifest.manifest.name}}_RWZI_BSS);
+
+    #if TFM_LVL == 3
+        /* Position tag */
+        . = ALIGN(32);
+        Image$$PT_{{manifest.manifest.name}}_PRIVATE_DATA_END$$Base = .;
+    #endif
 
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
@@ -407,7 +502,17 @@ SECTIONS
     {% endif %}
 {% endfor %}
     /**** APPLICATION RoT DATA end here */
-    Image$$TFM_APP_RW_STACK_END$$Base = .;
+
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_APP_RWZI_END$$Base = .;
+
+    #if TFM_LVL == 2
+        /* Position tag */
+        . = ALIGN(32);
+        Image$$PT_UNPRIV_RWZI_END$$Base = .;
+    #endif
+
 
 #if TFM_LVL != 1
 #ifdef TFM_PARTITION_TEST_SECURE_SERVICES
@@ -455,10 +560,17 @@ SECTIONS
 #ifdef TFM_MULTI_CORE_TOPOLOGY
 #ifdef S_DATA_PRIV_START
     /**** Privileged data area base address specified by multi-core platform */
-    .tfm_secure_priv_data_boundary :
+    . = ALIGN(32);
+    .PT_SECURE_PRIV_DATA_BOUNDARY :
     {
         . = ABSOLUTE(S_DATA_PRIV_START) ;
     } > RAM
+#endif
+
+#if TFM_LVL == 2 || TFM_LVL == 3
+    PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
 #endif
 
     /*
@@ -489,17 +601,25 @@ SECTIONS
     } > RAM
     Image$$ARM_LIB_STACK$$ZI$$Base = ADDR(.psp_stack);
     Image$$ARM_LIB_STACK$$ZI$$Limit = ADDR(.psp_stack) + SIZEOF(.psp_stack);
+#elif TFM_LVL == 2 || TFM_LVL == 3
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_PRIV_RWZI_START$$Base = .;
 #endif
 
     /**** PSA RoT DATA start here */
-    Image$$TFM_PSA_RW_STACK_START$$Base = .;
 
 {% for manifest in manifests %}
     {% if manifest.manifest.type == 'PSA-ROT' %}
     {% if manifest.attr.conditional %}
 #ifdef {{manifest.attr.conditional}}
     {% endif %}
-    .{{manifest.manifest.name}}_LINKER_DATA : ALIGN(32)
+    #if TFM_LVL == 3
+        /* Position tag */
+        . = ALIGN(32);
+        Image$$PT_{{manifest.manifest.name}}_PRIVATE_DATA_START$$Base = .;
+    #endif
+    .ER_{{manifest.manifest.name}}_RWZI : ALIGN(32)
     {
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
@@ -514,12 +634,12 @@ SECTIONS
         *({{manifest.manifest.name}}_ATTR_RW)
         . = ALIGN(32);
     } > RAM AT> FLASH
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$RW$$Base = ADDR(.{{manifest.manifest.name}}_LINKER_DATA);
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$RW$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER_DATA) + SIZEOF(.{{manifest.manifest.name}}_LINKER_DATA);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$RW$$Base = ADDR(.ER_{{manifest.manifest.name}}_RWZI);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$RW$$Limit = ADDR(.ER_{{manifest.manifest.name}}_RWZI) + SIZEOF(.ER_{{manifest.manifest.name}}_RWZI);
 
-    .{{manifest.manifest.name}}_LINKER_BSS : ALIGN(32)
+    .{{manifest.manifest.name}}_RWZI_BSS : ALIGN(32)
     {
-        start_of_{{manifest.manifest.name}}_LINKER = .;
+        start_of_{{manifest.manifest.name}}_RWZI = .;
     {% if manifest.attr.linker_pattern.library_list %}
         {% for pattern in manifest.attr.linker_pattern.library_list %}
         {{pattern}}:*(.bss*)
@@ -533,11 +653,15 @@ SECTIONS
         {% endfor %}
     {% endif %}
         *({{manifest.manifest.name}}_ATTR_ZI)
-        . += (. - start_of_{{manifest.manifest.name}}_LINKER) ? 0 : 4;
+        . += (. - start_of_{{manifest.manifest.name}}_RWZI) ? 0 : 4;
         . = ALIGN(32);
     } > RAM AT> RAM
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$ZI$$Base = ADDR(.{{manifest.manifest.name}}_LINKER_BSS);
-    Image$${{manifest.manifest.name}}_LINKER_DATA$$ZI$$Limit = ADDR(.{{manifest.manifest.name}}_LINKER_BSS) + SIZEOF(.{{manifest.manifest.name}}_LINKER_BSS);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$ZI$$Base = ADDR(.{{manifest.manifest.name}}_RWZI_BSS);
+    Image$$ER_{{manifest.manifest.name}}_RWZI$$ZI$$Limit = ADDR(.{{manifest.manifest.name}}_RWZI_BSS) + SIZEOF(.{{manifest.manifest.name}}_RWZI_BSS);
+
+    /* Position tag */
+    . = ALIGN(32);
+    Image$$PT_{{manifest.manifest.name}}_PRIVATE_DATA_END$$Base = .;
 
     {% if manifest.attr.conditional %}
 #endif /* {{manifest.attr.conditional}} */
@@ -546,7 +670,14 @@ SECTIONS
     {% endif %}
 {% endfor %}
     /**** PSA RoT DATA end here */
-    Image$$TFM_PSA_RW_STACK_END$$Base = .;
+    . = ALIGN(32);
+    #if TFM_LVL == 1
+        /* Position tag */
+        Image$$PT_RWZI_END$$Base = .;
+    #elif TFM_LVL == 2 || TFM_LVL == 3
+        /* Position tag */
+        Image$$PT_PRIV_RWZI_END$$Base = .;
+    #endif
 
     .TFM_DATA : ALIGN(4)
     {
