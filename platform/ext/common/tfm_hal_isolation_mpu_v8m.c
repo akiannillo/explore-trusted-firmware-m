@@ -134,10 +134,13 @@ enum tfm_hal_status_t tfm_hal_memory_has_access(const void *base,
     uint32_t privilege_mode;
     bool range_access_allowed_by_mpu = false;
 
-    if (attr & TFM_HAL_ACCESS_PRIVILEGED) {
+    switch (attr & TFM_HAL_ACCESS_PRIVILEGE_MSK) {
+    case TFM_HAL_ACCESS_PRIVILEGED:
         privilege_mode = TFM_PARTITION_PRIVILEGED_MODE;
-    } else {
+    case TFM_HAL_ACCESS_UNPRIVILEGED:
         privilege_mode = TFM_PARTITION_UNPRIVILEGED_MODE;
+    default:
+        return TFM_HAL_ERROR_INVALID_INPUT;
     }
 
     if (attr & TFM_HAL_ACCESS_NS) {
