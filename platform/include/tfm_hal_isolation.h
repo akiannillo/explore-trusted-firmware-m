@@ -25,6 +25,10 @@ extern "C" {
 #define TFM_HAL_ACCESS_DEVICE           0x20
 #define TFM_HAL_ACCESS_NS               0x40
 
+/* Memory access attribute masks */
+#define TFM_HAL_ACCESS_PRIVILEGE_MSK    (TFM_HAL_ACCESS_UNPRIVILEGED | \
+                                         TFM_HAL_ACCESS_PRIVILEGED)
+
 /* Commonly used memory access modes */
 #define TFM_HAL_ACCESS_MODE_ALL_PRIVILEGE_RW (TFM_HAL_ACCESS_PRIVILEGED |\
                                               TFM_HAL_ACCESS_UNPRIVILEGED |\
