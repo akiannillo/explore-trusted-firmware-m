@@ -355,6 +355,10 @@ LR_CODE S_CODE_START {
     /* PSP is unprivileged in single-core topology */
     ARM_LIB_STACK +0 ALIGN 32 EMPTY S_PSP_STACK_SIZE {
     }
+#elif TFM_LVL == 2 /* Multi-core TFM LVL 2 */
+    PT_UNPRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
 #endif
 
 #if !defined(TFM_PSA_API)
@@ -483,6 +487,12 @@ LR_CODE S_CODE_START {
     }
 #endif
 
+#if TFM_LVL == 2 || TFM_LVL == 3
+    PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
+#endif
+
     /*
      * Move BL2 shared area and MSP stack to the beginning of privileged data
      * area in multi-core topology.
@@ -498,6 +508,10 @@ LR_CODE S_CODE_START {
     /* PSP is privileged in multi-core topology */
     ARM_LIB_STACK +0 ALIGN 32 EMPTY S_PSP_STACK_SIZE {
     }
+#elif TFM_LVL == 2 || TFM_LVL == 3 /* single-core L2 and L3 */
+    PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
+        /* Position tag */
+    }
 #endif
 
     ARM_LIB_HEAP +0 ALIGN 8 EMPTY S_HEAP_SIZE {
@@ -506,12 +520,6 @@ LR_CODE S_CODE_START {
     ER_TFM_DATA +0 {
         * (+RW +ZI)
     }
-
-#if TFM_LVL == 2 || TFM_LVL == 3
-    PT_PRIV_RWZI_START +0 ALIGN 32 EMPTY 0x0 {
-        /* Position tag */
-    }
-#endif
 
     /**** PSA RoT RWZI starts here */
 
